@@ -1,4 +1,4 @@
-import IngredientListItem from "../../components/Ingredients/Ingredients/page_elements/ingredients_list_item";
+import RecetteListItem from "../../components/Recettes/page_elements/recette_list_display";
 import React, { useState, useEffect } from "react";
 import { Button, Modal, ModalBody, ModalFooter, Table } from "reactstrap";
 
@@ -17,175 +17,107 @@ const MONTHS = [
   "Décembre",
 ];
 
-function getAllIngredientsData() {
-  // var list = []
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Fraise", "category": "fruit", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Carotte", "category": "légume", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Boeuf", "category": "viande", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Poisson", "category": "poisson", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Pate", "category": "epicerie", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // return list.sort(function (a, b) {
-  //     if (a.name < b.name) {
-  //       return -1;
-  //     }
-  //     if (a.name > b.name) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
+function getAllRecettesData() {
   return [
     {
       id: 1,
-      name: "Fraise",
-      category: "fruit",
-      sous_category: "fruit rouge",
-      labels: [
-        { id: 1, name: "AOC" },
-        { id: 2, name: "AOP" },
+      name: "Soupe de poisson",
+      quantity: 1,
+      unit: "littre",
+      genres: [
+        { id: 1, name: "français" },
+        { id: 2, name: "marseille" },
+        { id: 3, name: "mijoté" },
       ],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
+      category: "plat",
+      tastes: [{ id: 1, name: "doux" }],
+      duration: 65,
+      selected_for_menu: true,
+      selling_price: 24.8,
     },
     {
       id: 2,
-      name: "Artichaut",
-      category: "légume",
-      sous_category: "légume feuille",
-      labels: [
-        { id: 1, name: "AOC" },
-        { id: 2, name: "AOC" },
-        { id: 3, name: "AOC" },
-        { id: 4, name: "AOC" },
+      name: "Moelleux au chocolat",
+      quantity: 3,
+      unit: "personnes",
+      genres: [{ id: 1, name: "pâtisserie" }],
+      category: "dessert",
+      tastes: [
+        { id: 1, name: "chocolat" },
+        { id: 2, name: "sucré" },
       ],
-      allergenes: [],
-      season: [
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
+      duration: 25,
+      selected_for_menu: false,
+      selling_price: 16,
     },
     {
       id: 3,
-      name: "Côte de boeuf",
-      category: "viande",
-      sous_category: "viande rouge",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
+      name: "Tartare de saumon",
+      quantity: 6,
+      unit: "personnes",
+      genres: [
+        { id: 1, name: "cru" },
+        { id: 2, name: "poisson" },
       ],
+      category: "entrée",
+      tastes: [
+        { id: 1, name: "relevé" },
+        { id: 2, name: "acide" },
+        { id: 3, name: "croustillant" },
+      ],
+      duration: 40,
+      selected_for_menu: true,
+      selling_price: 20,
     },
     {
       id: 4,
-      name: "Sole",
-      category: "poisson",
-      sous_category: "poisson à chair blanche",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
+      name: "Boeuf bourguignon",
+      quantity: 8,
+      unit: "personnes",
+      genres: [
+        { id: 1, name: "français" },
+        { id: 2, name: "mijoté" },
+        { id: 3, name: "boeuf" },
+        { id: 4, name: "purée" },
       ],
+      category: "plat",
+      tastes: [
+        { id: 1, name: "vin rouge" },
+        { id: 2, name: "mirepois" },
+      ],
+      duration: 250,
+      selected_for_menu: true,
+      selling_price: 22,
     },
     {
       id: 5,
-      name: "Carotte",
-      category: "légume",
-      sous_category: "légume racine",
-      labels: [],
-      allergenes: [
-        { id: 1, name: "lactose" },
-        { id: 2, name: "noix" },
+      name: "Condiment betterave",
+      quantity: 600,
+      unit: "grammes",
+      genres: [],
+      category: "condiment",
+      tastes: [
+        { id: 1, name: "sucré" },
+        { id: 2, name: "fumé" },
       ],
-      season: [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-      ],
+      duration: 20,
+      selected_for_menu: false,
+      selling_price: 5,
     },
     {
       id: 6,
-      name: "Framboise",
-      sous_category: "fruit rouge",
-      category: "fruit",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
+      name: "Ananas rôti",
+      quantity: 2,
+      unit: "personnes",
+      genres: [],
+      category: "dessert",
+      tastes: [
+        { id: 1, name: "sucré" },
+        { id: 2, name: "basilic" },
       ],
+      duration: 45,
+      selected_for_menu: true,
+      selling_price: 14.5,
     },
   ].sort(function (a, b) {
     if (a.name < b.name) {
@@ -199,21 +131,21 @@ function getAllIngredientsData() {
 }
 
 export async function getStaticProps() {
-  const allIngredientsData = getAllIngredientsData();
+  const allRecettesData = getAllRecettesData();
   return {
     props: {
-      allIngredientsData,
+      allRecettesData,
     },
   };
 }
 
 // The initial data needs to be grouped and sorted in alphabetical order so that this alphabetical order is
 // kept across the differents groupings realised by the user.
-function get_initial_data_grouped_and_sorted(allIngredientsData) {
-  const grouped_default_data = allIngredientsData.reduce((group, product) => {
-    const { name } = product;
-    group[name[0]] = group[name[0]] ?? [];
-    group[name[0]].push(product);
+function get_initial_data_grouped_and_sorted(allRecettesData) {
+  const grouped_default_data = allRecettesData.reduce((group, recette) => {
+    const { category } = recette;
+    group[category] = group[category] ?? [];
+    group[category].push(recette);
     return group;
   }, {});
   var default_data = [];
@@ -222,61 +154,56 @@ function get_initial_data_grouped_and_sorted(allIngredientsData) {
     if (grouped_default_data.hasOwnProperty(key)) {
       default_data.push({
         group_name: key,
-        ingredients: grouped_default_data[key],
+        recettes: grouped_default_data[key],
       });
     }
   }
   return default_data;
 }
 
-export default function AllIngredientsDisplay({ allIngredientsData }) {
+export default function AllRecettesDisplay({ allRecettesData }) {
   // State variable for the filtered search modal
   const [modalOpen, setModalOpen] = useState(false);
 
   // State variables for the storage of grouped and sorted data
   const [groupedData, setGroupedData] = useState(
-    get_initial_data_grouped_and_sorted(allIngredientsData)
+    get_initial_data_grouped_and_sorted(allRecettesData)
   );
-  const [filteredData, setFilteredData] = useState(allIngredientsData);
+  const [filteredData, setFilteredData] = useState(allRecettesData);
 
   // State variables to handle the filtered search
   const [groupingField, setGroupingField] = useState("default");
   const [searchString, setSearchString] = useState("");
-  const [allergeneFilter, setAllergeneFilter] = useState("default");
-  const [sousCategoryFilter, setsousCategoryFilter] = useState("default");
-  const [labelFilter, setLabelFilter] = useState("default");
+  const [tasteFilter, setTasteFilter] = useState("default");
+  const [genreFilter, setGenreFilter] = useState("default");
   const [categoryFilter, setCategoryFilter] = useState("default");
-  const [onlySeasonFilter, setOnlySeasonFilter] = useState(false);
-  const [monthFilter, setMonthFilter] = useState("default");
+  const [onTheMenuFilter, setOnTheMenuFilter] = useState(false);
+  //   const [onlySeasonFilter, setOnlySeasonFilter] = useState(false);
+  //   const [monthFilter, setMonthFilter] = useState("default");
 
   // Retrieve all the different categories to display in the filtered search.
   const all_different_categories = Array.from(
-    new Set(allIngredientsData.map((ingredient) => ingredient.category))
+    new Set(allRecettesData.map((recette) => recette.category))
   );
 
   // Retrieve all the different labels to display in the filtered search.
-  const all_different_labels = Array.from(
+  const all_different_tastes = Array.from(
     new Set(
-      allIngredientsData
-        .map((ingredient) => ingredient.labels)
+      allRecettesData
+        .map((recette) => recette.tastes)
         .flat()
-        .map((label) => label.name)
+        .map((taste) => taste.name)
     )
   );
 
   // Retrieve all the different allergenes to display in the filtered search.
-  const all_different_allergenes = Array.from(
+  const all_different_genres = Array.from(
     new Set(
-      allIngredientsData
-        .map((ingredient) => ingredient.allergenes)
+      allRecettesData
+        .map((recette) => recette.genres)
         .flat()
-        .map((allergene) => allergene.name)
+        .map((genre) => genre.name)
     )
-  );
-
-  // Retrieve all the different sous categories to display in the filtered search.
-  const all_different_sous_categories = Array.from(
-    new Set(allIngredientsData.map((ingredient) => ingredient.sous_category))
   );
 
   // Group the filtered data according to a given field.
@@ -287,18 +214,11 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
         group[name[0]] = group[name[0]] ?? [];
         group[name[0]].push(product);
         return group;
-      } else if (groupField) {
-        if (groupField == "category") {
-          const { category } = product;
-          group[category] = group[category] ?? [];
-          group[category].push(product);
-          return group;
-        } else if (groupField == "sous_category") {
-          const { sous_category } = product;
-          group[sous_category] = group[sous_category] ?? [];
-          group[sous_category].push(product);
-          return group;
-        }
+      } else if (groupField == "category") {
+        const { category } = product;
+        group[category] = group[category] ?? [];
+        group[category].push(product);
+        return group;
       }
     }, {});
   }
@@ -309,7 +229,7 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
 
     for (var key in group_data) {
       if (group_data.hasOwnProperty(key)) {
-        dict_to_array.push({ group_name: key, ingredients: group_data[key] });
+        dict_to_array.push({ group_name: key, recettes: group_data[key] });
       }
     }
     return dict_to_array.sort(function (a, b) {
@@ -337,13 +257,10 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
   // Reset all search filters to their default values.
   const resetSearchFilters = () => {
     setSearchString("");
-    setAllergeneFilter("default");
+    setGenreFilter("default");
+    setTasteFilter("default");
     setCategoryFilter("default");
-    setLabelFilter("default");
-    setsousCategoryFilter("default");
-    setMonthFilter("default");
-    setOnlySeasonFilter(false);
-    setModalOpen(true);
+    setOnTheMenuFilter(false);
   };
 
   // Perform a filtered search based on the various filters inputted by the user.
@@ -351,62 +268,68 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
     if (
       searchString != "" ||
       categoryFilter != "default" ||
-      labelFilter != "default" ||
-      allergeneFilter != "default" ||
-      sousCategoryFilter != "default" ||
-      monthFilter != "default" ||
-      onlySeasonFilter
+      tasteFilter != "default" ||
+      genreFilter != "default" ||
+      onTheMenuFilter
     ) {
-      var results = allIngredientsData;
+      var results = allRecettesData;
       if (searchString != "") {
-        results = results.filter((ingredient) => {
-          if (searchString === "") return allIngredientsData;
-          return ingredient.name
+        results = results.filter((recette) => {
+          if (searchString === "") return allRecettesData;
+          return recette.name
             .toLowerCase()
             .includes(searchString.toLowerCase());
         });
       }
       if (categoryFilter != "default") {
         results = results.filter(
-          (ingredient) =>
-            ingredient.category.toLowerCase() === categoryFilter.toLowerCase()
+          (recette) =>
+            recette.category.toLowerCase() === categoryFilter.toLowerCase()
         );
       }
-      if (labelFilter != "default") {
-        results = results.filter((ingredient) =>
-          ingredient.labels.map((label) => label.name).includes(labelFilter)
+      if (genreFilter != "default") {
+        results = results.filter((recette) =>
+          recette.genres.map((genre) => genre.name).includes(genreFilter)
         );
       }
-      if (allergeneFilter != "default") {
-        results = results.filter((ingredient) =>
-          ingredient.allergenes
-            .map((allergene) => allergene.name)
-            .includes(allergeneFilter)
+      if (tasteFilter != "default") {
+        results = results.filter((recette) =>
+          recette.tastes.map((taste) => taste.name).includes(tasteFilter)
         );
       }
-      if (sousCategoryFilter != "default") {
-        results = results.filter(
-          (ingredient) =>
-            ingredient.sous_category.toLowerCase() ===
-            sousCategoryFilter.toLowerCase()
-        );
-      }
-      if (monthFilter != "default") {
-        results = results.filter(
-          (ingredient) => ingredient.season[MONTHS.indexOf(monthFilter)] == true
-        );
-      }
-      if (onlySeasonFilter) {
-        const dateHelper = new Date();
-        const current_month_number = dateHelper.getMonth();
-        results = results.filter(
-          (ingredient) => ingredient.season[current_month_number] == true
-        );
+      if (onTheMenuFilter) {
+        results = results.filter((recette) => recette.selected_for_menu);
       }
       groupIngredientData(results, groupingField);
       setFilteredData(results);
     }
     setModalOpen(!modalOpen);
+  };
+
+  const showMenu = () => {
+    const filtered_data = allRecettesData.filter(
+      (recette) => recette.selected_for_menu
+    );
+    const grouped_data = filtered_data.reduce((group, recette) => {
+      const { category } = recette;
+      group[category] = group[category] ?? [];
+      group[category].push(recette);
+      return group;
+    }, {});
+    var menu_data = [];
+
+    for (var key in grouped_data) {
+      if (grouped_data.hasOwnProperty(key)) {
+        menu_data.push({
+          group_name: key,
+          recettes: grouped_data[key],
+        });
+      }
+    }
+    setGroupedData(menu_data);
+    setFilteredData(filtered_data);
+    resetSearchFilters();
+    setOnTheMenuFilter(true);
   };
 
   return (
@@ -463,97 +386,60 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
                   </select>
                 </div>
                 <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par allergène:</p>
+                  <p style={{ fontSize: 15 }}>Par goût:</p>
                   <select
                     className={"btn col-6 ps-1 ms-2"}
                     style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
                     onChange={(e) => {
-                      setAllergeneFilter(e.target.value);
+                      setTasteFilter(e.target.value);
                     }}
-                    value={allergeneFilter}
+                    value={tasteFilter}
                   >
                     <option disabled value="default">
-                      Nom de l'allergène
+                      Nom du goût
                     </option>
-                    {all_different_allergenes.map((allergene) => (
-                      <option value={allergene}>{allergene}</option>
+                    {all_different_tastes.map((taste) => (
+                      <option value={taste}>{taste}</option>
                     ))}
                   </select>
                 </div>
                 <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par label:</p>
+                  <p style={{ fontSize: 15 }}>Par genre:</p>
                   <select
                     className={"btn col-6 ps-1 ms-2"}
                     style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
                     onChange={(e) => {
-                      setLabelFilter(e.target.value);
+                      setGenreFilter(e.target.value);
                     }}
-                    value={labelFilter}
+                    value={genreFilter}
                   >
                     <option disabled value="default">
-                      Nom du label
+                      Nom du genre
                     </option>
-                    {all_different_labels.map((label) => (
-                      <option value={label}>{label}</option>
+                    {all_different_genres.map((genre) => (
+                      <option value={genre}>{genre}</option>
                     ))}
                   </select>
                 </div>
                 <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par sous catégorie:</p>
-                  <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
-                    onChange={(e) => {
-                      setsousCategoryFilter(e.target.value);
-                    }}
-                    value={sousCategoryFilter}
-                  >
-                    <option disabled value="default">
-                      Nom de la sous catégorie
-                    </option>
-                    {all_different_sous_categories.map((label) => (
-                      <option value={label}>{label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par mois de saisonnalité:</p>
-                  <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
-                    onChange={(e) => {
-                      setMonthFilter(e.target.value);
-                    }}
-                    value={monthFilter}
-                  >
-                    <option disabled value="default">
-                      Nom du mois
-                    </option>
-                    {MONTHS.map((mois) => (
-                      <option value={mois}>{mois}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  {onlySeasonFilter ? (
+                  {onTheMenuFilter ? (
                     <input
                       type="checkbox"
                       id="example_checkbox"
-                      onChange={(event) => setOnlySeasonFilter(true)}
+                      onChange={(event) => setOnTheMenuFilter(false)}
                       checked
                     />
                   ) : (
                     <input
                       type="checkbox"
                       id="example_checkbox"
-                      onChange={(event) => setOnlySeasonFilter(true)}
+                      onChange={(event) => setOnTheMenuFilter(true)}
                     />
                   )}
                   <p style={{ fontSize: 16, marginLeft: "10px" }}>
-                    Seulement les produits actuellement de saison
+                    Seulement les recettes à la carte
                   </p>
                 </div>
-
                 <div className="d-flex flex-row justify-content-end col-12">
                   <button
                     className={"btn"}
@@ -579,6 +465,13 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
               </Button>
             </ModalFooter>
           </Modal>
+          <button
+            className={"btn"}
+            style={{ textDecorationLine: "underline", color: "#6C757D" }}
+            onClick={() => showMenu()}
+          >
+            Afficher la carte
+          </button>
         </div>
         <div className={"col-7 d-flex flex-row justify-content-end"}>
           <button
@@ -586,10 +479,11 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
             style={{ textDecorationLine: "underline", color: "#6C757D" }}
             onClick={() => {
               setGroupedData(
-                get_initial_data_grouped_and_sorted(allIngredientsData)
+                get_initial_data_grouped_and_sorted(allRecettesData)
               );
-              setFilteredData(allIngredientsData);
+              setFilteredData(allRecettesData);
               setGroupingField("default");
+              resetSearchFilters();
             }}
           >
             Réinitialiser
@@ -607,7 +501,6 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
             </option>
             <option value="name">Par nom</option>
             <option value="category">Par catégorie</option>
-            <option value="sous_category">Par sous catégorie</option>
           </select>
         </div>
       </div>
@@ -615,18 +508,18 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
         <div>
           {groupedData.map((group) => (
             <div>
-              <p style={{ background: "#CDCCCD", paddingLeft: "10px" }}>
+              <p
+                style={{
+                  background: "#CDCCCD",
+                  paddingLeft: "10px",
+                  marginTop: "15px",
+                }}
+              >
                 {group.group_name}
               </p>
-              <Table hover>
-                <tbody>
-                  {group.ingredients.map((ingredient) => (
-                    <IngredientListItem
-                      ingredient={ingredient}
-                    ></IngredientListItem>
-                  ))}
-                </tbody>
-              </Table>
+              {group.recettes.map((recette) => (
+                <RecetteListItem recette={recette}></RecetteListItem>
+              ))}
             </div>
           ))}
         </div>

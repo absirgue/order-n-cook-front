@@ -146,7 +146,6 @@ function getIngredientData(id) {
 }
 
 export const getStaticProps = async (context) => {
-  console.log("RUNNING");
   const ingredientID = context.params?.id;
   const ingredientData = getIngredientData(ingredientID);
   return {
@@ -168,7 +167,7 @@ export const getStaticPaths = async () => {
   };
 };
 
-export default function IndividualIngredientPage({ ingredientData }) {
+export default function SingleIngredientPage({ ingredientData }) {
   return (
     <div className="col-12">
       <div className={"d-flex flex-row m-1 mb-2 justify-content-center"}>

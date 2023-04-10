@@ -539,7 +539,7 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
                     <input
                       type="checkbox"
                       id="example_checkbox"
-                      onChange={(event) => setOnlySeasonFilter(true)}
+                      onChange={(event) => setOnlySeasonFilter(false)}
                       checked
                     />
                   ) : (
@@ -590,6 +590,7 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
               );
               setFilteredData(allIngredientsData);
               setGroupingField("default");
+              resetSearchFilters();
             }}
           >
             Réinitialiser
