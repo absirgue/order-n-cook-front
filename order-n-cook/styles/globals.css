@@ -1,0 +1,62 @@
+.btn-primary {
+    background-color: #0085CA;
+    border: 0;
+}
+
+.season-month-circle {
+    width: 8%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #fff;
+    text-align: center;
+    background: #95929c;
+    font-size: 75%;
+    vertical-align: center;
+}
+
+.not-season-month-circle {
+    width: 8%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #ffffff;
+    text-align: center;
+    background: #c2c1d1;
+    font-size: 75%;
+    vertical-align: center;
+}
+
+.this-season-month-circle {
+    width: 8%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #fff;
+    text-align: center;
+    background: #77af85;
+    font-size: 75%;
+    vertical-align: center;
+}
+
+.this-not-season-month-circle {
+    width: 8%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #fff;
+    text-align: center;
+    background: #f19494;
+    font-size: 75%;
+    vertical-align: center;
+}
+
+.emoji_button {
+    background-color: transparent;
+    border-width: 0;
+}
+
+.emoji_button-hover {
+    background-color: #c2c1d1;
+    border-width: 0;
+}
