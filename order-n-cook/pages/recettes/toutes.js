@@ -34,8 +34,23 @@ function getAllRecettesData() {
       tastes: [{ id: 1, name: "doux" }],
       duration: 65,
       selected_for_menu: true,
+      selected_for_next_menu: false,
       selling_price: 24.8,
       allergenes: "noix; lactose",
+      season: [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+      ],
     },
     {
       id: 2,
@@ -50,8 +65,23 @@ function getAllRecettesData() {
       ],
       duration: 25,
       selected_for_menu: false,
+      selected_for_next_menu: true,
       selling_price: 16,
       allergenes: "noix",
+      season: [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+      ],
     },
     {
       id: 3,
@@ -70,9 +100,24 @@ function getAllRecettesData() {
       ],
       duration: 40,
       selected_for_menu: true,
+      selected_for_next_menu: false,
       selling_price: 20,
       allergenes: "gluten",
       is_to_modify: true,
+      season: [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+      ],
     },
     {
       id: 4,
@@ -92,8 +137,23 @@ function getAllRecettesData() {
       ],
       duration: 250,
       selected_for_menu: true,
+      selected_for_next_menu: false,
       selling_price: 22,
       is_to_modify: true,
+      season: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+      ],
     },
     {
       id: 5,
@@ -108,7 +168,22 @@ function getAllRecettesData() {
       ],
       duration: 20,
       selected_for_menu: false,
+      selected_for_next_menu: true,
       selling_price: 5,
+      season: [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+      ],
     },
     {
       id: 6,
@@ -123,7 +198,22 @@ function getAllRecettesData() {
       ],
       duration: 45,
       selected_for_menu: true,
+      selected_for_next_menu: false,
       selling_price: 14.5,
+      season: [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+      ],
     },
   ].sort(function (a, b) {
     if (a.name < b.name) {
@@ -184,6 +274,9 @@ export default function AllRecettesDisplay({ allRecettesData }) {
   const [genreFilter, setGenreFilter] = useState("default");
   const [categoryFilter, setCategoryFilter] = useState("default");
   const [onTheMenuFilter, setOnTheMenuFilter] = useState(false);
+  const [monthFilter, setMonthFilter] = useState("default");
+  const [onNextMenuFilter, setOnNextMenuFilter] = useState(false);
+
   //   const [onlySeasonFilter, setOnlySeasonFilter] = useState(false);
   //   const [monthFilter, setMonthFilter] = useState("default");
 
@@ -267,6 +360,8 @@ export default function AllRecettesDisplay({ allRecettesData }) {
     setTasteFilter("default");
     setCategoryFilter("default");
     setOnTheMenuFilter(false);
+    setMonthFilter("default");
+    setOnNextMenuFilter(false);
   };
 
   // Perform a filtered search based on the various filters inputted by the user.
@@ -276,7 +371,9 @@ export default function AllRecettesDisplay({ allRecettesData }) {
       categoryFilter != "default" ||
       tasteFilter != "default" ||
       genreFilter != "default" ||
-      onTheMenuFilter
+      monthFilter != "default" ||
+      onTheMenuFilter ||
+      onNextMenuFilter
     ) {
       var results = allRecettesData;
       if (searchString != "") {
@@ -286,6 +383,11 @@ export default function AllRecettesDisplay({ allRecettesData }) {
             .toLowerCase()
             .includes(searchString.toLowerCase());
         });
+      }
+      if (monthFilter != "default") {
+        results = results.filter(
+          (recette) => recette.season[MONTHS.indexOf(monthFilter)] == true
+        );
       }
       if (categoryFilter != "default") {
         results = results.filter(
@@ -305,6 +407,9 @@ export default function AllRecettesDisplay({ allRecettesData }) {
       }
       if (onTheMenuFilter) {
         results = results.filter((recette) => recette.selected_for_menu);
+      }
+      if (onNextMenuFilter) {
+        results = results.filter((recette) => recette.selected_for_next_menu);
       }
       groupIngredientData(results, groupingField);
       setFilteredData(results);
@@ -422,6 +527,24 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                     </select>
                   </div>
                   <div className={"d-flex flex-row align-items-baseline"}>
+                    <p style={{ fontSize: 15 }}>Par mois de saisonnalité:</p>
+                    <select
+                      className={"btn col-6 ps-1 ms-2"}
+                      style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                      onChange={(e) => {
+                        setMonthFilter(e.target.value);
+                      }}
+                      value={monthFilter}
+                    >
+                      <option disabled value="default">
+                        Nom du mois
+                      </option>
+                      {MONTHS.map((mois) => (
+                        <option value={mois}>{mois}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={"d-flex flex-row align-items-baseline"}>
                     <p style={{ fontSize: 15 }}>Par genre:</p>
                     <select
                       className={"btn col-6 ps-1 ms-2"}
@@ -456,6 +579,25 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                     )}
                     <p style={{ fontSize: 16, marginLeft: "10px" }}>
                       Seulement les recettes à la carte
+                    </p>
+                  </div>
+                  <div className={"d-flex flex-row align-items-baseline"}>
+                    {onNextMenuFilter ? (
+                      <input
+                        type="checkbox"
+                        id="example_checkbox"
+                        onChange={(event) => setOnNextMenuFilter(false)}
+                        checked
+                      />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        id="example_checkbox"
+                        onChange={(event) => setOnNextMenuFilter(true)}
+                      />
+                    )}
+                    <p style={{ fontSize: 16, marginLeft: "10px" }}>
+                      Seulement les recettes à la prochaine carte
                     </p>
                   </div>
                   <div className="d-flex flex-row justify-content-end col-12">

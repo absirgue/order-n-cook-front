@@ -25,8 +25,9 @@ const PurchaseIngredientHelper = () => {
             className=" close"
             type="button"
             onClick={() => setModalOpen(!modalOpen)}
+            style={{ backgroundColor: "transparent", border: 0 }}
           >
-            <span>×</span>
+            x
           </button>
         </div>
         <ModalBody>... to be implemented ... </ModalBody>

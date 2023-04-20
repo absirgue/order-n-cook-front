@@ -9,6 +9,10 @@ import {
   UncontrolledPopover,
   PopoverHeader,
   PopoverBody,
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownMenu,
 } from "reactstrap";
 import { useState } from "react";
 function getRecetteData(id) {
@@ -18,9 +22,9 @@ function getRecetteData(id) {
     quantity: 1,
     unit: "littre",
     season: [
-      false,
-      false,
       true,
+      false,
+      false,
       false,
       false,
       false,
@@ -43,8 +47,13 @@ function getRecetteData(id) {
     selling_price_ht: 24.8,
     selling_price_ttc: 35.6,
     unit_selling_price_ttc: 35.6,
+    sous_vide_soudure: 3,
+    temperature: 120,
+    sous_vide_pression: 2,
+    selected_for_next_menu: true,
     ingredients_cost: 9.87,
     coefficient: 3.2,
+    is_to_modify: true,
     allergenes: "noix",
     tva: 10,
     ingredients: [
@@ -87,67 +96,68 @@ function getRecetteData(id) {
       },
     ],
     sous_recette: [
-      // {
-      //   name: "condiment betterave",
-      //   quantity: 300,
-      //   unit: "millilittres",
-      //   id: 2,
-      //   allergenes: [{ id: 1, name: "lactose" }],
-      //   cost: 4,
-      // },
+      {
+        name: "condiment betterave",
+        quantity: 300,
+        unit: "millilittres",
+        id: 2,
+        allergenes: [{ id: 1, name: "lactose" }],
+        cost: 4,
+      },
     ],
     sections: [
-      { number: 0, name: "Préparation inventée numéro 1" },
-      { number: 1, name: "préparation inventée numéro 2" },
+      { number: 0, name: "Préparation inventée numéro 1", id: 1 },
+      { number: 1, name: "préparation inventée numéro 2", id: 2 },
+      { number: 2, name: "préparation inventée numéro 3", id: 3 },
     ],
     progression_elements: [
-      // {
-      //   id: 1,
-      //   rank: 0,
-      //   text: "L1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 0,
-      // },
-      // {
-      //   id: 2,
-      //   rank: 1,
-      //   text: "L2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 0,
-      // },
-      // {
-      //   id: 3,
-      //   rank: 2,
-      //   text: "L3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 0,
-      // },
-      // {
-      //   id: 4,
-      //   rank: 3,
-      //   text: "L4: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 0,
-      // },
-      // {
-      //   id: 5,
-      //   rank: 0,
-      //   text: "L5: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 1,
-      // },
-      // {
-      //   id: 6,
-      //   rank: 1,
-      //   text: "L6: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 1,
-      // },
-      // {
-      //   id: 7,
-      //   rank: 2,
-      //   text: "L7: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      //   section: 1,
-      // },
+      {
+        id: 1,
+        rank: 0,
+        text: "L1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 0,
+      },
+      {
+        id: 2,
+        rank: 1,
+        text: "L2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 0,
+      },
+      {
+        id: 3,
+        rank: 2,
+        text: "L3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 0,
+      },
+      {
+        id: 4,
+        rank: 3,
+        text: "L4: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 0,
+      },
+      {
+        id: 5,
+        rank: 0,
+        text: "L5: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 1,
+      },
+      {
+        id: 6,
+        rank: 1,
+        text: "L6: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 1,
+      },
+      {
+        id: 7,
+        rank: 2,
+        text: "L7: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        section: 1,
+      },
       {
         id: 8,
         rank: 3,
         text: "L8:bore et dolore magna aliqua.",
-        // section: 1,
+        section: 1,
       },
     ],
   };
@@ -180,18 +190,20 @@ export default function SingleRecettePage({ recetteData }) {
     alert("Suppression");
   };
   const [showTools, setShowTools] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
     <div className="col-12 d-flex flex-column justify-content-center align-items-center pt-2">
       <div className="col-11 d-flex flew-row justify-content-between mb-4">
-        <div className="d-flex flex-row justify-content-start col-4">
+        <div className="d-flex flex-row justify-content-start col-2">
           <Link href="/recettes/toutes">{"< Voir toutes les recettes"}</Link>
         </div>
-        <div className="d-flex flex-row justify-content-end col-8">
+        <div className="d-flex flex-row justify-content-end col-10 flex-wrap align-content-between">
           {showTools ? (
             <>
               <Button
-                className="me-4"
+                className="me-4 mb-1"
                 style={{
                   textDecoration: "underline",
                   color: "#086EFD",
@@ -203,32 +215,69 @@ export default function SingleRecettePage({ recetteData }) {
                 {"Ranger les outils >"}
               </Button>
               <Button
-                className="btn-danger me-4"
+                className="btn-danger me-4 mb-1"
                 onClick={() => {
                   if (
                     window.confirm(
                       "Êtes-vous sûr de vouloir supprimer cette recette ?"
                     )
                   )
-                    deleteRecette();
+                    if (
+                      window.confirm(
+                        "Cette suppression sera définitive. Confirmez-vous vouloir supprimer cette recette ?"
+                      )
+                    )
+                      deleteRecette();
                 }}
               >
                 Supprimer
               </Button>
+              <Dropdown
+                className={"mb-1 me-4"}
+                isOpen={dropdownOpen}
+                toggle={toggle}
+              >
+                <DropdownToggle className={"btn-success"} caret>
+                  Gérer les cartes
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem
+                    onClick={() => {
+                      window.location.reload(false);
+                      recetteData.selected_for_menu =
+                        !recetteData.selected_for_menu;
+                    }}
+                  >
+                    {recetteData.selected_for_menu
+                      ? "Retirer de la carte"
+                      : "Marquer à la carte"}
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={() => {
+                      window.location.reload(false);
+                      recetteData.selected_for_menu =
+                        !recetteData.selected_for_menu;
+                    }}
+                  >
+                    {recetteData.selected_for_menu
+                      ? "Retirer de la prochaine carte"
+                      : "Marquer à la prochaine carte"}
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
               <Button
-                className="btn-success me-4"
+                className="btn-secondary me-4 mb-1"
                 onClick={() => {
-                  window.location.reload(false);
-                  recetteData.selected_for_menu =
-                    !recetteData.selected_for_menu;
+                  recetteData.is_to_modify = !recetteData.is_to_modify;
                 }}
               >
-                {recetteData.selected_for_menu
-                  ? "Retirer de la carte"
-                  : "Marquer à la carte"}
+                {recetteData.is_to_modify
+                  ? "Plus à modifier"
+                  : "Marquer à modifier"}
               </Button>
-              <Button className="btn-primary me-4">🛒 Commander</Button>
-              <Button className="btn-secondary">🖨 Imprimer</Button>
+
+              <Button className="btn-primary me-4 mb-1">🛒 Commander</Button>
+              <Button className="btn-secondary mb-1">🖨 Imprimer</Button>
             </>
           ) : (
             <Button
@@ -251,17 +300,45 @@ export default function SingleRecettePage({ recetteData }) {
           <div className="col-1"></div>
           <div className="d-flex flex-column justify-content-center align-items-center mb-3 col-10">
             <h4 style={{ marginBottom: "0px" }}>{recetteData.name}</h4>
-            {recetteData.selected_for_menu ? (
-              <p
-                className="align-self-center"
-                style={{
-                  color: "#f19494",
-                  marginBottom: "0px",
-                  marginLeft: "15px",
-                }}
-              >
-                (à la carte)
-              </p>
+            <div className="col-12 d-flex flez-row justify-content-center">
+              {recetteData.selected_for_menu ? (
+                <p
+                  className="align-self-center me-4"
+                  style={{
+                    color: "#f19494",
+                    marginBottom: "0px",
+                    marginLeft: "15px",
+                  }}
+                >
+                  (à la carte)
+                </p>
+              ) : null}
+              {recetteData.selected_for_next_menu ? (
+                <p
+                  className="align-self-center me-4"
+                  style={{
+                    color: "#77af85",
+                    marginBottom: "0px",
+                    marginLeft: "15px",
+                  }}
+                >
+                  (à la prochaine carte)
+                </p>
+              ) : null}
+            </div>
+            {recetteData.is_to_modify ? (
+              <div className="col-12 d-flex flex-row justify-content-center align-items-baseline">
+                <i
+                  className="me-2"
+                  style={{
+                    marginBottom: "0px",
+                    fontWeight: "800",
+                    color: "red",
+                  }}
+                >
+                  À Modifier
+                </i>
+              </div>
             ) : null}
           </div>
           <div className="col-1 d-flex flex-row justify-content-end align-items-start">
@@ -310,28 +387,6 @@ export default function SingleRecettePage({ recetteData }) {
           ></PricingInformationComponent>
         </div> */}
         <div className="col-lg-11 col-12">
-          <div className="col-12 d-flex flex-column justify-content-start mt-3 mb-3">
-            {recetteData.allergenes ? (
-              <div className="col-12 d-flex flex-row justify-content-start align-items-baseline">
-                <i className="me-2" style={{ marginBottom: "0px" }}>
-                  Allergènes:
-                </i>
-                <p style={{ marginBottom: "0px" }}>{recetteData.allergenes}</p>
-              </div>
-            ) : (
-              <i style={{ marginBottom: "0px" }}>Aucun allergène</i>
-            )}
-            <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-              <i className="me-2" style={{ marginBottom: "0px" }}>
-                Saisonnalité:
-              </i>
-              <div className="col-5">
-                <SeasonnalityDisplay
-                  ingredient_data={recetteData}
-                ></SeasonnalityDisplay>
-              </div>
-            </div>
-          </div>
           {/* Ingrédients */}
           <AllRecetteIngredientsDisplay
             recette={recetteData}

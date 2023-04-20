@@ -5,7 +5,7 @@ const ProgressionElementEditHelper = ({ progression_element }) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const handleEditSubmission = async (event) => {
     event.preventDefault();
-    console.log("EDITED");
+
     console.log(event.target.id.value);
   };
   return (
@@ -27,8 +27,9 @@ const ProgressionElementEditHelper = ({ progression_element }) => {
             className=" close"
             type="button"
             onClick={() => setOpenEditModal(!openEditModal)}
+            style={{ backgroundColor: "transparent", border: 0 }}
           >
-            <span>×</span>
+            x
           </button>
         </div>
         <form

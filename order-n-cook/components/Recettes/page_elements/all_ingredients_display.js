@@ -1,7 +1,9 @@
 import { Table } from "reactstrap";
 import RecetteIngredientListItem from "./recette_ingredient_list_item";
-import AddIngredient from "./edit_only/add_ingredient";
-import AddSection from "./edit_only/add_section";
+import AddIngredient from "./edit_only/add_buttons/add_ingredient";
+import AddSection from "./edit_only/add_buttons/add_section";
+import { useState } from "react";
+
 function get_ingredient_data_grouped_and_sorted(recette) {
   if (recette.ingredients) {
     const grouped_default_data = recette.ingredients.reduce(
@@ -43,6 +45,14 @@ function get_ingredient_data_grouped_and_sorted(recette) {
 const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
   const grouped_ingredient_data =
     get_ingredient_data_grouped_and_sorted(recette);
+  const [allSections, setAllSections] = useState(
+    recette.sections.filter(
+      (section) =>
+        recette.ingredients
+          .map((element) => element.section)
+          .indexOf(section.number) >= 0
+    )
+  );
 
   return (
     <div className="d-flex flex-column justify-content-start align-items-center col-12 mt-4">
@@ -73,6 +83,7 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                         ingredient={ingredient}
                         key={ingredient.id}
                         is_edit={is_edit}
+                        all_sections={allSections}
                       ></RecetteIngredientListItem>
                     );
                   })}

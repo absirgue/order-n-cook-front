@@ -1,7 +1,12 @@
 import { Button } from "reactstrap";
-import ProgressionElementEditHelper from "./progression_element_edit_dialog";
-import AddSection from "./edit_only/add_section";
-import AddProgressionElement from "./edit_only/add_progression_element";
+import ProgressionElementEditHelper from "./edit_only/modification_buttons/progression_element_edit_dialog";
+import AddSection from "./edit_only/add_buttons/add_section";
+import AddProgressionElement from "./edit_only/add_buttons/add_progression_element";
+import DeleteButton from "./edit_only/modification_buttons/delete_button";
+import ChangeSectionButton from "./edit_only/modification_buttons/change_section_button";
+import FlecheHautButton from "./edit_only/modification_buttons/fleche_haut";
+import FlecheBasButton from "./edit_only/modification_buttons/fleche_bas";
+import { useState } from "react";
 var Reorder = require("react-reorder");
 function get_progression_data_grouped_and_sorted(recette) {
   const grouped_default_data = recette.progression_elements.reduce(
@@ -24,6 +29,12 @@ function get_progression_data_grouped_and_sorted(recette) {
       if (related_section) {
         default_data.push({
           section_name: related_section.name,
+          section_min_rank: Math.min(
+            ...grouped_default_data[key].map((section) => section.rank)
+          ),
+          section_max_rank: Math.max(
+            ...grouped_default_data[key].map((section) => section.rank)
+          ),
           progression_elements: grouped_default_data[key].sort(function (a, b) {
             if (a.rank < b.rank) {
               return -1;
@@ -45,9 +56,14 @@ function get_progression_data_grouped_and_sorted(recette) {
 }
 
 const ProgressionDisplay = ({ recette, is_edit = false }) => {
-  const deleteProgressionElement = () => {
-    window.alert("Supression");
-  };
+  const [allSections, setAllSections] = useState(
+    recette.sections.filter(
+      (section) =>
+        recette.progression_elements
+          .map((element) => element.section)
+          .indexOf(section.number) >= 0
+    )
+  );
 
   const grouped_progression_data =
     get_progression_data_grouped_and_sorted(recette);
@@ -82,32 +98,47 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                             key={"edit_" + progression_element.id}
                           >
                             <p
-                              className="col-11"
+                              className="col-10"
                               key={"edit_text_" + progression_element.id}
                             >
                               {progression_element.rank +
                                 ". " +
                                 progression_element.text}
                             </p>
-                            <div className="col-1">
+                            <div className={"col-1 d-flex flex-row"}>
+                              <ChangeSectionButton
+                                is_progression={true}
+                                all_sections={allSections}
+                                element={progression_element}
+                              ></ChangeSectionButton>
+                              <div
+                                className={
+                                  "d-flex flex-column justify-content-center"
+                                }
+                              >
+                                {progression_element.rank ==
+                                group.section_min_rank ? null : (
+                                  <FlecheHautButton
+                                    element={progression_element}
+                                  ></FlecheHautButton>
+                                )}
+                                {progression_element.rank ==
+                                group.section_max_rank ? null : (
+                                  <FlecheBasButton
+                                    element={progression_element}
+                                  ></FlecheBasButton>
+                                )}
+                              </div>
+                            </div>
+                            <div className="col-1 d-flex flez-row align-items-center">
                               <ProgressionElementEditHelper
                                 progression_element={progression_element}
                                 key={"edit_" + progression_element.id}
                               ></ProgressionElementEditHelper>
-                              <Button
-                                className="emoji_button col-6"
-                                key={"delete_button" + progression_element.id}
-                                onClick={() => {
-                                  if (
-                                    window.confirm(
-                                      "Êtes-vous sûr de vouloir supprimer cet élément de progression ?"
-                                    )
-                                  )
-                                    deleteProgressionElement();
-                                }}
-                              >
-                                🗑
-                              </Button>
+                              <DeleteButton
+                                element={progression_element}
+                                is_progression={true}
+                              ></DeleteButton>
                             </div>
                           </div>
                         </div>
@@ -144,7 +175,9 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
           </>
         )}
       </div>
-      {is_edit ? <AddSection></AddSection> : null}
+      {is_edit ? (
+        <AddSection unused_sections={[{ name: "hello", id: 1 }]}></AddSection>
+      ) : null}
     </div>
   );
 };

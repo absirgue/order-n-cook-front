@@ -20,6 +20,23 @@ function getRecetteData(id) {
     duration: 75,
     selected_for_menu: true,
     selling_price_ht: 24.8,
+    sous_vide_soudure: 3,
+    temperature: 120,
+    season: [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+    ],
+    sous_vide_pression: 2,
     selling_price_ttc: 35.6,
     unit_selling_price_ttc: 35.6,
     ingredients_cost: 9.87,
@@ -75,8 +92,9 @@ function getRecetteData(id) {
       },
     ],
     sections: [
-      { number: 0, name: "Préparation inventée numéro 1" },
-      { number: 1, name: "préparation inventée numéro 2" },
+      { number: 0, name: "Préparation inventée numéro 1", id: 1 },
+      { number: 1, name: "préparation inventée numéro 2", id: 2 },
+      { number: 2, name: "préparation inventée numéro 3", id: 3 },
     ],
     progression_elements: [
       {
@@ -164,7 +182,6 @@ const handleSubmit = async (event) => {
   }
 
   const JSONdata = JSON.stringify(data);
-  console.log(JSONdata);
 
   // API endpoint where we send form data.
   // const endpoint = "/api/form";

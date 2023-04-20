@@ -6,7 +6,8 @@ import {
   PopoverHeader,
   PopoverBody,
 } from "reactstrap";
-import RecetteComponentModifier from "./recette_component_modifier";
+import RecetteComponentModifier from "./edit_only/modification_buttons/recette_component_modifier";
+import DeleteButton from "./edit_only/modification_buttons/delete_button";
 const SousRecetteListItem = ({ sous_recette, is_edit = false }) => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const deleteSousRecette = () => {
@@ -60,21 +61,10 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false }) => {
             ></RecetteComponentModifier>
           </td>
           <td className={"col-1"}>
-            <Button
-              className="emoji_button"
-              onClick={() => {
-                if (
-                  window.confirm(
-                    'Êtes-vous sûr de vouloir supprimer la sous recette "' +
-                      sous_recette.name.toLowerCase() +
-                      '" de cette recette ?'
-                  )
-                )
-                  deleteSousRecette();
-              }}
-            >
-              🗑
-            </Button>
+            <DeleteButton
+              element={sous_recette}
+              is_sous_recette={true}
+            ></DeleteButton>
           </td>
         </>
       ) : (

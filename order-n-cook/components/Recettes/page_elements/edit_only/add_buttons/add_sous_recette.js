@@ -5,25 +5,24 @@ import Select from "react-select";
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const AddIngredient = ({ section_id, sans_section = false }) => {
+const AddSousRecette = ({ section_id }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedIngredient, setSelectedIngredient] = React.useState("");
+  const [selectedRecette, setSelectedRecette] = React.useState("");
   const [selectedUnit, setSelectedUnit] = React.useState("default");
-  const [createNewIngredient, setCreateNewIngredient] = React.useState(false);
 
   const possible_units = ["kilogramme", "gramme", "littre"];
-  const all_existing_ingredients = [
-    { name: "sole", id: 1 },
-    { name: "banane", id: 2 },
-    { name: "pomme de terre", id: 3 },
-    { name: "sel", id: 4 },
-    { name: "beurre", id: 5 },
+  const all_existing_recettes = [
+    { name: "Recette n1", id: 1 },
+    { name: "Recette n2", id: 2 },
+    { name: "Recette n3", id: 3 },
+    { name: "Recette n4", id: 4 },
+    { name: "Recette n5", id: 5 },
   ];
-  const ingredient_options = [];
+  const recette_options = [];
 
   const generate_option_list = () => {
-    all_existing_ingredients.forEach((ingredient) =>
-      ingredient_options.push({ value: ingredient.id, label: ingredient.name })
+    all_existing_recettes.forEach((recette) =>
+      recette_options.push({ value: recette.id, label: recette.name })
     );
   };
   generate_option_list();
@@ -34,25 +33,17 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
 
     // Get data from the form.
     let data = {};
-    if (event.target.unit.value) {
+    if (event.target.unit && event.target.unit.value) {
       data["unit"] = event.target.unit.value;
     }
-    if (event.target.quantity.value) {
+    if (event.target.quantity && event.target.quantity.value) {
       data["quantity"] = event.target.quantity.value;
     }
-    if (event.target.note.value) {
+    if (event.target.note && event.target.note.value) {
       data["note"] = event.target.note.value;
-    }
-    try {
-      if (event.target.ingredient_name.value) {
-        data["ingredient_name"] = event.target.ingredient_name.value;
-      }
-    } catch {
-      // no new ingredient was created
     }
 
     const JSONdata = JSON.stringify(data);
-    console.log(JSONdata);
 
     // API endpoint where we send form data.
     // const endpoint = "/api/form";
@@ -78,39 +69,33 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
     alert(`Data: ${JSONdata}`);
   };
 
-  const resetSelections = () => {
-    console.log("CALLED RESET");
-    setSelectedIngredient("");
+  const resetSelection = () => {
+    setSelectedRecette("");
     setSelectedUnit("default");
-    setCreateNewIngredient(false);
   };
 
   return (
     <>
       <Button
-        className="btn btn-primary mb-2"
+        className="btn btn-primary mb-2 col-12"
         onClick={() => setModalOpen(!modalOpen)}
       >
-        Ajouter un ingrédient{sans_section ? null : " à cette section"}
+        Ajouter une sous recette
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
-          <h5 className="modal-title">
-            {createNewIngredient
-              ? "Créer un nouvel ingrédient et l'ajouter à la section"
-              : "Ajouter un ingrédient"}
-            {!createNewIngredient && sans_section ? null : " à cette section"}
-          </h5>
+          <h5 className="modal-title">Ajouter une sous recette</h5>
           <button
             aria-label="Close"
             className=" close"
             type="button"
             onClick={() => {
               setModalOpen(!modalOpen);
-              resetSelections();
+              resetSelection();
             }}
+            style={{ backgroundColor: "transparent", border: 0 }}
           >
-            <span>×</span>
+            x
           </button>
         </div>
         <form
@@ -121,60 +106,15 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
             <div className="d-flex flex-column">
               <div className="d-flex flex-column justify-content-start col-12 align-items-start">
                 <div className="d-flex flex-row justify-content-between col-12">
-                  {createNewIngredient ? (
-                    <>
-                      <input
-                        className="col-11 mb-2"
-                        type="text"
-                        id="ingredient_name"
-                        name="ingredient_name"
-                        style={{
-                          backgroundColor: "transparent",
-                          borderWidth: "1px",
-                          borderRadius: 5,
-                          textAlign: "start",
-                          height: "40px",
-                          paddingLeft: "5px",
-                        }}
-                        placeholder="Le nom d'un nouvel ingrédient"
-                        required
-                      />
-                      <Button
-                        type="button"
-                        className="btn btn-primary"
-                        style={{ aspectRatio: "1/1" }}
-                        onClick={() => {
-                          setCreateNewIngredient(!createNewIngredient);
-                        }}
-                      >
-                        {"<"}
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <Select
-                        className="col-11 mb-2"
-                        options={ingredient_options}
-                        placeholder="Choisir un ingrédient"
-                        isSearchable={true}
-                        value={selectedIngredient}
-                        onChange={(data) => setSelectedIngredient(data)}
-                        required
-                      />
-                      <Button
-                        type="button"
-                        className="btn btn-primary"
-                        style={{ aspectRatio: "1/1" }}
-                        onClick={() => {
-                          console.log("HERE");
-                          setCreateNewIngredient(!createNewIngredient);
-                        }}
-                      >
-                        {"+"}
-                      </Button>
-                    </>
-                  )}
+                  <Select
+                    className="col-12 mb-2"
+                    options={recette_options}
+                    placeholder="Choisir une recette"
+                    isSearchable={true}
+                    value={selectedRecette}
+                    onChange={(data) => setSelectedRecette(data)}
+                    required
+                  />
                 </div>
 
                 <div className="d-flex flex-row justify-content-start align-items-baseline">
@@ -195,12 +135,12 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                   />
                   <select
                     className={"btn col-6 ps-1 ms-2"}
-                    name="unit"
                     style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
                     value={selectedUnit}
                     onChange={(e) => {
                       setSelectedUnit(e.target.value);
                     }}
+                    name="unit"
                     required
                   >
                     <option disabled value="default">
@@ -238,7 +178,7 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
               type="button"
               onClick={() => {
                 setModalOpen(!modalOpen);
-                resetSelections();
+                resetSelection();
               }}
             >
               Fermer
@@ -250,4 +190,4 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
   );
 };
 
-export default AddIngredient;
+export default AddSousRecette;

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import PurchaseIngredientHelper from "../../Ingredients/Ingredients/modals/purchase_ingredient_modal";
-import RecetteComponentModifier from "./recette_component_modifier";
+import RecetteComponentModifier from "./edit_only/modification_buttons/recette_component_modifier";
+import DeleteButton from "./edit_only/modification_buttons/delete_button";
+import ChangeSectionButton from "./edit_only/modification_buttons/change_section_button";
 import {
   Button,
   UncontrolledPopover,
@@ -9,7 +11,11 @@ import {
   PopoverBody,
 } from "reactstrap";
 
-const RecetteIngredientListItem = ({ ingredient, is_edit = false }) => {
+const RecetteIngredientListItem = ({
+  ingredient,
+  is_edit = false,
+  all_sections,
+}) => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const deleteIngredient = () => {
     alert("Suppression");
@@ -63,28 +69,25 @@ const RecetteIngredientListItem = ({ ingredient, is_edit = false }) => {
       </td>
       {is_edit ? (
         <>
-          <td className={"col-1"}>{/* Empty on purpose */}</td>
-          <td className={"col-1"}>
+          <td className={"col-1"}></td>
+          <td className={"col-1"} style={{ verticalAlign: "middle" }}>
+            <ChangeSectionButton
+              is_ingredient={true}
+              all_sections={all_sections}
+              element={ingredient}
+            ></ChangeSectionButton>
+          </td>
+
+          <td className={"col-1"} style={{ verticalAlign: "middle" }}>
             <RecetteComponentModifier
               component={ingredient}
             ></RecetteComponentModifier>
           </td>
-          <td className={"col-1"}>
-            <Button
-              className="emoji_button"
-              onClick={() => {
-                if (
-                  window.confirm(
-                    "Êtes-vous sûr de vouloir supprimer l'ingrédient \"" +
-                      ingredient.name.toLowerCase() +
-                      '" de cette recette ?'
-                  )
-                )
-                  deleteIngredient();
-              }}
-            >
-              🗑
-            </Button>
+          <td className={"col-1"} style={{ verticalAlign: "middle" }}>
+            <DeleteButton
+              element={ingredient}
+              is_ingredient={true}
+            ></DeleteButton>
           </td>
         </>
       ) : (

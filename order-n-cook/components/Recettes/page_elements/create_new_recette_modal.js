@@ -18,7 +18,6 @@ const CreateNewRecetteButton = ({ component, is_sous_recette = false }) => {
     }
 
     const JSONdata = JSON.stringify(data);
-    console.log(JSONdata);
 
     // API endpoint where we send form data.
     // const endpoint = "/api/form";
@@ -57,8 +56,9 @@ const CreateNewRecetteButton = ({ component, is_sous_recette = false }) => {
             className=" close"
             type="button"
             onClick={() => setModalOpen(!modalOpen)}
+            style={{ backgroundColor: "transparent", border: 0 }}
           >
-            <span>×</span>
+            x
           </button>
         </div>
         <form

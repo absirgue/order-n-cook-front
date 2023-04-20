@@ -48,16 +48,10 @@ const RecetteListItem = ({ recette }) => {
                   color="white"
                   type="button"
                   id={"to-modify" + recette.id}
+                  title="Recette à modifier"
                 >
                   ❗️
                 </Button>
-                <UncontrolledPopover
-                  placement="bottom"
-                  target={"to-modify" + recette.id}
-                  trigger="legacy"
-                >
-                  <PopoverBody>Recette à modifier</PopoverBody>
-                </UncontrolledPopover>
               </div>
             ) : null}
           </div>

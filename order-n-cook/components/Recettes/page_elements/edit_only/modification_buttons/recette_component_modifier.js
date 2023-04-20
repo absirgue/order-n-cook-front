@@ -1,50 +1,35 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
-import Select from "react-select";
+
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const AddSousRecette = ({ section_id }) => {
+const RecetteComponentModifier = ({ component, is_sous_recette = false }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedRecette, setSelectedRecette] = React.useState("");
   const [selectedUnit, setSelectedUnit] = React.useState("default");
 
   const possible_units = ["kilogramme", "gramme", "littre"];
-  const all_existing_recettes = [
-    { name: "Recette n1", id: 1 },
-    { name: "Recette n2", id: 2 },
-    { name: "Recette n3", id: 3 },
-    { name: "Recette n4", id: 4 },
-    { name: "Recette n5", id: 5 },
-  ];
-  const recette_options = [];
-
-  const generate_option_list = () => {
-    all_existing_recettes.forEach((recette) =>
-      recette_options.push({ value: recette.id, label: recette.name })
-    );
-  };
-  generate_option_list();
-
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
 
     // Get data from the form.
     let data = {};
-    if (event.target.unit.value) {
+    if (event.target.unit.value && event.target.unit.value != component.unit) {
       data["unit"] = event.target.unit.value;
     }
-    if (event.target.quantity.value) {
+    if (
+      event.target.quantity.value &&
+      event.target.quantity.value != component.quantity
+    ) {
       data["quantity"] = event.target.quantity.value;
     }
-    if (event.target.note.value) {
+    if (event.target.note.value && event.target.note.value != component.note) {
       data["note"] = event.target.note.value;
     }
 
     const JSONdata = JSON.stringify(data);
-    console.log(JSONdata);
 
     // API endpoint where we send form data.
     // const endpoint = "/api/form";
@@ -70,32 +55,25 @@ const AddSousRecette = ({ section_id }) => {
     alert(`Data: ${JSONdata}`);
   };
 
-  const resetSelection = () => {
-    setSelectedRecette("");
-    setSelectedUnit("default");
-  };
-
   return (
     <>
-      <Button
-        className="btn btn-primary mb-2 col-12"
-        onClick={() => setModalOpen(!modalOpen)}
-      >
-        Ajouter une sous recette
+      <Button className="emoji_button" onClick={() => setModalOpen(!modalOpen)}>
+        🖊
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
-          <h5 className="modal-title">Ajouter une sous recette</h5>
+          <h5 className="modal-title">
+            Modifier {is_sous_recette ? " la sous recette " : " l'ingrédient "}
+            {component.name.toLowerCase()}
+          </h5>
           <button
             aria-label="Close"
             className=" close"
             type="button"
-            onClick={() => {
-              setModalOpen(!modalOpen);
-              resetSelection();
-            }}
+            onClick={() => setModalOpen(!modalOpen)}
+            style={{ backgroundColor: "transparent", border: 0 }}
           >
-            <span>×</span>
+            x
           </button>
         </div>
         <form
@@ -105,18 +83,6 @@ const AddSousRecette = ({ section_id }) => {
           <ModalBody>
             <div className="d-flex flex-column">
               <div className="d-flex flex-column justify-content-start col-12 align-items-start">
-                <div className="d-flex flex-row justify-content-between col-12">
-                  <Select
-                    className="col-12 mb-2"
-                    options={recette_options}
-                    placeholder="Choisir une recette"
-                    isSearchable={true}
-                    value={selectedRecette}
-                    onChange={(data) => setSelectedRecette(data)}
-                    required
-                  />
-                </div>
-
                 <div className="d-flex flex-row justify-content-start align-items-baseline">
                   <label htmlFor="quantity">Quantité:</label>
                   <input
@@ -130,11 +96,14 @@ const AddSousRecette = ({ section_id }) => {
                       textAlign: "end",
                       width: "100px",
                     }}
-                    placeholder={"3"}
-                    required
-                  />
+                    defaultValue={
+                      component.quantity ? component.quantity.toString() : null
+                    }
+                    placeholder={component.quantity ? "" : "quantité?"}
+                  ></input>
                   <select
                     className={"btn col-6 ps-1 ms-2"}
+                    name="unit"
                     style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
                     value={selectedUnit}
                     onChange={(e) => {
@@ -150,23 +119,23 @@ const AddSousRecette = ({ section_id }) => {
                     ))}
                   </select>
                 </div>
-
-                <div className="d-flex flex-row justify-content-start mt-2">
-                  <label htmlFor="note" className="col-3">
-                    Note (optionnel):
-                  </label>
-                  <textarea
-                    id="note"
-                    name="note"
-                    rows="2"
-                    cols="50"
-                    className="col-9"
-                    placeholder="émondées"
-                  />
-                </div>
               </div>
-              <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
+              <div className="d-flex flex-row justify-content-start mt-2">
+                <label htmlFor="note" className="col-3">
+                  Note (optionnel):
+                </label>
+                <textarea
+                  id="note"
+                  name="note"
+                  rows="2"
+                  cols="50"
+                  className="col-9"
+                >
+                  {component.note}
+                </textarea>
+              </div>
             </div>
+            <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
           </ModalBody>
           <ModalFooter>
             <button className="btn btn-primary" type="submit">
@@ -175,10 +144,7 @@ const AddSousRecette = ({ section_id }) => {
             <Button
               className="btn-secondary"
               type="button"
-              onClick={() => {
-                setModalOpen(!modalOpen);
-                resetSelection();
-              }}
+              onClick={() => setModalOpen(!modalOpen)}
             >
               Fermer
             </Button>
@@ -189,4 +155,4 @@ const AddSousRecette = ({ section_id }) => {
   );
 };
 
-export default AddSousRecette;
+export default RecetteComponentModifier;

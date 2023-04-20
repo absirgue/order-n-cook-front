@@ -14,12 +14,14 @@ const AddProgressionElement = ({ sans_section = false }) => {
 
     // Get data from the form.
     let data = {};
-    if (event.target.progression_element.value) {
+    if (
+      event.target.progression_element &&
+      event.target.progression_element.value
+    ) {
       data["progression_element"] = event.target.progression_element.value;
     }
 
     const JSONdata = JSON.stringify(data);
-    console.log(JSONdata);
 
     // API endpoint where we send form data.
     // const endpoint = "/api/form";
@@ -52,7 +54,7 @@ const AddProgressionElement = ({ sans_section = false }) => {
         onClick={() => setModalOpen(!modalOpen)}
       >
         Ajouter un élément de progression 
-        {sans_section ? null : " à cette section"}
+        {sans_section ? null : "à cette section"}
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
@@ -65,8 +67,9 @@ const AddProgressionElement = ({ sans_section = false }) => {
             className=" close"
             type="button"
             onClick={() => setModalOpen(!modalOpen)}
+            style={{ backgroundColor: "transparent", border: 0 }}
           >
-            <span>×</span>
+            x
           </button>
         </div>
         <form

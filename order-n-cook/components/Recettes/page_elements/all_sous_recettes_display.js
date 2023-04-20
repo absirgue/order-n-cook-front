@@ -1,6 +1,6 @@
 import { Table } from "reactstrap";
 import SousRecetteListItem from "./sous_recette_list_item";
-import AddSousRecette from "./edit_only/add_sous_recette";
+import AddSousRecette from "./edit_only/add_buttons/add_sous_recette";
 const AllSousRecettesDisplay = ({ recette, is_edit = false }) => {
   return (
     <>
