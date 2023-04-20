@@ -10,25 +10,25 @@ const SeasonnalityDisplay = ({ ingredient_data }) => {
       {get_season_symbol_list(ingredient_data).map((month_data) => {
         if (month_data.status == 1) {
           return (
-            <div class="this-season-month-circle d-flex flex-column justify-content-center">
+            <div className="this-season-month-circle d-flex flex-column justify-content-center">
               {month_data.month}
             </div>
           );
         } else if (month_data.status == 2) {
           return (
-            <div class="season-month-circle d-flex flex-column justify-content-center">
+            <div className="season-month-circle d-flex flex-column justify-content-center">
               {month_data.month}
             </div>
           );
         } else if (month_data.status == 3) {
           return (
-            <div class="this-not-season-month-circle d-flex flex-column justify-content-center">
+            <div className="this-not-season-month-circle d-flex flex-column justify-content-center">
               {month_data.month}
             </div>
           );
         } else {
           return (
-            <div class="not-season-month-circle d-flex flex-column justify-content-center">
+            <div className="not-season-month-circle d-flex flex-column justify-content-center">
               {month_data.month}
             </div>
           );

@@ -29,8 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/_app.js",
-    "pages/ingredients/all.js",
-    "pages/ingredients/all.js",
+    "pages/ingredients/tous.js",
+    "pages/ingredients/tous.js",
     "pages/ingredients/[id].js"
   ],
   "exclude": [
