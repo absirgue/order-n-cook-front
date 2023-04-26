@@ -1,11 +1,14 @@
 import { Button } from "reactstrap";
+import { useSWRConfig } from "swr";
 
 const DeleteButton = ({
   is_progression = false,
   is_ingredient = false,
   is_sous_recette = false,
   element,
+  recette_id,
 }) => {
+  const { mutate } = useSWRConfig();
   let delete_confirmation_text = "";
   if (is_progression) {
     delete_confirmation_text =
@@ -20,8 +23,36 @@ const DeleteButton = ({
       '" de cette recette ?';
   }
 
-  const deleteItem = () => {
-    alert("Suppression " + element.name);
+  const deleteItem = async () => {
+    console.log("ELEMENT");
+    console.log(element);
+    let endpoint = "http://127.0.0.1:8000/api/";
+    if (is_ingredient) {
+      endpoint += "recette_ingredients/";
+    } else if (is_progression) {
+      endpoint += "recette_progression/";
+    }
+    endpoint += element.id;
+    console.log("ENDPOINT");
+    console.log(endpoint);
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: "DELETE",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+    };
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options);
+    if (response.status == 204) {
+      mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
+    } else {
+      alert("Une erreur est survenue. Merci de réessayer plus tard.");
+    }
   };
   return (
     <Button

@@ -7,63 +7,151 @@ import ChangeSectionButton from "./edit_only/modification_buttons/change_section
 import FlecheHautButton from "./edit_only/modification_buttons/fleche_haut";
 import FlecheBasButton from "./edit_only/modification_buttons/fleche_bas";
 import { useState } from "react";
-var Reorder = require("react-reorder");
-function get_progression_data_grouped_and_sorted(recette) {
-  const grouped_default_data = recette.progression_elements.reduce(
-    (group, product) => {
-      const { section } = product;
-      group[section] = group[section] ?? [];
-      group[section].push(product);
-      return group;
-    },
-    {}
-  );
-  grouped_default_data;
-  var default_data = [];
 
-  for (var key in grouped_default_data) {
-    if (grouped_default_data.hasOwnProperty(key)) {
-      const related_section = recette.sections.filter(
-        (section) => section.number == key
-      )[0];
-      if (related_section) {
-        default_data.push({
-          section_name: related_section.name,
-          section_min_rank: Math.min(
-            ...grouped_default_data[key].map((section) => section.rank)
-          ),
-          section_max_rank: Math.max(
-            ...grouped_default_data[key].map((section) => section.rank)
-          ),
-          progression_elements: grouped_default_data[key].sort(function (a, b) {
-            if (a.rank < b.rank) {
-              return -1;
-            }
-            if (a.rank > b.rank) {
-              return 1;
-            }
-            return 0;
-          }),
-        });
+function get_progression_data_grouped_and_sorted(recette) {
+  console.log("CALLED GROUP DATA");
+  if (recette.progression_elements && recette.progression_elements.length > 0) {
+    const grouped_default_data = recette.progression_elements.reduce(
+      (group, product) => {
+        const { section } = product;
+        group[section] = group[section] ?? [];
+        group[section].push(product);
+        return group;
+      },
+      {}
+    );
+    console.log("GROUPED DEFAULT DATA");
+    console.log(grouped_default_data);
+    var default_data = [];
+
+    for (var key in grouped_default_data) {
+      if (
+        grouped_default_data.hasOwnProperty(key) &&
+        recette.sections.length > 0
+      ) {
+        console.log("ENTERED");
+        const related_section = recette.sections.filter(
+          (section) => section.number == key
+        )[0];
+        if (related_section) {
+          default_data.push({
+            section_name: related_section.name,
+            section_number: related_section.number,
+            section_min_rank: Math.min(
+              ...grouped_default_data[key].map((section) => section.rank)
+            ),
+            section_max_rank: Math.max(
+              ...grouped_default_data[key].map((section) => section.rank)
+            ),
+            progression_elements: grouped_default_data[key].sort(function (
+              a,
+              b
+            ) {
+              if (a.rank < b.rank) {
+                return -1;
+              }
+              if (a.rank > b.rank) {
+                return 1;
+              }
+              return 0;
+            }),
+          });
+        } else {
+          console.log("YA PAS DE SECTION");
+          default_data.push({
+            progression_elements: grouped_default_data[key].sort(function (
+              a,
+              b
+            ) {
+              if (a.rank < b.rank) {
+                return -1;
+              }
+              if (a.rank > b.rank) {
+                return 1;
+              }
+              return 0;
+            }),
+          });
+        }
       } else {
-        default_data.push({
-          progression_elements: grouped_default_data[key],
-        });
+        for (var value in grouped_default_data) {
+          if (grouped_default_data.hasOwnProperty(key)) {
+            default_data.push({
+              progression_elements: grouped_default_data[key].sort(function (
+                a,
+                b
+              ) {
+                if (a.rank < b.rank) {
+                  return -1;
+                }
+                if (a.rank > b.rank) {
+                  return 1;
+                }
+                return 0;
+              }),
+            });
+            console.log("LA");
+            console.log(default_data);
+          }
+        }
       }
     }
+    return default_data;
+  } else {
+    console.log("YA PAS DE LENGTH DES LE DEBUT");
+    return [];
   }
-  return default_data;
 }
 
 const ProgressionDisplay = ({ recette, is_edit = false }) => {
+  const get_initial_all_sections_value = () => {
+    if (recette.sections && recette.sections.length > 0) {
+      return recette.sections.filter(
+        (section) =>
+          recette.progression_elements
+            .map((element) => element.section)
+            .indexOf(section.number) >= 0
+      );
+    } else {
+      return [];
+    }
+  };
   const [allSections, setAllSections] = useState(
-    recette.sections.filter(
-      (section) =>
-        recette.progression_elements
-          .map((element) => element.section)
-          .indexOf(section.number) >= 0
-    )
+    get_initial_all_sections_value()
   );
+
+  const get_unused_sections_value = () => {
+    if (
+      recette.sections &&
+      recette.sections.length > 0 &&
+      recette.progression_elements &&
+      recette.progression_elements.length > 0
+    ) {
+      console.log("CA PASSE EN 1");
+      return recette.sections.filter(
+        (section) =>
+          recette.ingredients
+            .map((element) => element.section)
+            .indexOf(section.number) == -1
+      );
+    } else if (
+      recette.sections &&
+      recette.sections.length > 0 &&
+      recette.progression_elements
+    ) {
+      console.log("CA PASSE EN 2");
+      console.log(recette.sections);
+      return recette.sections;
+    } else {
+      console.log("CA PASEE PAS DE STAETEMENT");
+      return [];
+    }
+  };
+
+  const [allUnusedSections, setAllUnusedSections] = useState(
+    get_unused_sections_value()
+  );
+  const [newlyImporterdSections, setNewlyImporterdSections] = useState([]);
 
   const grouped_progression_data =
     get_progression_data_grouped_and_sorted(recette);
@@ -119,12 +207,14 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                                 {progression_element.rank ==
                                 group.section_min_rank ? null : (
                                   <FlecheHautButton
+                                    recette_id={recette.id}
                                     element={progression_element}
                                   ></FlecheHautButton>
                                 )}
                                 {progression_element.rank ==
                                 group.section_max_rank ? null : (
                                   <FlecheBasButton
+                                    recette_id={recette.id}
                                     element={progression_element}
                                   ></FlecheBasButton>
                                 )}
@@ -132,12 +222,14 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                             </div>
                             <div className="col-1 d-flex flez-row align-items-center">
                               <ProgressionElementEditHelper
+                                recette_id={recette.id}
                                 progression_element={progression_element}
                                 key={"edit_" + progression_element.id}
                               ></ProgressionElementEditHelper>
                               <DeleteButton
                                 element={progression_element}
                                 is_progression={true}
+                                recette_id={recette.id}
                               ></DeleteButton>
                             </div>
                           </div>
@@ -152,7 +244,12 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                       ))}
                 </div>
                 {is_edit ? (
-                  <AddProgressionElement></AddProgressionElement>
+                  <AddProgressionElement
+                    section_number={group.section_number}
+                    section_max_number={group.section_max_number}
+                    recette={recette}
+                    sans_section={group.section_id ? false : true}
+                  ></AddProgressionElement>
                 ) : null}
               </div>
             ))}
@@ -169,14 +266,52 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
             </div>
             {is_edit ? (
               <AddProgressionElement
+                recette={recette}
                 sans_section={true}
               ></AddProgressionElement>
             ) : null}
           </>
         )}
       </div>
+      {is_edit && newlyImporterdSections.length > 0
+        ? newlyImporterdSections
+            .filter(
+              (section) =>
+                recette.progression_elements
+                  .map((element) => element.section)
+                  .indexOf(section.number) == -1
+            )
+            .map((section) => (
+              <div
+                className="d-flex flex-column col-12"
+                key={section.id ? section.id : "sans_section"}
+              >
+                <p
+                  style={{
+                    background: "#CDCCCD",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  {section.name}
+                </p>
+                <AddProgressionElement
+                  section_number={section.number}
+                  recette={recette}
+                ></AddProgressionElement>
+              </div>
+            ))
+        : null}
       {is_edit ? (
-        <AddSection unused_sections={[{ name: "hello", id: 1 }]}></AddSection>
+        <AddSection
+          recette={recette}
+          unused_sections={allUnusedSections}
+          sectionrecette={recette}
+          set_section_options={setAllSections}
+          all_sections={allSections}
+          newly_imported_sections={newlyImporterdSections}
+          set_newly_imported_sections={setNewlyImporterdSections}
+          setAllUnusedSections={setAllUnusedSections}
+        ></AddSection>
       ) : null}
     </div>
   );

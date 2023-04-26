@@ -1,119 +1,328 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
+import { useSWRConfig } from "swr";
+
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const AddIngredient = ({ section_id, sans_section = false }) => {
+const AddIngredient = ({
+  recette,
+  section_id,
+  sans_section = false,
+  all_ingredients_with_units,
+}) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedIngredient, setSelectedIngredient] = React.useState("");
   const [selectedUnit, setSelectedUnit] = React.useState("default");
   const [createNewIngredient, setCreateNewIngredient] = React.useState(false);
+  const [createNewUnit, setCreateNewUnit] = React.useState(false);
+  const [categoryError, setCategoryError] = React.useState(false);
+  const [sousCategoryError, setSousCategoryError] = React.useState(false);
+  const [quantityError, setQuantityError] = React.useState(null);
+  const [ingredientError, setIngredientError] = React.useState(null);
+  const [unitError, setUnitError] = React.useState(null);
+  const [category, setCategory] = React.useState(null);
+  const [sousCategory, setSousCategory] = React.useState(null);
+  const [noteError, setNoteError] = React.useState(null);
+  const { mutate } = useSWRConfig();
 
-  const possible_units = ["kilogramme", "gramme", "littre"];
-  const all_existing_ingredients = [
-    { name: "sole", id: 1 },
-    { name: "banane", id: 2 },
-    { name: "pomme de terre", id: 3 },
-    { name: "sel", id: 4 },
-    { name: "beurre", id: 5 },
-  ];
-  const ingredient_options = [];
+  async function get_all_existing_ingredients_options() {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/all_ingredient_and_units/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
 
-  const generate_option_list = () => {
-    all_existing_ingredients.forEach((ingredient) =>
-      ingredient_options.push({ value: ingredient.id, label: ingredient.name })
+    // Awaiting response.json()
+    const resData = await response.json();
+
+    // Return response data
+    return resData;
+  }
+
+  async function get_all_existing_categories() {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/ingredient_categories/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+
+    // Awaiting response.json()
+    const resData = await response.json();
+
+    // Return response data
+    return resData.map((obj) => obj.name);
+  }
+
+  async function get_all_existing_sous_categories() {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/ingredient_sous_categories/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+
+    // Awaiting response.json()
+    const resData = await response.json();
+
+    // Return response data
+    return resData.map((obj) => obj.name);
+  }
+
+  const category_options = [];
+
+  const sous_category_options = [];
+
+  let ingredient_options = [];
+
+  const generate_option_list = async () => {
+    const helper = await get_all_existing_ingredients_options();
+
+    helper.forEach((ingredient) =>
+      ingredient_options.push({
+        value: ingredient.id,
+        label: ingredient.name,
+        units: ingredient.units,
+      })
+    );
+    const all_existing_categories = await get_all_existing_categories();
+    all_existing_categories.forEach((category) =>
+      category_options.push({ value: category, label: category })
+    );
+    const all_existing_sous_categories =
+      await get_all_existing_sous_categories();
+    all_existing_sous_categories.forEach((sous_category) =>
+      sous_category_options.push({ value: sous_category, label: sous_category })
     );
   };
+
+  const reset_all_errors = () => {
+    setQuantityError(null);
+    setIngredientError(null);
+    setUnitError(null);
+    setNoteError(null);
+    setCategoryError(null);
+    setSousCategoryError(null);
+  };
+
   generate_option_list();
+
+  async function assembleDataObject(event_target) {
+    let data = {};
+    if (createNewIngredient) {
+      let ingredient_creation_data = {};
+      if (event_target.ingredient_name.value) {
+        ingredient_creation_data["name"] = event_target.ingredient_name.value;
+      }
+      if (category) {
+        data["category"] = category.value;
+      } else {
+        setCategoryError(
+          "Veuillez renseigner une catégorie pour ce nouvel ingrédient."
+        );
+        return null;
+      }
+      if (sousCategory) {
+        data["sous_category"] = sousCategory.value;
+      } else {
+        setSousCategoryError(
+          "Veuillez renseigner une sous catégorie pour ce nouvel ingrédient."
+        );
+        return null;
+      }
+      const JSONdata = JSON.stringify(ingredient_creation_data);
+
+      // API endpoint where we send form data.
+      const endpoint = "http://127.0.0.1:8000/api/ingredients/";
+
+      // Form the request for sending data to the server.
+      const options = {
+        // The method is POST because we are sending data.
+        method: "POST",
+        // Tell the server we're sending JSON.
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Body of the request is the JSON data we created above.
+        body: JSONdata,
+      };
+
+      // Send the form data to our forms API on Vercel and get a response.
+      const response = await fetch(endpoint, options);
+      if (response.status == 201) {
+        const result = await response.json();
+        data["ingredient"] = result.id;
+      } else {
+        return null;
+      }
+    } else if (selectedIngredient) {
+      data["ingredient"] = selectedIngredient.value;
+    } else {
+      setIngredientError("Veuillez sélectionner un ingrédient.");
+    }
+    if (createNewUnit) {
+      let create_unit_data = {};
+      if (event_target.new_unit_name.value) {
+        create_unit_data["unit"] = event_target.new_unit_name.value;
+      }
+      if (event_target.new_unit_conversion.value) {
+        create_unit_data["conversion_to_kilo"] =
+          event_target.new_unit_conversion.value;
+      }
+      if (data["ingredient"]) {
+        create_unit_data["ingredient"] = data["ingredient"];
+      } else {
+        return null;
+      }
+      console.log("PROBLEME ICI");
+      console.log(create_unit_data);
+
+      const JSONdata = JSON.stringify(create_unit_data);
+
+      // API endpoint where we send form data.
+      const endpoint = "http://127.0.0.1:8000/api/conversion_rate/";
+
+      // Form the request for sending data to the server.
+      const options = {
+        // The method is POST because we are sending data.
+        method: "POST",
+        // Tell the server we're sending JSON.
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Body of the request is the JSON data we created above.
+        body: JSONdata,
+      };
+
+      // Send the form data to our forms API on Vercel and get a response.
+      const response = await fetch(endpoint, options);
+      if (response.status == 201) {
+        const result = await response.json();
+        data["unit"] = result.unit;
+      } else {
+        return null;
+      }
+    } else if (event_target.unit) {
+      if (event_target.unit.value === "default") {
+        setUnitError("Veuillez renseigner une unité pour cet ingrédient");
+      } else {
+        data["unit"] = event_target.unit.value;
+      }
+    } else {
+      return null;
+    }
+    if (event_target.quantity.value && event_target.quantity) {
+      data["quantity"] = event_target.quantity.value;
+    }
+    if (event_target.note && event_target.note.value) {
+      data["note"] = event_target.note.value;
+    }
+
+    if (section_id) {
+      data["section"] = section_id;
+    }
+
+    data["recette"] = recette.id;
+
+    return data;
+  }
+
+  function handleSuccess() {
+    mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+    reset_all_errors();
+    resetSelections();
+
+    setModalOpen(!modalOpen);
+  }
+
+  function handleError(result) {
+    let error_found = false;
+    if (result.hasOwnProperty("quantity")) {
+      setQuantityError(result.quantity);
+      error_found = true;
+    }
+    if (result.hasOwnProperty("unit")) {
+      setUnitError(result.unit);
+      error_found = true;
+    }
+    if (result.hasOwnProperty("ingredient")) {
+      setIngredientError(result.ingredient);
+      error_found = true;
+    }
+    if (result.hasOwnProperty("note")) {
+      setNoteError(result.note);
+      error_found = true;
+    }
+    if (!error_found) {
+      alert(
+        "Une erreur est survenue. Merci de vérifier les valeurs renseignées et de réessayer ultérieurement."
+      );
+    }
+  }
 
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
 
     // Get data from the form.
-    let data = {};
-    if (event.target.unit) {
-      if (event.target.unit.value === "default") {
-        alert("Veuillez renseigner une unité pour cet ingrédient");
+    const assembledData = await assembleDataObject(event.target);
+    if (assembledData) {
+      const JSONdata = JSON.stringify(assembledData);
+
+      // API endpoint where we send form data.
+      const endpoint = "http://127.0.0.1:8000/api/recette_ingredients/";
+
+      // Form the request for sending data to the server.
+      const options = {
+        // The method is POST because we are sending data.
+        method: "POST",
+        // Tell the server we're sending JSON.
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Body of the request is the JSON data we created above.
+        body: JSONdata,
+      };
+
+      // Send the form data to our forms API on Vercel and get a response.
+      const response = await fetch(endpoint, options);
+
+      // Get the response data from server as JSON.
+      // If server returns the name submitted, that means the form works.
+      const result = await response.json();
+      console.log(response);
+      if (response.status == 201) {
+        handleSuccess();
       } else {
-        data["unit"] = event.target.unit.value;
+        handleError(result);
       }
+    } else {
+      alert(
+        "Une erreur est survenue. Merci de vérifier votre saisie et de réessayer plus tard."
+      );
     }
-    if (event.target.ingredient_category) {
-      if (event.target.ingredient_category.value === "default") {
-        alert("Veuillez renseigner une catégorie pour ce nouvel ingrédient");
-      } else {
-        data["ingredient_category"] = event.target.ingredient_category.value;
-      }
-    }
-    if (event.target.ingredient_sous_category) {
-      if (event.target.ingredient_sous_category.value === "default") {
-        alert(
-          "Veuillez renseigner une sous catégorie pour ce nouvel ingrédient"
-        );
-      } else {
-        data["ingredient_sous_category"] =
-          event.target.ingredient_sous_category.value;
-      }
-    }
-    if (event.target.quantity.value && event.target.quantity) {
-      data["quantity"] = event.target.quantity.value;
-    }
-    if (event.target.note && event.target.note.value) {
-      data["note"] = event.target.note.value;
-    }
-    try {
-      if (event.target.ingredient_name.value) {
-        data["ingredient_name"] = event.target.ingredient_name.value;
-      }
-    } catch {
-      // no new ingredient was created
-    }
-
-    const JSONdata = JSON.stringify(data);
-
-    // API endpoint where we send form data.
-    // const endpoint = "/api/form";
-
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
-
-    // Send the form data to our forms API on Vercel and get a response.
-    // const response = await fetch(endpoint, options);
-
-    // Get the response data from server as JSON.
-    // If server returns the name submitted, that means the form works.
-    // const result = await response.json();
-    alert(`Data: ${JSONdata}`);
   };
-
-  const possible_ingredient_categories = [
-    { name: "fruit", id: 1 },
-    { name: "légume", id: 2 },
-    { name: "viande", id: 3 },
-    { name: "poisson", id: 4 },
-  ];
-  const possible_ingredient_sous_categories = [
-    { name: "fruit rouge", id: 1 },
-    { name: "légume feuilles", id: 2 },
-    { name: "viande rouges", id: 3 },
-    { name: "poisson blanc", id: 4 },
-  ];
   const resetSelections = () => {
     setSelectedIngredient("");
     setSelectedUnit("default");
     setCreateNewIngredient(false);
+    setCategory(null);
+    setCreateNewIngredient(false);
+    setCreateNewUnit(false);
+    setSousCategory(null);
   };
 
   return (
@@ -169,13 +378,14 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                             height: "40px",
                             paddingLeft: "5px",
                           }}
-                          placeholder="Le nom d'un nouvel ingrédient"
+                          placeholder="Nom du nouvel ingrédient"
                           required
                         />
                         <Button
                           type="button"
                           className="btn btn-primary"
                           style={{ aspectRatio: "1/1" }}
+                          title="Revenir à la liste d'ingrédients"
                           onClick={() => {
                             setCreateNewIngredient(!createNewIngredient);
                           }}
@@ -185,45 +395,35 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                       </div>
                       <div className="d-flex flex-row justify-content-between col-12">
                         {" "}
-                        <select
-                          className={"btn col-5"}
-                          name="ingredient_category"
-                          style={{
-                            backgroundColor: "#CDCCCD",
-                            textAlign: "start",
+                        <Select
+                          id="categories"
+                          className="flex-grow-1 me-1"
+                          options={category_options}
+                          placeholder="Catégorie"
+                          isSearchable={true}
+                          value={category}
+                          onChange={(data) => {
+                            setCategory(data);
                           }}
-                          defaultValue="default"
-                          required
-                        >
-                          <option disabled value="default">
-                            Catégorie
-                          </option>
-                          {possible_ingredient_categories.map((category) => (
-                            <option value={category.id}>{category.name}</option>
-                          ))}
-                        </select>
-                        <select
-                          className={"btn col-5 "}
-                          name="ingredient_sous_category"
-                          defaultValue="default"
-                          style={{
-                            backgroundColor: "#CDCCCD",
-                            textAlign: "start",
+                        />
+                        <Select
+                          id="sous_categories"
+                          className="flex-grow-1 ms-1"
+                          options={sous_category_options}
+                          placeholder="Sous catégorie"
+                          isSearchable={true}
+                          value={sousCategory}
+                          onChange={(data) => {
+                            setSousCategory(data);
                           }}
-                          required
-                        >
-                          <option disabled value="default">
-                            Sous catégorie
-                          </option>
-                          {possible_ingredient_sous_categories.map(
-                            (sous_category) => (
-                              <option value={sous_category.id}>
-                                {sous_category.name}
-                              </option>
-                            )
-                          )}
-                        </select>
+                        />
                       </div>
+                      {categoryError ? (
+                        <p className="form-error">{categoryError}</p>
+                      ) : null}
+                      {sousCategoryError ? (
+                        <p className="form-error">{sousCategoryError}</p>
+                      ) : null}
                     </div>
                   ) : (
                     <>
@@ -233,13 +433,19 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                         placeholder="Choisir un ingrédient"
                         isSearchable={true}
                         value={selectedIngredient}
-                        onChange={(data) => setSelectedIngredient(data)}
+                        onChange={(data) => {
+                          setSelectedIngredient(data);
+                          console.log("SELECTED");
+                          console.log(selectedIngredient);
+                        }}
                         required
                       />
+
                       <Button
                         type="button"
                         className="btn btn-primary"
                         style={{ aspectRatio: "1/1" }}
+                        title="Créer un nouvel ingrédient"
                         onClick={() => {
                           setCreateNewIngredient(!createNewIngredient);
                         }}
@@ -249,7 +455,9 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                     </>
                   )}
                 </div>
-
+                {ingredientError ? (
+                  <p className="form-error">{ingredientError}</p>
+                ) : null}
                 <div className="d-flex flex-row justify-content-start align-items-baseline">
                   <label htmlFor="quantity">Quantité:</label>
                   <input
@@ -266,25 +474,116 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                     placeholder={"3"}
                     required
                   />
-                  <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    name="unit"
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
-                    defaultValue="default"
-                    onChange={(e) => {
-                      setSelectedUnit(e.target.value);
-                    }}
-                    required
-                  >
-                    <option disabled value="default">
-                      Unité
-                    </option>
-                    {possible_units.map((unit) => (
-                      <option value={unit}>{unit}</option>
-                    ))}
-                  </select>
+                  {createNewUnit ? null : (
+                    <div class="d-flex flex-row col-8 ps-1 ms-2 mt-1">
+                      <select
+                        className={"btn col-10 me-1 flex-grow-1"}
+                        name="unit"
+                        style={{
+                          backgroundColor: "#CDCCCD",
+                          textAlign: "start",
+                        }}
+                        defaultValue="default"
+                        onChange={(e) => {
+                          setSelectedUnit(e.target.value);
+                        }}
+                        required
+                      >
+                        {selectedIngredient ? (
+                          <option disabled value="default">
+                            Unité
+                          </option>
+                        ) : createNewIngredient ? (
+                          <option disabled value="kilogramme">
+                            Kilogramme
+                          </option>
+                        ) : (
+                          <option disabled value="default">
+                            Sélectionnez un ingrédient
+                          </option>
+                        )}
+                        {selectedIngredient
+                          ? selectedIngredient.units.map((unit) => (
+                              <option value={unit}>{unit}</option>
+                            ))
+                          : null}
+                      </select>
+                      <Button
+                        type="button"
+                        className="btn btn-primary col-2 flex-grow-1"
+                        style={{ aspectRatio: "1/1", maxHeight: "50px" }}
+                        title="Créer une unité"
+                        onClick={() => {
+                          setCreateNewUnit(!createNewUnit);
+                        }}
+                      >
+                        {"+"}
+                      </Button>
+                    </div>
+                  )}
                 </div>
-
+                {quantityError ? (
+                  <p className="form-error">{quantityError}</p>
+                ) : null}
+                {unitError ? <p className="form-error">{unitError}</p> : null}
+                {createNewUnit ? (
+                  <div className="d-flex flex-row col-10 justify-content-between mt-3 align-items-center">
+                    <div className="d-flex flex-column col-11 justify-content-start ">
+                      <div className="d-flex flex-row col-12  align-items-baseline">
+                        <label htmlFor="new_unit_conversion">
+                          Nom de l'unité:
+                        </label>
+                        <input
+                          type="text"
+                          id="new_unit_name"
+                          name="new_unit_name"
+                          className="ms-1 flex-grow-1"
+                          style={{
+                            backgroundColor: "transparent",
+                            border: 0,
+                            borderBottom: "5px",
+                            textAlign: "start",
+                            width: "100px",
+                          }}
+                          placeholder={"ex: cuillère à soupe"}
+                          required
+                        />
+                      </div>
+                      <div className="d-flex flex-row col-12 align-items-baseline">
+                        <label htmlFor="new_unit_conversion">
+                          Conversion en kg:
+                        </label>
+                        <input
+                          type="number"
+                          id="new_unit_conversion"
+                          name="new_unit_conversion"
+                          className="ms-1 flex-grow-1"
+                          step="any"
+                          style={{
+                            backgroundColor: "transparent",
+                            border: 0,
+                            borderBottom: "5px",
+                            textAlign: "start",
+                            width: "100px",
+                          }}
+                          placeholder={'ex: pour "gramme", 0.001'}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      className="btn btn-primary col-2"
+                      style={{ aspectRatio: "1/1", maxHeight: "50px" }}
+                      title="Retourner à la liste d'unités"
+                      onClick={() => {
+                        setCreateNewUnit(!createNewUnit);
+                      }}
+                    >
+                      {"<"}
+                    </Button>
+                  </div>
+                ) : null}
                 <div className="d-flex flex-row justify-content-start mt-2">
                   <label htmlFor="note" className="col-3">
                     Note (optionnel):
@@ -298,6 +597,7 @@ const AddIngredient = ({ section_id, sans_section = false }) => {
                     placeholder="émondées"
                   />
                 </div>
+                {noteError ? <p className="form-error">{noteError}</p> : null}
               </div>
               <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
             </div>

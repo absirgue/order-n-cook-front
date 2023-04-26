@@ -1,8 +1,10 @@
-import RecetteListItem from "../../components/Recettes/page_elements/recette_list_display";
+import RecetteListItem from "../../components/Recettes/page_elements/recette_list_item";
 import React, { useState, useEffect } from "react";
 import { Button, Modal, ModalBody, ModalFooter, Table } from "reactstrap";
 import Link from "next/link";
 import CreateNewRecetteButton from "../../components/Recettes/page_elements/create_new_recette_modal";
+import { useHistory } from "react-router-dom";
+
 const MONTHS = [
   "Janvier",
   "Février",
@@ -226,13 +228,22 @@ function getAllRecettesData() {
   });
 }
 
-export async function getStaticProps() {
-  const allRecettesData = getAllRecettesData();
-  return {
-    props: {
-      allRecettesData,
-    },
-  };
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`http://127.0.0.1:8000/api/recettes/`);
+  let allRecettesData = await res.json();
+  allRecettesData = allRecettesData.sort(function (a, b) {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  });
+
+  // Pass data to the page via props
+  return { props: { allRecettesData } };
 }
 
 // The initial data needs to be grouped and sorted in alphabetical order so that this alphabetical order is
@@ -287,23 +298,15 @@ export default function AllRecettesDisplay({ allRecettesData }) {
 
   // Retrieve all the different labels to display in the filtered search.
   const all_different_tastes = Array.from(
-    new Set(
-      allRecettesData
-        .map((recette) => recette.tastes)
-        .flat()
-        .map((taste) => taste.name)
-    )
+    new Set(allRecettesData.map((recette) => recette.tastes).flat())
   );
 
   // Retrieve all the different allergenes to display in the filtered search.
   const all_different_genres = Array.from(
-    new Set(
-      allRecettesData
-        .map((recette) => recette.genres)
-        .flat()
-        .map((genre) => genre.name)
-    )
+    new Set(allRecettesData.map((recette) => recette.genres).flat())
   );
+
+  
 
   // Group the filtered data according to a given field.
   function group_list_based_on_field(list, groupField) {
@@ -397,12 +400,12 @@ export default function AllRecettesDisplay({ allRecettesData }) {
       }
       if (genreFilter != "default") {
         results = results.filter((recette) =>
-          recette.genres.map((genre) => genre.name).includes(genreFilter)
+          recette.genres.includes(genreFilter)
         );
       }
       if (tasteFilter != "default") {
         results = results.filter((recette) =>
-          recette.tastes.map((taste) => taste.name).includes(tasteFilter)
+          recette.tastes.includes(tasteFilter)
         );
       }
       if (onTheMenuFilter) {

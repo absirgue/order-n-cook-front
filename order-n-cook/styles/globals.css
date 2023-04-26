@@ -60,3 +60,8 @@
     background-color: #c2c1d1;
     border-width: 0;
 }
+
+.form-error {
+    color:red;
+    margin-bottom: 0px;
+}

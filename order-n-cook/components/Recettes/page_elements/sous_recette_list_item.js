@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 import RecetteComponentModifier from "./edit_only/modification_buttons/recette_component_modifier";
 import DeleteButton from "./edit_only/modification_buttons/delete_button";
-const SousRecetteListItem = ({ sous_recette, is_edit = false }) => {
+const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const deleteSousRecette = () => {
     alert("Suppression");
@@ -48,7 +48,9 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false }) => {
         </p>
       </td>
       <td className={"col-7"} style={{ verticalAlign: "middle" }}>
-        <Link href={"/recettes/" + sous_recette.id}>{sous_recette.name}</Link>
+        <Link href={"/sous_recettes/" + recette_id + "/" + sous_recette.id}>
+          {sous_recette.name}
+        </Link>
         {sous_recette.note ? " (" + sous_recette.note + ")" : null}
       </td>
       {is_edit ? (
@@ -56,6 +58,7 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false }) => {
           <td className={"col-1"}>{/* Empty on purpose */}</td>
           <td className={"col-1"}>
             <RecetteComponentModifier
+              recette_id={recette_id}
               component={sous_recette}
               is_sous_recette={true}
             ></RecetteComponentModifier>
@@ -64,6 +67,7 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false }) => {
             <DeleteButton
               element={sous_recette}
               is_sous_recette={true}
+              recette_id={recette_id}
             ></DeleteButton>
           </td>
         </>

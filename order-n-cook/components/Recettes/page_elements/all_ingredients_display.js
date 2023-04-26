@@ -5,7 +5,7 @@ import AddSection from "./edit_only/add_buttons/add_section";
 import { useState } from "react";
 
 function get_ingredient_data_grouped_and_sorted(recette) {
-  if (recette.ingredients) {
+  if (recette.ingredients && recette.ingredients.length > 0) {
     const grouped_default_data = recette.ingredients.reduce(
       (group, product) => {
         const { section } = product;
@@ -15,14 +15,19 @@ function get_ingredient_data_grouped_and_sorted(recette) {
       },
       {}
     );
-    grouped_default_data;
+
+    console.log("HERE GOUPED DATA");
+    console.log(grouped_default_data);
     var default_data = [];
 
     for (var key in grouped_default_data) {
       if (grouped_default_data.hasOwnProperty(key)) {
-        const related_section = recette.sections.filter(
-          (section) => section.number == key
-        )[0];
+        let related_section = null;
+        if (recette.sections && recette.sections.length > 0) {
+          related_section = recette.sections.filter(
+            (section) => section.number == key
+          )[0];
+        }
         if (related_section) {
           default_data.push({
             section_name: related_section.name,
@@ -38,20 +43,43 @@ function get_ingredient_data_grouped_and_sorted(recette) {
     }
     return default_data;
   } else {
-    return null;
+    return [];
   }
 }
 
 const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
   const grouped_ingredient_data =
     get_ingredient_data_grouped_and_sorted(recette);
+  const [newlyImportedSections, setNewlyImportedSections] = useState([]);
+  const get_initial_all_sections_value = () => {
+    if (recette.sections && recette.sections.length > 0) {
+      return recette.sections.filter(
+        (section) =>
+          recette.ingredients
+            .map((element) => element.section)
+            .indexOf(section.number) >= 0
+      );
+    } else {
+      return [];
+    }
+  };
+  const get_unused_sections_value = () => {
+    if (recette.sections && recette.sections.length > 0) {
+      return recette.sections.filter(
+        (section) =>
+          recette.ingredients
+            .map((element) => element.section)
+            .indexOf(section.number) == -1
+      );
+    } else {
+      return [];
+    }
+  };
   const [allSections, setAllSections] = useState(
-    recette.sections.filter(
-      (section) =>
-        recette.ingredients
-          .map((element) => element.section)
-          .indexOf(section.number) >= 0
-    )
+    get_initial_all_sections_value()
+  );
+  const [allUnusedSections, setAllUnusedSections] = useState(
+    get_unused_sections_value()
   );
 
   return (
@@ -84,6 +112,7 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                         key={ingredient.id}
                         is_edit={is_edit}
                         all_sections={allSections}
+                        recette_id={recette.id}
                       ></RecetteIngredientListItem>
                     );
                   })}
@@ -93,6 +122,7 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                 <AddIngredient
                   section_id={group.section_id}
                   sans_section={group.section_id ? false : true}
+                  recette={recette}
                 ></AddIngredient>
               ) : null}
             </div>
@@ -108,10 +138,54 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                 : " Modifier la recette pour ajouter des ingrédients."}
             </i>
           </div>
-          {is_edit ? <AddIngredient sans_section={true}></AddIngredient> : null}
+          {is_edit ? (
+            <AddIngredient
+              sans_section={true}
+              recette={recette}
+            ></AddIngredient>
+          ) : null}
         </div>
       )}
-      {is_edit ? <AddSection></AddSection> : null}
+      {is_edit && newlyImportedSections.length > 0
+        ? newlyImportedSections
+            .filter(
+              (section) =>
+                recette.ingredients
+                  .map((element) => element.section)
+                  .indexOf(section.number) == -1
+            )
+            .map((section) => (
+              <div
+                className="d-flex flex-column col-12"
+                key={section.id ? section.id : "sans_section"}
+              >
+                <p
+                  style={{
+                    background: "#CDCCCD",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  {section.name}
+                </p>
+                <AddIngredient
+                  section_id={section.number}
+                  recette={recette}
+                ></AddIngredient>
+              </div>
+            ))
+        : null}
+      {is_edit ? (
+        <AddSection
+          unused_sections={allUnusedSections}
+          sectionrecette={recette}
+          set_section_options={setAllSections}
+          all_sections={allSections}
+          newly_imported_sections={newlyImportedSections}
+          set_newly_imported_sections={setNewlyImportedSections}
+          recette={recette}
+          setAllUnusedSections={setAllUnusedSections}
+        ></AddSection>
+      ) : null}
     </div>
   );
 };

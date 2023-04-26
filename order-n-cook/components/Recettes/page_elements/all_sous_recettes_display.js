@@ -15,17 +15,20 @@ const AllSousRecettesDisplay = ({ recette, is_edit = false }) => {
                     sous_recette={sous_recette}
                     key={sous_recette.id}
                     is_edit={is_edit}
+                    recette_id={recette.id}
                   ></SousRecetteListItem>
                 ))}
               </tbody>
             </Table>
-            {is_edit ? <AddSousRecette></AddSousRecette> : null}
+            {is_edit ? (
+              <AddSousRecette recette_id={recette.id}></AddSousRecette>
+            ) : null}
           </div>
         </div>
       ) : is_edit ? (
         <div className="d-flex flex-column justify-content-start align-items-center col-12 mt-4">
           <h5>Sous Recettes</h5>
-          <AddSousRecette></AddSousRecette>
+          <AddSousRecette recette_id={recette.id}></AddSousRecette>
         </div>
       ) : null}
     </>

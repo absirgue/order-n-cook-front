@@ -16,6 +16,8 @@ const RecetteListItem = ({ recette }) => {
     tastes_string = tastes_string.substring(0, tastes_string.length - 2);
   }
 
+  console.log(recette)
+
   return (
     <div
       className="mb-2 d-flex flex-row align-align-items-center
@@ -33,7 +35,11 @@ const RecetteListItem = ({ recette }) => {
         style={{ textDecoration: "none" }}
       >
         <h4
-          style={{ verticalAlign: "center", marginBottom: 0, color: "#0254c7" }}
+          style={{
+            verticalAlign: "center",
+            marginBottom: 0,
+            color: recette.name.endsWith("(copie)") ? "#f19494" : "#0254c7",
+          }}
         >
           {recette.name}
         </h4>
@@ -72,7 +78,7 @@ const RecetteListItem = ({ recette }) => {
                   trigger="legacy"
                 >
                   <PopoverHeader>Allergènes</PopoverHeader>
-                  <PopoverBody>{recette.allergenes}</PopoverBody>
+                  <PopoverBody>{recette.allergenes.reduce((accumultor, allergene)=> accumultor + allergene.name + "; ","").slice(0, -2)}</PopoverBody>
                 </UncontrolledPopover>
               </div>
             ) : null}

@@ -17,177 +17,11 @@ const MONTHS = [
   "Décembre",
 ];
 
-function getAllIngredientsData() {
-  // var list = []
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Fraise", "category": "fruit", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Carotte", "category": "légume", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Boeuf", "category": "viande", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Poisson", "category": "poisson", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Pate", "category": "epicerie", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // return list.sort(function (a, b) {
-  //     if (a.name < b.name) {
-  //       return -1;
-  //     }
-  //     if (a.name > b.name) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-  return [
-    {
-      id: 1,
-      name: "Fraise",
-      category: "fruit",
-      sous_category: "fruit rouge",
-      labels: [
-        { id: 1, name: "AOC" },
-        { id: 2, name: "AOP" },
-      ],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 2,
-      name: "Artichaut",
-      category: "légume",
-      sous_category: "légume feuille",
-      labels: [
-        { id: 1, name: "AOC" },
-        { id: 2, name: "AOC" },
-        { id: 3, name: "AOC" },
-        { id: 4, name: "AOC" },
-      ],
-      allergenes: [],
-      season: [
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 3,
-      name: "Côte de boeuf",
-      category: "viande",
-      sous_category: "viande rouge",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 4,
-      name: "Sole",
-      category: "poisson",
-      sous_category: "poisson à chair blanche",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 5,
-      name: "Carotte",
-      category: "légume",
-      sous_category: "légume racine",
-      labels: [],
-      allergenes: [
-        { id: 1, name: "lactose" },
-        { id: 2, name: "noix" },
-      ],
-      season: [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 6,
-      name: "Framboise",
-      sous_category: "fruit rouge",
-      category: "fruit",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-  ].sort(function (a, b) {
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`http://127.0.0.1:8000/api/ingredients/`);
+  let allIngredientsData = await res.json();
+  allIngredientsData = allIngredientsData.sort(function (a, b) {
     if (a.name < b.name) {
       return -1;
     }
@@ -196,15 +30,9 @@ function getAllIngredientsData() {
     }
     return 0;
   });
-}
 
-export async function getStaticProps() {
-  const allIngredientsData = getAllIngredientsData();
-  return {
-    props: {
-      allIngredientsData,
-    },
-  };
+  // Pass data to the page via props
+  return { props: { allIngredientsData } };
 }
 
 // The initial data needs to be grouped and sorted in alphabetical order so that this alphabetical order is
@@ -343,7 +171,6 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
     setsousCategoryFilter("default");
     setMonthFilter("default");
     setOnlySeasonFilter(false);
-    setModalOpen(true);
   };
 
   // Perform a filtered search based on the various filters inputted by the user.

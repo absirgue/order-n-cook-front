@@ -1,30 +1,59 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
+import { useSWRConfig } from "swr";
+
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const AddSousRecette = ({ section_id }) => {
+
+async function get_all_possible_sous_recette() {
+  const response = await fetch(
+    `http://127.0.0.1:8000/api/sous_recette_options/`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    }
+  );
+
+  // Awaiting response.json()
+  const resData = await response.json();
+
+  // Return response data
+  return resData;
+}
+
+const AddSousRecette = ({ recette_id }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedRecette, setSelectedRecette] = React.useState("");
   const [selectedUnit, setSelectedUnit] = React.useState("default");
+  const [sousRecetteError, setRecetteError] = React.useState(null);
+  const [quantityError, setQuantityError] = React.useState(null);
+  const [noteError, setNoteError] = React.useState(null);
 
-  const possible_units = ["kilogramme", "gramme", "littre"];
-  const all_existing_recettes = [
-    { name: "Recette n1", id: 1 },
-    { name: "Recette n2", id: 2 },
-    { name: "Recette n3", id: 3 },
-    { name: "Recette n4", id: 4 },
-    { name: "Recette n5", id: 5 },
-  ];
+  const { mutate } = useSWRConfig();
+
   const recette_options = [];
-
-  const generate_option_list = () => {
-    all_existing_recettes.forEach((recette) =>
-      recette_options.push({ value: recette.id, label: recette.name })
+  const generate_option_list = async () => {
+    const all_existing_sous_recette = await get_all_possible_sous_recette();
+    all_existing_sous_recette.forEach((recette) =>
+      recette_options.push({
+        value: recette.id,
+        label: recette.name,
+        unit: recette.unit,
+      })
     );
   };
+
+  const reset_all_errors = () => {
+    setRecetteError(null);
+    setQuantityError(null);
+    setNoteError(null);
+  };
+
   generate_option_list();
 
   const handleSubmit = async (event) => {
@@ -42,11 +71,15 @@ const AddSousRecette = ({ section_id }) => {
     if (event.target.note && event.target.note.value) {
       data["note"] = event.target.note.value;
     }
+    if (selectedRecette) {
+      data["sous_recette"] = selectedRecette.value;
+    }
+    data["recette"] = recette_id;
 
     const JSONdata = JSON.stringify(data);
 
     // API endpoint where we send form data.
-    // const endpoint = "/api/form";
+    const endpoint = "http://127.0.0.1:8000/api/sous_recette/";
 
     // Form the request for sending data to the server.
     const options = {
@@ -61,12 +94,32 @@ const AddSousRecette = ({ section_id }) => {
     };
 
     // Send the form data to our forms API on Vercel and get a response.
-    // const response = await fetch(endpoint, options);
-
-    // Get the response data from server as JSON.
-    // If server returns the name submitted, that means the form works.
-    // const result = await response.json();
-    alert(`Data: ${JSONdata}`);
+    const response = await fetch(endpoint, options);
+    if (response.status == 201) {
+      setModalOpen(false);
+      reset_all_errors();
+      mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+    } else {
+      const result = await response.json();
+      let error_found = false;
+      if (result.hasOwnProperty("note")) {
+        setNoteError(result.note);
+        error_found = true;
+      }
+      if (result.hasOwnProperty("sous_recette")) {
+        setNoteError(result.sous_recette);
+        error_found = true;
+      }
+      if (result.hasOwnProperty("quantity")) {
+        setNoteError(result.quantity);
+        error_found = true;
+      }
+      if (!error_found) {
+        alert(
+          "Une erreur est survenue. Merci de vérifier les valeurs renseignées et de réessayer ultérieurement."
+        );
+      }
+    }
   };
 
   const resetSelection = () => {
@@ -116,7 +169,9 @@ const AddSousRecette = ({ section_id }) => {
                     required
                   />
                 </div>
-
+                {sousRecetteError ? (
+                  <p className="form-error">{sousRecetteError}</p>
+                ) : null}
                 <div className="d-flex flex-row justify-content-start align-items-baseline">
                   <label htmlFor="quantity">Quantité:</label>
                   <input
@@ -133,25 +188,15 @@ const AddSousRecette = ({ section_id }) => {
                     placeholder={"3"}
                     required
                   />
-                  <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
-                    value={selectedUnit}
-                    onChange={(e) => {
-                      setSelectedUnit(e.target.value);
-                    }}
-                    name="unit"
-                    required
-                  >
-                    <option disabled value="default">
-                      Unité
-                    </option>
-                    {possible_units.map((unit) => (
-                      <option value={unit}>{unit}</option>
-                    ))}
-                  </select>
+                  {selectedRecette ? (
+                    <p style={{ marginBottom: "0px" }}>
+                      {selectedRecette.unit}
+                    </p>
+                  ) : null}
                 </div>
-
+                {quantityError ? (
+                  <p className="form-error">{quantityError}</p>
+                ) : null}
                 <div className="d-flex flex-row justify-content-start mt-2">
                   <label htmlFor="note" className="col-3">
                     Note (optionnel):
@@ -166,6 +211,7 @@ const AddSousRecette = ({ section_id }) => {
                   />
                 </div>
               </div>
+              {noteError ? <p className="form-error">{noteError}</p> : null}
               <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
             </div>
           </ModalBody>

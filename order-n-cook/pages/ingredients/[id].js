@@ -147,7 +147,11 @@ function getIngredientData(id) {
 
 export const getStaticProps = async (context) => {
   const ingredientID = context.params?.id;
-  const ingredientData = getIngredientData(ingredientID);
+  const res = await fetch(
+    `http://127.0.0.1:8000/api/ingredients/` + ingredientID
+  );
+
+  const ingredientData = await res.json();
   return {
     props: {
       ingredientData,
@@ -156,9 +160,10 @@ export const getStaticProps = async (context) => {
 };
 
 export const getStaticPaths = async () => {
-  const data = { stars: [] };
-  const pathsWithParams = data.stars.map((star) => ({
-    params: { something: star.id },
+  const res = await fetch(`http://127.0.0.1:8000/api/ingredients/`);
+  const allIngredientsData = await res.json();
+  const pathsWithParams = allIngredientsData.map((ingredient) => ({
+    params: { id: ingredient.id.toString() },
   }));
 
   return {

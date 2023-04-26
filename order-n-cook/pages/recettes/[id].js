@@ -3,7 +3,9 @@ import AllRecetteIngredientsDisplay from "../../components/Recettes/page_element
 import GeneralRecetteDataDisplay from "../../components/Recettes/page_elements/general_recette_data_display";
 import AllSousRecettesDisplay from "../../components/Recettes/page_elements/all_sous_recettes_display";
 import ProgressionDisplay from "../../components/Recettes/page_elements/all_progression_elements_display";
-import SeasonnalityDisplay from "../../components/Ingredients/Ingredients/page_elements/seasonnality_display";
+import useSWR, { useSWRConfig } from "swr";
+import {Redirect} from "react-router-dom"
+import { useRouter } from "next/router";
 import {
   Button,
   UncontrolledPopover,
@@ -13,6 +15,7 @@ import {
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
+  UncontrolledDropdown,
 } from "reactstrap";
 import { useState } from "react";
 function getRecetteData(id) {
@@ -115,83 +118,202 @@ function getRecetteData(id) {
         id: 1,
         rank: 0,
         text: "L1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
+        section: 1,
       },
       {
         id: 2,
         rank: 1,
         text: "L2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
+        section: 1,
       },
       {
         id: 3,
         rank: 2,
         text: "L3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
+        section: 1,
       },
       {
         id: 4,
         rank: 3,
         text: "L4: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
+        section: 1,
       },
       {
         id: 5,
         rank: 0,
         text: "L5: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 1,
+        section: 0,
       },
       {
         id: 6,
         rank: 1,
         text: "L6: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 1,
+        section: 0,
       },
       {
         id: 7,
         rank: 2,
         text: "L7: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 1,
+        section: 0,
       },
       {
         id: 8,
         rank: 3,
         text: "L8:bore et dolore magna aliqua.",
-        section: 1,
+        section: 0,
       },
     ],
   };
 }
 
-export const getStaticProps = async (context) => {
-  //   const recetteId = context.params?.id;
-  const recetteData = getRecetteData();
-  return {
-    props: {
-      recetteData,
-    },
-  };
-};
+// export const getStaticProps = async (context) => {
+//   const recetteID = context.params?.id;
+//   const res = await fetch(`http://127.0.0.1:8000/api/recettes/` + recetteID);
 
-export const getStaticPaths = async () => {
-  const data = { stars: [{ id: "1" }, { id: "6" }] };
-  const pathsWithParams = data.stars.map((star) => ({
-    params: { id: star.id },
-  }));
+//   const data = await res.json();
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// };
 
-  return {
-    paths: pathsWithParams,
-    fallback: true,
-  };
-};
+// export const getStaticPaths = async () => {
+//   const res = await fetch(`http://127.0.0.1:8000/api/recettes/`);
+//   const allRecettesData = await res.json();
+//   const pathsWithParams = allRecettesData.map((recette) => ({
+//     params: { id: recette.id.toString() },
+//   }));
 
-export default function SingleRecettePage({ recetteData }) {
+//   return {
+//     paths: pathsWithParams,
+//     fallback: true,
+//   };
+// };
+
+async function sendRequest(url, { arg }) {
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(arg),
+  }).then((res) => res.json());
+}
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+export default function SingleRecettePage() {
   const deleteRecette = () => {
     alert("Suppression");
   };
+  const [redirect,setRedirect] = useState(null)
   const [showTools, setShowTools] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const [autresOutilsOpen, setAutresOutilsDropdownOpen] = useState(false);
+  const [cartesOutilsOpen, setCartesOutilsOpen] = useState(false);
+  const toggleAutresOutils = () =>
+    setAutresOutilsDropdownOpen((prevState) => !prevState);
+  const toggleCarteOutils = () =>
+    setCartesOutilsOpen((prevState) => !prevState);
+  const router = useRouter();
+  const { id } = router.query;
+
+  const duplicate_recette = async () => {
+    let endpoint = "http://127.0.0.1:8000/api/duplicate_recette/"+data.id+"/";
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: "GET",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+    };
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options);
+    if (response.status == 201) {
+      alert("La recette a bien été dupliquée !");
+    } else {
+      alert("Une erreur est survenue. Merci de réessayer plus tard.");
+    }
+  }
+
+  const delete_recette = async () => {
+    let endpoint = "http://127.0.0.1:8000/api/recettes/"+data.id+"/";
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: "DELETE",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+    };
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options);
+  
+    if (response.status == 204) {
+      window.location.href = '/recettes/toutes'
+    } else {
+      alert("Une erreur est survenue. Merci de réessayer plus tard.");
+    }
+  }
+
+  // Use a ternary operator to only fetch the data when the ID isn't undefined
+  const { data, error } = useSWR(
+    id ? `http://127.0.0.1:8000/api/recettes/${id}/` : null,
+    fetcher
+  );
+
+  const { mutate } = useSWRConfig();
+
+  const perform_update_request = async (field_to_change, value) => {
+    let body_data = {};
+    body_data[field_to_change] = value;
+    const response = await fetch(`http://127.0.0.1:8000/api/recettes/${id}/`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(body_data),
+    });
+
+    // Awaiting response.json()
+    const resData = await response.json();
+
+    // Return response data
+    return resData;
+  };
+  const update_recette_data_handler = async (field_to_change, value) => {
+    let new_data = { ...data };
+    new_data[field_to_change] = value;
+    const options = {
+      optimisticData: new_data,
+      rollbackOnError(error) {
+        // If it's timeout abort error, don't rollback
+        return error.name !== "AbortError";
+      },
+    };
+
+    mutate(
+      `http://127.0.0.1:8000/api/recettes/${id}/`,
+      perform_update_request(field_to_change, value),
+      options
+    );
+  };
+
+  if (error) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
+  if (!data) return <div>Chargement en cours ...</div>;
+
+  console.log(data);
 
   return (
     <div className="col-12 d-flex flex-column justify-content-center align-items-center pt-2">
@@ -227,15 +349,46 @@ export default function SingleRecettePage({ recetteData }) {
                         "Cette suppression sera définitive. Confirmez-vous vouloir supprimer cette recette ?"
                       )
                     )
-                      deleteRecette();
+                    delete_recette();
                 }}
               >
                 Supprimer
               </Button>
+              <UncontrolledDropdown
+                className={"mb-1 me-4"}
+                isOpen={autresOutilsOpen}
+                toggle={toggleAutresOutils}
+                id="autre_outils"
+              >
+                <DropdownToggle
+                  htmlFor="autre_outils"
+                  className={"btn-secondary"}
+                  caret
+                >
+                  Autres outils
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem
+                    onClick={() => {
+                      alert("imprimer");
+                    }}
+                  >
+                    Imprimer
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={() => {
+                      duplicate_recette()
+                    }}
+                  >
+                    Dupliquer
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
               <Dropdown
                 className={"mb-1 me-4"}
-                isOpen={dropdownOpen}
-                toggle={toggle}
+                isOpen={cartesOutilsOpen}
+                toggle={toggleCarteOutils}
+                id="cartes"
               >
                 <DropdownToggle className={"btn-success"} caret>
                   Gérer les cartes
@@ -243,41 +396,46 @@ export default function SingleRecettePage({ recetteData }) {
                 <DropdownMenu>
                   <DropdownItem
                     onClick={() => {
-                      window.location.reload(false);
-                      recetteData.selected_for_menu =
-                        !recetteData.selected_for_menu;
+                      update_recette_data_handler(
+                        "selected_for_menu",
+                        !data.selected_for_menu
+                      );
                     }}
                   >
-                    {recetteData.selected_for_menu
+                    {data.selected_for_menu
                       ? "Retirer de la carte"
                       : "Marquer à la carte"}
                   </DropdownItem>
                   <DropdownItem
                     onClick={() => {
-                      window.location.reload(false);
-                      recetteData.selected_for_menu =
-                        !recetteData.selected_for_menu;
+                      update_recette_data_handler(
+                        "selected_for_next_menu",
+                        !data.selected_for_next_menu
+                      );
                     }}
                   >
-                    {recetteData.selected_for_menu
+                    {data.selected_for_next_menu
                       ? "Retirer de la prochaine carte"
                       : "Marquer à la prochaine carte"}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
+
               <Button
                 className="btn-secondary me-4 mb-1"
                 onClick={() => {
-                  recetteData.is_to_modify = !recetteData.is_to_modify;
+                  update_recette_data_handler(
+                    "is_to_modify",
+                    !data.is_to_modify
+                  );
                 }}
               >
-                {recetteData.is_to_modify
-                  ? "Plus à modifier"
+                {data.is_to_modify
+                  ? "Modifications faites"
                   : "Marquer à modifier"}
               </Button>
 
               <Button className="btn-primary me-4 mb-1">🛒 Commander</Button>
-              <Button className="btn-secondary mb-1">🖨 Imprimer</Button>
             </>
           ) : (
             <Button
@@ -299,9 +457,9 @@ export default function SingleRecettePage({ recetteData }) {
         <div className="col-11 d-flex flex-row justify-content-center">
           <div className="col-1"></div>
           <div className="d-flex flex-column justify-content-center align-items-center mb-3 col-10">
-            <h4 style={{ marginBottom: "0px" }}>{recetteData.name}</h4>
+            <h4 style={{ marginBottom: "0px" }}>{data.name}</h4>
             <div className="col-12 d-flex flez-row justify-content-center">
-              {recetteData.selected_for_menu ? (
+              {data.selected_for_menu ? (
                 <p
                   className="align-self-center me-4"
                   style={{
@@ -313,7 +471,7 @@ export default function SingleRecettePage({ recetteData }) {
                   (à la carte)
                 </p>
               ) : null}
-              {recetteData.selected_for_next_menu ? (
+              {data.selected_for_next_menu ? (
                 <p
                   className="align-self-center me-4"
                   style={{
@@ -326,7 +484,7 @@ export default function SingleRecettePage({ recetteData }) {
                 </p>
               ) : null}
             </div>
-            {recetteData.is_to_modify ? (
+            {data.is_to_modify ? (
               <div className="col-12 d-flex flex-row justify-content-center align-items-baseline">
                 <i
                   className="me-2"
@@ -345,58 +503,54 @@ export default function SingleRecettePage({ recetteData }) {
             <Link
               className="emoji_button"
               style={{ textDecoration: "none" }}
-              href={"/recettes/modifier/" + recetteData.id}
+              href={"/recettes/modifier/" + data.id}
             >
               Modifier
             </Link>
           </div>
         </div>
 
-        <GeneralRecetteDataDisplay
-          recette={recetteData}
-        ></GeneralRecetteDataDisplay>
+        <GeneralRecetteDataDisplay recette={data}></GeneralRecetteDataDisplay>
 
         {/* <div className="col-12 d-flex flex-row justify-content-center">
           <PricingInformationComponent
             title={"Prix de revient H.T."}
-            value={recetteData.ingredients_cost}
+            value={data.ingredients_cost}
           ></PricingInformationComponent>
           <PricingInformationComponent
             title={"Taux de TVA"}
-            value={recetteData.tva}
+            value={data.tva}
             is_tva={true}
           ></PricingInformationComponent>
           <PricingInformationComponent
             title={"Coefficient"}
-            value={recetteData.coefficient}
+            value={data.coefficient}
             is_coefficient={true}
           ></PricingInformationComponent>
           <PricingInformationComponent
             title={"Prix de vente H.T."}
-            value={recetteData.selling_price_ht}
+            value={data.selling_price_ht}
             is_total_price={true}
           ></PricingInformationComponent>
           <PricingInformationComponent
             title={"Prix de vente T.T.C."}
-            value={recetteData.selling_price_ttc}
+            value={data.selling_price_ttc}
             is_total_price={true}
           ></PricingInformationComponent>
           <PricingInformationComponent
             title={"Prix de vente unitaire TTC"}
-            value={recetteData.unit_selling_price_ttc}
+            value={data.unit_selling_price_ttc}
           ></PricingInformationComponent>
         </div> */}
         <div className="col-lg-11 col-12">
           {/* Ingrédients */}
           <AllRecetteIngredientsDisplay
-            recette={recetteData}
+            recette={data}
           ></AllRecetteIngredientsDisplay>
           {/* Sous recettes */}
-          <AllSousRecettesDisplay
-            recette={recetteData}
-          ></AllSousRecettesDisplay>
+          <AllSousRecettesDisplay recette={data}></AllSousRecettesDisplay>
           {/* Progression */}
-          <ProgressionDisplay recette={recetteData}></ProgressionDisplay>
+          <ProgressionDisplay recette={data}></ProgressionDisplay>
         </div>
       </div>
     </div>

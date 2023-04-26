@@ -15,6 +15,7 @@ const RecetteIngredientListItem = ({
   ingredient,
   is_edit = false,
   all_sections,
+  recette_id,
 }) => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const deleteIngredient = () => {
@@ -64,7 +65,9 @@ const RecetteIngredientListItem = ({
         </p>
       </td>
       <td className={"col-7"} style={{ verticalAlign: "middle" }}>
-        <Link href={"/ingredients/" + ingredient.id}>{ingredient.name}</Link>
+        <Link href={"/ingredients/" + ingredient.ingredient_id}>
+          {ingredient.name}
+        </Link>
         {ingredient.note ? " (" + ingredient.note + ")" : null}
       </td>
       {is_edit ? (
@@ -80,6 +83,7 @@ const RecetteIngredientListItem = ({
 
           <td className={"col-1"} style={{ verticalAlign: "middle" }}>
             <RecetteComponentModifier
+              recette_id={recette_id}
               component={ingredient}
             ></RecetteComponentModifier>
           </td>
@@ -87,6 +91,7 @@ const RecetteIngredientListItem = ({
             <DeleteButton
               element={ingredient}
               is_ingredient={true}
+              recette_id={recette_id}
             ></DeleteButton>
           </td>
         </>

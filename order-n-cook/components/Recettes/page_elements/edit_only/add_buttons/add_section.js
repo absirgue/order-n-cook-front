@@ -1,47 +1,76 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
+import { useSWRConfig } from "swr";
+
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const AddSection = ({ unused_sections }) => {
+const AddSection = ({
+  unused_sections,
+  recette,
+  set_section_options,
+  all_sections,
+  newly_imported_sections,
+  set_newly_imported_sections,
+  setAllUnusedSections,
+}) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [importExisting, setImportExisting] = React.useState(false);
   const [selectedSection, setSelectedSection] = React.useState("");
+  const [nameError, setNameError] = React.useState(null);
+  const { mutate } = useSWRConfig();
 
   const get_unused_sections_options = () => {
-    const ingredient_options = [];
+    const section_options = [];
+    console.log("UNUSED SECTIONS IN HERE");
+    console.log(unused_sections);
     if (unused_sections) {
+      console.log("UNUSED SECTIONS IN HERE");
       unused_sections.forEach((section) =>
-        ingredient_options.push({
+        section_options.push({
           value: section.id,
           label: section.name,
+          number: section.number,
         })
       );
     }
-    return ingredient_options;
+    return section_options;
   };
 
   const resetSelections = () => {
     setImportExisting(false);
     setSelectedSection("");
   };
-  const handleSubmit = async (event) => {
-    if (!importExisting) {
-      // Stop the form from submitting and refreshing the page.
-      event.preventDefault();
 
+  function reset_all_errors() {
+    setNameError(null);
+  }
+  const handleSubmit = async (event) => {
+    // Stop the form from submitting and refreshing the page.
+    event.preventDefault();
+    if (!importExisting) {
       // Get data from the form.
       let data = {};
       if (event.target.section_name && event.target.section_name.value) {
-        data["section_name"] = event.target.section_name.value;
+        data["name"] = event.target.section_name.value;
       }
 
+      let max_section_number = 0;
+      for (let section_number of recette.sections.map(
+        (section) => section.number
+      )) {
+        if (section_number > max_section_number) {
+          max_section_number = section_number;
+        }
+      }
+      data["number"] = max_section_number + 1;
+      data["recette"] = recette.id;
       const JSONdata = JSON.stringify(data);
 
       // API endpoint where we send form data.
-      // const endpoint = "/api/form";
+      const endpoint = `http://127.0.0.1:8000/api/recette_section/`;
 
       // Form the request for sending data to the server.
       const options = {
@@ -56,15 +85,41 @@ const AddSection = ({ unused_sections }) => {
       };
 
       // Send the form data to our forms API on Vercel and get a response.
-      // const response = await fetch(endpoint, options);
-
-      // Get the response data from server as JSON.
-      // If server returns the name submitted, that means the form works.
-      // const result = await response.json();
-      alert(`Data: ${JSONdata}`);
+      const response = await fetch(endpoint, options);
+      if (response.status == 201) {
+        set_newly_imported_sections([...newly_imported_sections, data]);
+        reset_all_errors();
+        mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+        setModalOpen(false);
+      } else {
+        const result = await response.json();
+        let error_found = false;
+        if (result.hasOwnProperty("name")) {
+          setNameError(result.name);
+          error_found = true;
+        }
+        if (!error_found) {
+          alert(
+            "Une erreur est survenue. Merci de vérifier les valeurs renseignées et de réessayer ultérieurement."
+          );
+        }
+      }
     } else {
-      alert(`Import: ${selectedSection}`);
+      const selected_section_assembled = {
+        id: selectedSection.value,
+        name: selectedSection.label,
+        number: selectedSection.number,
+      };
+      set_section_options([...all_sections, selected_section_assembled]);
+      set_newly_imported_sections([
+        ...newly_imported_sections,
+        selected_section_assembled,
+      ]);
+      setModalOpen(false);
     }
+
+    // Get the response data from server as JSON.
+    // If server returns the name submitted, that means the form works.
   };
 
   return (
@@ -97,7 +152,7 @@ const AddSection = ({ unused_sections }) => {
         >
           <ModalBody className="pt-1">
             <div className="d-flex flex-column ">
-              {unused_sections ? (
+              {unused_sections.length > 0 ? (
                 <div className="d-flex flex-row justify-content-between col-12 align-items-baseline mb-4">
                   <Button
                     style={{
