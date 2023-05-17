@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useSWRConfig } from "swr";
+import { create_progression_element_request } from "../../../../../utils/backend/recette_components_requests";
 
 /*
-A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
-quantity of said ingredient from a selected provider.
+A modal that enables creating a new Progression Element for the Recette on display.
 */
 const AddProgressionElement = ({
   sans_section = false,
@@ -16,6 +16,38 @@ const AddProgressionElement = ({
   const [noteError, setNoteError] = React.useState(null);
   const { mutate } = useSWRConfig();
 
+  function get_initial_rank_value(section) {
+    if (section_max_number) {
+      console.log("SECTION MAX");
+      console.log(section_max_number);
+      return section_max_number + 1;
+    } else if (
+      recette.progression_elements &&
+      recette.progression_elements.length > 0
+    ) {
+      let maximum = 0;
+      if (section) {
+        for (let element of recette.progression_elements.filter(
+          (element) => element.section && element.section == section_number
+        )) {
+          if (element.rank > maximum) {
+            maximum = element.rank;
+          }
+        }
+      } else {
+        for (let element of recette.progression_elements.filter(
+          (element) => !element.section
+        )) {
+          if (element.rank > maximum) {
+            maximum = element.rank;
+          }
+        }
+      }
+      return maximum + 1;
+    } else {
+      return 1;
+    }
+  }
   function reset_all_errors() {
     setNoteError(null);
   }
@@ -35,53 +67,8 @@ const AddProgressionElement = ({
       data["section"] = section_number;
     }
     data["recette"] = recette.id;
-    if (section_max_number) {
-      console.log("SECTION MAX");
-      console.log(section_max_number);
-      recette["rank"] = section_max_number + 1;
-    } else if (
-      recette.progression_elements &&
-      recette.progression_elements.length > 0
-    ) {
-      let maximum = 0;
-      for (let element of recette.progression_elements) {
-        if (
-          element.section &&
-          element.section == section_number &&
-          element.rank > maximum
-        ) {
-          maximum = element.rank;
-        }
-      }
-
-      data["rank"] = maximum + 1;
-      //   recette.progression_elements.map((progression_element) =>
-      //     parseInt(progression_element.rank)
-      //   )
-      // );
-    } else {
-      data["rank"] = 1;
-    }
-
-    const JSONdata = JSON.stringify(data);
-
-    // API endpoint where we send form data.
-    const endpoint = `http://127.0.0.1:8000/api/recette_progression/`;
-
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
-
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch(endpoint, options);
+    data["rank"] = get_initial_rank_value(section_number);
+    const response = await create_progression_element_request(data);
     if (response.status == 201) {
       setModalOpen(false);
       reset_all_errors();

@@ -53,12 +53,11 @@ const RecetteComponentModifier = ({
   const load_possible_units = async () => {
     if (!is_sous_recette && !isLoaded) {
       const data = await get_possible_units();
-      console.log("DATA");
+      console.log("DATA of POSSIBLE UNITS");
       console.log(data);
-      data.units.forEach((unit) => {
-        console.log(unit.unit);
-        setPossibleUnit([...possibleUnit, unit.unit]);
-      });
+      setPossibleUnit(data.units.map((unit) => unit.unit));
+      console.log("RESULTED IN");
+      console.log(possibleUnit);
       setIsLoaded(true);
     }
   };
@@ -182,6 +181,7 @@ const RecetteComponentModifier = ({
                     type="number"
                     id="quantity"
                     name="quantity"
+                    step="any"
                     style={{
                       backgroundColor: "transparent",
                       border: 0,

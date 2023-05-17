@@ -16,176 +16,27 @@ import {
 } from "reactstrap";
 import { useState } from "react";
 
-function getRecetteData(id) {
-  return {
-    id: 1,
-    name: "Soupe de poisson",
-    quantity: 1,
-    unit: "littre",
-    season: [
-      true,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      true,
-      true,
-      true,
-      true,
-    ],
-    genres: [
-      { id: 1, name: "français" },
-      { id: 2, name: "marseille" },
-      { id: 3, name: "mijoté" },
-    ],
-    category: "plat",
-    tastes: [{ id: 1, name: "doux" }],
-    duration: 75,
-    selected_for_menu: true,
-    selling_price_ht: 24.8,
-    selling_price_ttc: 35.6,
-    unit_selling_price_ttc: 35.6,
-    sous_vide_soudure: 3,
-    temperature: 120,
-    sous_vide_pression: 2,
-    selected_for_next_menu: true,
-    ingredients_cost: 9.87,
-    coefficient: 3.2,
-    is_to_modify: true,
-    allergenes: "noix",
-    tva: 10,
-    ingredients: [
-      {
-        id: 1,
-        name: "Fraise",
-        quantity: 45,
-        unit: "unités",
-        // section: 0,
-        note: "gariguettes de préférence",
-        allergenes: [],
-        cost: 1.3,
-      },
-      {
-        id: 6,
-        name: "Framboise",
-        quantity: 5,
-        unit: "hectogramme",
-        section: 0,
-        allergenes: [],
-        cost: 0.9,
-      },
-      {
-        id: 3,
-        name: "côte de boeuf",
-        quantity: 1,
-        section: 0,
-        allergenes: [{ id: 1, name: "inventé" }],
-        cost: 3,
-      },
-      {
-        id: 5,
-        name: "Carotte",
-        section: 1,
-        allergenes: [
-          { id: 1, name: "inventé" },
-          { id: 2, name: "créé" },
-        ],
-        cost: 0.2,
-      },
-    ],
-    sous_recette: [
-      {
-        name: "condiment betterave",
-        quantity: 300,
-        unit: "millilittres",
-        id: 2,
-        allergenes: [{ id: 1, name: "lactose" }],
-        cost: 4,
-      },
-    ],
-    sections: [
-      { number: 0, name: "Préparation inventée numéro 1", id: 1 },
-      { number: 1, name: "préparation inventée numéro 2", id: 2 },
-      { number: 2, name: "préparation inventée numéro 3", id: 3 },
-    ],
-    progression_elements: [
-      {
-        id: 1,
-        rank: 0,
-        text: "L1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
-      },
-      {
-        id: 2,
-        rank: 1,
-        text: "L2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
-      },
-      {
-        id: 3,
-        rank: 2,
-        text: "L3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
-      },
-      {
-        id: 4,
-        rank: 3,
-        text: "L4: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 0,
-      },
-      {
-        id: 5,
-        rank: 0,
-        text: "L5: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 1,
-      },
-      {
-        id: 6,
-        rank: 1,
-        text: "L6: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 1,
-      },
-      {
-        id: 7,
-        rank: 2,
-        text: "L7: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        section: 1,
-      },
-      {
-        id: 8,
-        rank: 3,
-        text: "L8:bore et dolore magna aliqua.",
-        section: 1,
-      },
-    ],
-  };
+async function getRecetteData(id) {
+  console.log("HERE");
+  console.log("HERE");
+  console.log(id);
+  const endpoint = `http://127.0.0.1:8000/api/recettes/${id}/`;
+  const data = await fetch(endpoint);
+  return await data.json();
 }
 
-export const getStaticProps = async (context) => {
+export const getServerSideProps = async (context) => {
   //   const recetteId = context.params?.id;
-
-  const page_data = getRecetteData();
+  console.log("PARAMS");
+  console.log(context.params);
+  const page_data = await getRecetteData(context.params?.sous_recette_id);
+  console.log(page_data);
   page_data["recette_id"] = context.params?.recette_id;
 
   return {
     props: {
       page_data,
     },
-  };
-};
-
-export const getStaticPaths = async () => {
-  const data = { stars: [{ id: "1" }, { id: "6" }] };
-  const pathsWithParams = data.stars.map((star) => ({
-    params: { recette_id: star.id, sous_recette_id: star.id },
-  }));
-
-  return {
-    paths: pathsWithParams,
-    fallback: true,
   };
 };
 

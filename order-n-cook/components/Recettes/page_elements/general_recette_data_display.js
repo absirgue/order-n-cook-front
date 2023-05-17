@@ -1,5 +1,3 @@
-import { useState } from "react";
-import Select from "react-select";
 import SeasonnalityDisplay from "../../Ingredients/Ingredients/page_elements/seasonnality_display";
 import {
   get_taste_string,
@@ -8,6 +6,12 @@ import {
 } from "./helper_functions/general_recette_data";
 import GeneralRecetteDataModify from "./edit_only/general_recette_data_modify";
 
+/**
+ * Shows general information for a Recette and handles switching between edit mode and non-edit mode.
+ *
+ * @param recette the Recette on display
+ * @param is_edit boolean conditionning if edit mode should be shown or just normal mode (defaults to normal mode)
+ */
 const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
   return (
     <>
@@ -20,68 +24,88 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
               <p style={{ fontSize: "14px", marginBottom: "0px" }}>
                 Quantité:{" "}
                 <span style={{ fontSize: "16px" }}>
-                  {(recette.quantity ? recette.quantity:"?") + " " + (recette.unit ? recette.unit : "")}
+                  {(recette.quantity ? recette.quantity : "?") +
+                    " " +
+                    (recette.unit ? recette.unit : "")}
                 </span>
               </p>
-              {recette.duration ? 
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Temps de cuisson:{" "}
-                <span style={{ fontSize: "16px" }}>
-                  {get_formatted_duration(recette)}
-                </span>
-              </p>:null}
-              {recette.temperature ? 
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Température de cuisson:{" "}
-                <span style={{ fontSize: "16px" }}>{recette.temperature}</span>
-              </p>:null}
-              {recette.sous_vide_pression ? 
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Sous vide - pression:{" "}
-                <span style={{ fontSize: "16px" }}>
-                  {recette.sous_vide_pression}
-                </span>
-              </p> : null}
-              {recette.sous_vide_soudure ? 
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Sous vide - soudure:{" "}
-                <span style={{ fontSize: "16px" }}>
-                  {recette.sous_vide_soudure}
-                </span>
-              </p>:null}
+              {recette.duration ? (
+                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                  Temps de cuisson:{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {get_formatted_duration(recette)}
+                  </span>
+                </p>
+              ) : null}
+              {recette.temperature ? (
+                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                  Température de cuisson:{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {recette.temperature}
+                  </span>
+                </p>
+              ) : null}
+              {recette.sous_vide_pression ? (
+                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                  Sous vide - pression:{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {recette.sous_vide_pression}
+                  </span>
+                </p>
+              ) : null}
+              {recette.sous_vide_soudure ? (
+                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                  Sous vide - soudure:{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {recette.sous_vide_soudure}
+                  </span>
+                </p>
+              ) : null}
             </div>
             <div className="d-flex flex-column justify-content-start col-6 align-items-end">
               <p style={{ fontSize: "14px", marginBottom: "0px" }}>
                 Prix de revient:{" "}
                 <span style={{ fontSize: "16px" }}>
-                  {recette.cost_ingredients? recette.cost_ingredients + "€":"-"}
+                  {recette.cost_ingredients
+                    ? recette.cost_ingredients + "€"
+                    : "-"}
                 </span>
               </p>
               <p style={{ fontSize: "14px", marginBottom: "0px" }}>
                 Taux de TVA:{" "}
-                <span style={{ fontSize: "16px" }}>{recette.tva ? recette.tva + "%" : "?"}</span>
+                <span style={{ fontSize: "16px" }}>
+                  {recette.tva ? recette.tva + "%" : "?"}
+                </span>
               </p>
               <p style={{ fontSize: "14px", marginBottom: "0px" }}>
                 Coefficient:{" "}
-                <span style={{ fontSize: "16px" }}>{recette.coefficient ? recette.coefficient : "?"}</span>
-              </p>
-              {recette.ht_selling_price && recette.ht_selling_price!= "null" ? (
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Prix de vente HT (pour {recette.quantity + " " + recette.unit}
-                ):{" "}
                 <span style={{ fontSize: "16px" }}>
-                  {recette.ht_selling_price + "€"}
+                  {recette.coefficient ? recette.coefficient : "?"}
                 </span>
-              </p>):null}
-              {recette.ttc_selling_price && recette.ttc_selling_price!= "null" ? (
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Prix de vente TTC (pour {recette.quantity + " " + recette.unit}
-                ):{" "}
-                <span style={{ fontSize: "16px", fontWeight: "500" }}>
-                  {recette.ttc_selling_price + "€"}
-                </span>
-              </p>):null}
-              {recette.ttc_unit_selling_price && recette.ttc_unit_selling_price!= "null" ? (
+              </p>
+              {recette.ht_selling_price &&
+              recette.ht_selling_price != "null" ? (
+                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                  Prix de vente HT (pour {recette.quantity + " " + recette.unit}
+                  ):{" "}
+                  <span style={{ fontSize: "16px" }}>
+                    {recette.ht_selling_price + "€"}
+                  </span>
+                </p>
+              ) : null}
+              {recette.ttc_selling_price &&
+              recette.ttc_selling_price != "null" ? (
+                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                  Prix de vente TTC (pour{" "}
+                  {recette.quantity + " " + recette.unit}
+                  ):{" "}
+                  <span style={{ fontSize: "16px", fontWeight: "500" }}>
+                    {recette.ttc_selling_price + "€"}
+                  </span>
+                </p>
+              ) : null}
+              {recette.ttc_unit_selling_price &&
+              recette.ttc_unit_selling_price != "null" ? (
                 <p style={{ fontSize: "14px", marginBottom: "0px" }}>
                   Prix de vente unitaire TTC:{" "}
                   <span style={{ fontSize: "16px", fontWeight: "500" }}>
@@ -97,7 +121,15 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
                 <i className="me-2" style={{ marginBottom: "0px" }}>
                   Allergènes:
                 </i>
-                <p style={{ marginBottom: "0px" }}>{recette.allergenes.reduce((accumultor, allergene)=> accumultor + allergene.name + "; ","").slice(0, -2)}</p>
+                <p style={{ marginBottom: "0px" }}>
+                  {recette.allergenes
+                    .reduce(
+                      (accumultor, allergene) =>
+                        accumultor + allergene.name + "; ",
+                      ""
+                    )
+                    .slice(0, -2)}
+                </p>
               </div>
             ) : (
               <i style={{ marginBottom: "0px" }}>Aucun allergène</i>

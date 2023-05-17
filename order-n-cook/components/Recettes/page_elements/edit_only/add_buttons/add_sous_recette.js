@@ -2,30 +2,15 @@ import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { useSWRConfig } from "swr";
+import {
+  get_all_possible_sous_recette,
+  create_sous_recette,
+} from "../../../../../utils/backend/recette_components_requests";
 
 /*
-A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
-quantity of said ingredient from a selected provider.
+A modal to create a Sous Recette for the Recette on display.
+This presents a form comporting a searchable list of all possible sous recette
 */
-
-async function get_all_possible_sous_recette() {
-  const response = await fetch(
-    `http://127.0.0.1:8000/api/sous_recette_options/`,
-    {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    }
-  );
-
-  // Awaiting response.json()
-  const resData = await response.json();
-
-  // Return response data
-  return resData;
-}
-
 const AddSousRecette = ({ recette_id }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedRecette, setSelectedRecette] = React.useState("");
@@ -38,7 +23,9 @@ const AddSousRecette = ({ recette_id }) => {
 
   const recette_options = [];
   const generate_option_list = async () => {
-    const all_existing_sous_recette = await get_all_possible_sous_recette();
+    const all_existing_sous_recette = await get_all_possible_sous_recette(
+      recette_id
+    );
     all_existing_sous_recette.forEach((recette) =>
       recette_options.push({
         value: recette.id,
@@ -76,29 +63,11 @@ const AddSousRecette = ({ recette_id }) => {
     }
     data["recette"] = recette_id;
 
-    const JSONdata = JSON.stringify(data);
-
-    // API endpoint where we send form data.
-    const endpoint = "http://127.0.0.1:8000/api/sous_recette/";
-
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
-
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch(endpoint, options);
+    const response = await create_sous_recette(data);
     if (response.status == 201) {
       setModalOpen(false);
       reset_all_errors();
-      mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+      mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
     } else {
       const result = await response.json();
       let error_found = false;
@@ -178,6 +147,7 @@ const AddSousRecette = ({ recette_id }) => {
                     type="number"
                     id="quantity"
                     name="quantity"
+                    step="any"
                     style={{
                       backgroundColor: "transparent",
                       border: 0,

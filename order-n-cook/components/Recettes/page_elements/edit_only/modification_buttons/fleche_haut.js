@@ -1,5 +1,11 @@
 import { Button } from "reactstrap";
 import { useSWRConfig } from "swr";
+
+/**
+ * Handles moving a progression element one position up.
+ * @param {*} param0
+ * @returns
+ */
 const FlecheHautButton = ({ element, recette_id }) => {
   const { mutate } = useSWRConfig();
   const handleClick = async () => {

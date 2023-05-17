@@ -2,6 +2,10 @@ import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
+
+/*
+This implements a Buttona and linked Modal to create a new Recette tag item, whether Category, Genre, or Taste.
+*/
 const AddRecetteTagButton = ({
   is_category = false,
   is_taste = false,

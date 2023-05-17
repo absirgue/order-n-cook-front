@@ -1,6 +1,5 @@
 import { MONTHS } from "../../../../utils/general_constants";
 import { useState } from "react";
-import { Button } from "reactstrap";
 import Select from "react-select";
 import AddRecetteTagButton from "./add_buttons/add_recette_tag_button";
 import {
@@ -8,10 +7,34 @@ import {
   get_initial_taste_select_value,
   get_recette_season_end_month,
   get_recette_season_start_month,
+  get_data_object_for_recette_general_info_update_event,
 } from "..//helper_functions/general_recette_data";
-import { useSWRConfig } from "swr";
+import useSWR, { useSWRConfig } from "swr";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
+
+async function sendUpdateRecetteRequest(data, recette) {
+  const JSONdata = JSON.stringify(data);
+
+  // API endpoint where we send form data.
+  const endpoint = `http://127.0.0.1:8000/api/recettes/${recette.id}/`;
+
+  // Form the request for sending data to the server.
+  const options = {
+    // The method is POST because we are sending data.
+    method: "PUT",
+    // Tell the server we're sending JSON.
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // Body of the request is the JSON data we created above.
+    body: JSONdata,
+  };
+
+  // Send the form data to our forms API on Vercel and get a response.
+  const response = await fetch(endpoint, options);
+  return response;
+}
 
 const GeneralRecetteDataModify = ({ recette }) => {
   console.log(recette);
@@ -37,53 +60,18 @@ const GeneralRecetteDataModify = ({ recette }) => {
 
   const { mutate } = useSWRConfig();
 
-  async function get_all_existing_recette_genres() {
-    const response = await fetch(`http://127.0.0.1:8000/api/recette_genres/`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-
-    // Awaiting response.json()
-    const resData = await response.json();
-    console.log(resData.map((obj) => obj.name));
-    // Return response data
-    return resData.map((obj) => obj.name);
-  }
-
-  async function get_all_existing_recette_tastes() {
-    const response = await fetch(`http://127.0.0.1:8000/api/recette_tastes/`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-
-    // Awaiting response.json()
-    const resData = await response.json();
-
-    // Return response data
-    return resData.map((obj) => obj.name);
-  }
-
-  async function get_all_existing_recette_categories() {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/recette_categories/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-
-    // Awaiting response.json()
-    const resData = await response.json();
-
-    // Return response data
-    return resData.map((obj) => obj.name);
-  }
+  const { data: genreData, error: genreDataError } = useSWR(
+    `http://127.0.0.1:8000/api/recette_genres/`,
+    fetcher
+  );
+  const { data: tasteData, error: tasteDataError } = useSWR(
+    `http://127.0.0.1:8000/api/recette_tastes/`,
+    fetcher
+  );
+  const { data: categoryData, error: categoryDataError } = useSWR(
+    `http://127.0.0.1:8000/api/recette_categories/`,
+    fetcher
+  );
 
   const genre_options = [];
 
@@ -92,22 +80,20 @@ const GeneralRecetteDataModify = ({ recette }) => {
   const category_options = [];
 
   const generate_option_list = async () => {
-    const all_existing_genres = await get_all_existing_recette_genres();
-    all_existing_genres.forEach((genre) =>
-      genre_options.push({ value: genre, label: genre })
-    );
-    const all_existing_recette_tastes = await get_all_existing_recette_tastes();
-    all_existing_recette_tastes.forEach((taste) =>
-      taste_options.push({ value: taste, label: taste })
-    );
-    const all_existing_recette_categories =
-      await get_all_existing_recette_categories();
-    all_existing_recette_categories.forEach((category) =>
-      category_options.push({ value: category, label: category })
-    );
-  };
+    genreData
+      .map((obj) => obj.name)
+      .forEach((genre) => genre_options.push({ value: genre, label: genre }));
 
-  generate_option_list();
+    tasteData
+      .map((obj) => obj.name)
+      .forEach((taste) => taste_options.push({ value: taste, label: taste }));
+
+    categoryData
+      .map((obj) => obj.name)
+      .forEach((category) =>
+        category_options.push({ value: category, label: category })
+      );
+  };
 
   function reset_all_errors() {
     setUnitError(null);
@@ -127,121 +113,23 @@ const GeneralRecetteDataModify = ({ recette }) => {
 
   const updateRecetteGeneralInformation = async (event) => {
     // Stop the form from submitting and refreshing the page.
-    event.preventDefault();
-
-    // Get data from the form.
-
-    let data = {};
-    if (event.target.unit.value && event.target.unit.value != recette.unit) {
-      data["unit"] = event.target.unit.value;
-    }
-    if (
-      event.target.quantity.value &&
-      event.target.quantity.value != recette.quantity
-    ) {
-      data["quantity"] = parseInt(event.target.quantity.value);
-    }
-    if (event.target.tva.value && event.target.tva.value != recette.tva) {
-      data["tva"] = parseInt(event.target.tva.value);
-    }
-    if (
-      event.target.temperature.value &&
-      event.target.temperature.value != recette.temperature
-    ) {
-      data["temperature"] = parseInt(event.target.temperature.value);
-    }
-    if (
-      event.target.sous_vide_pression.value &&
-      event.target.sous_vide_pression.value != recette.sous_vide_pression
-    ) {
-      data["sous_vide_pression"] = parseInt(
-        event.target.sous_vide_pression.value
-      );
-    }
-    if (
-      event.target.sous_vide_soudure.value &&
-      event.target.sous_vide_soudure.value != recette.sous_vide_soudure
-    ) {
-      data["sous_vide_soudure"] = parseInt(
-        event.target.sous_vide_soudure.value
-      );
-    }
-    if (
-      event.target.coefficient.value &&
-      event.target.coefficient.value != recette.coefficient
-    ) {
-      data["coefficient"] = event.target.coefficient.value;
-    }
-    if (
-      event.target.season_start.value &&
-      event.target.season_start.value != recette.season_start
-    ) {
-      data["season_start"] = event.target.season_start.value;
-    }
-
-    if (
-      event.target.season_end.value &&
-      event.target.season_end.value != recette.season_end
-    ) {
-      data["season_end"] = event.target.season_end.value;
-    }
-
-    if (
-      event.target.duration.value &&
-      event.target.duration.value != recette.duration
-    ) {
-      data["duration"] = event.target.duration.value;
-    }
-
-    const taste_select_values = tastes.map(
-      (taste_representation) => taste_representation.label
+    const data = get_data_object_for_recette_general_info_update_event(
+      event,
+      recette,
+      genres,
+      tastes,
+      category
     );
-    if (recette.tastes.toString() != taste_select_values.toString()) {
-      data["tastes"] = taste_select_values;
-    }
 
-    const genre_select_values = genres.map(
-      (genre_representation) => genre_representation.label
-    );
-    if (recette.genres.toString() != genre_select_values.toString()) {
-      data["genres"] = genre_select_values;
-    }
-
-    if (category.label != recette.category) {
-      data["category"] = category.label;
-    }
-
-    const JSONdata = JSON.stringify(data);
-
-    console.log(JSONdata);
-
-    // API endpoint where we send form data.
-    const endpoint = `http://127.0.0.1:8000/api/recettes/${recette.id}/`;
-
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "PUT",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
-
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch(endpoint, options);
-
+    const response = await sendUpdateRecetteRequest(data, recette);
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
-    const result = await response.json();
+
     if (response.status == 200) {
       mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
       reset_all_errors();
     } else {
-      console.log("ERROR");
-      console.log(result);
+      const result = await response.json();
       let error_found = false;
       if (result.hasOwnProperty("unit")) {
         setUnitError(result.unit);
@@ -307,6 +195,21 @@ const GeneralRecetteDataModify = ({ recette }) => {
   const recette_season_start_month = get_recette_season_start_month(recette);
   const recette_season_end_month = get_recette_season_end_month(recette);
 
+  if (genreDataError || tasteDataError || categoryDataError) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
+  console.log("DATAS");
+  console.log(genreData);
+  console.log(tasteData);
+  console.log(categoryData);
+  if (!(genreData && tasteData && categoryData))
+    return <div>Chargement en cours ...</div>;
+  generate_option_list();
   return (
     <>
       <form
@@ -555,7 +458,7 @@ const GeneralRecetteDataModify = ({ recette }) => {
               id="categories"
               className="flex-grow-1"
               options={category_options}
-              placeholder="Ajouter des étiquettes de goûts à la recette"
+              placeholder="Sélectionner une catégorie pour cette recette"
               isSearchable={true}
               value={category}
               onChange={(data) => {

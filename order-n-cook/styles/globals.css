@@ -65,3 +65,12 @@
     color:red;
     margin-bottom: 0px;
 }
+
+p {
+    margin-bottom: 0;
+}
+
+.greyed-label {
+    color: #95929c;
+    margin-bottom: "0px";
+}

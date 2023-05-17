@@ -2,10 +2,10 @@ import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { useSWRConfig } from "swr";
+import { create_recette_section } from "../../../../../utils/backend/recette_components_requests";
 
 /*
-A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
-quantity of said ingredient from a selected provider.
+A modal to create a Section for the Recette on display.
 */
 const AddSection = ({
   unused_sections,
@@ -67,27 +67,10 @@ const AddSection = ({
       }
       data["number"] = max_section_number + 1;
       data["recette"] = recette.id;
-      const JSONdata = JSON.stringify(data);
-
-      // API endpoint where we send form data.
-      const endpoint = `http://127.0.0.1:8000/api/recette_section/`;
-
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: "POST",
-        // Tell the server we're sending JSON.
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      };
-
-      // Send the form data to our forms API on Vercel and get a response.
-      const response = await fetch(endpoint, options);
+      const response = await create_recette_section(data);
       if (response.status == 201) {
         set_newly_imported_sections([...newly_imported_sections, data]);
+        set_section_options([...all_sections, data]);
         reset_all_errors();
         mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
         setModalOpen(false);

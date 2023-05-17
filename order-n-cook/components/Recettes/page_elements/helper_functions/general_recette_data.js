@@ -86,3 +86,94 @@ export function get_recette_season_end_month(recette) {
   }
   return recette_season_end;
 }
+
+export function get_data_object_for_recette_general_info_update_event(
+  event,
+  recette,
+  genres,
+  tastes,
+  category
+) {
+  event.preventDefault();
+
+  // Get data from the form.
+
+  let data = {};
+  if (event.target.unit.value && event.target.unit.value != recette.unit) {
+    data["unit"] = event.target.unit.value;
+  }
+  if (
+    event.target.quantity.value &&
+    event.target.quantity.value != recette.quantity
+  ) {
+    data["quantity"] = parseInt(event.target.quantity.value);
+  }
+  if (event.target.tva.value && event.target.tva.value != recette.tva) {
+    data["tva"] = parseInt(event.target.tva.value);
+  }
+  if (
+    event.target.temperature.value &&
+    event.target.temperature.value != recette.temperature
+  ) {
+    data["temperature"] = parseInt(event.target.temperature.value);
+  }
+  if (
+    event.target.sous_vide_pression.value &&
+    event.target.sous_vide_pression.value != recette.sous_vide_pression
+  ) {
+    data["sous_vide_pression"] = parseInt(
+      event.target.sous_vide_pression.value
+    );
+  }
+  if (
+    event.target.sous_vide_soudure.value &&
+    event.target.sous_vide_soudure.value != recette.sous_vide_soudure
+  ) {
+    data["sous_vide_soudure"] = parseInt(event.target.sous_vide_soudure.value);
+  }
+  if (
+    event.target.coefficient.value &&
+    event.target.coefficient.value != recette.coefficient
+  ) {
+    data["coefficient"] = event.target.coefficient.value;
+  }
+  if (
+    event.target.season_start.value &&
+    event.target.season_start.value != recette.season_start
+  ) {
+    data["season_start"] = event.target.season_start.value;
+  }
+
+  if (
+    event.target.season_end.value &&
+    event.target.season_end.value != recette.season_end
+  ) {
+    data["season_end"] = event.target.season_end.value;
+  }
+
+  if (
+    event.target.duration.value &&
+    event.target.duration.value != recette.duration
+  ) {
+    data["duration"] = event.target.duration.value;
+  }
+
+  const taste_select_values = tastes.map(
+    (taste_representation) => taste_representation.label
+  );
+  if (recette.tastes.toString() != taste_select_values.toString()) {
+    data["tastes"] = taste_select_values;
+  }
+
+  const genre_select_values = genres.map(
+    (genre_representation) => genre_representation.label
+  );
+  if (recette.genres.toString() != genre_select_values.toString()) {
+    data["genres"] = genre_select_values;
+  }
+
+  if (category.label != recette.category) {
+    data["category"] = category.label;
+  }
+  return data;
+}

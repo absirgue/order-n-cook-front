@@ -1,6 +1,11 @@
 import { Button } from "reactstrap";
 import { useSWRConfig } from "swr";
 
+/**
+ * Handles moving a progression element one position down.
+ * @param {*} param0
+ * @returns
+ */
 const FlecheBasButton = ({ element, recette_id }) => {
   const { mutate } = useSWRConfig();
   const handleClick = async () => {

@@ -130,7 +130,7 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
       console.log("CA PASSE EN 1");
       return recette.sections.filter(
         (section) =>
-          recette.ingredients
+          recette.progression_elements
             .map((element) => element.section)
             .indexOf(section.number) == -1
       );
@@ -158,7 +158,18 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
   return (
     <div>
       <div className="d-flex flex-column justify-content-start align-items-center mt-3 col-12">
-        <h5>Progression</h5>
+        <p
+          className="col-12"
+          style={{
+            background: "#CDCCCD",
+            paddingLeft: "10px",
+            textAlign: "center",
+            fontSize: "20px",
+            fontWeight: "500",
+          }}
+        >
+          Progression
+        </p>
         {grouped_progression_data.length > 0 ? (
           <div className="col-12">
             {grouped_progression_data.map((group) => (
@@ -168,21 +179,16 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                   key={"general_div_" + group.section_name}
                 >
                   {group.section_name ? (
-                    <p
-                      style={{
-                        background: "#CDCCCD",
-                        paddingLeft: "10px",
-                      }}
-                    >
+                    <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
                       {group.section_name}
-                    </p>
+                    </h5>
                   ) : null}
 
                   {is_edit
                     ? group.progression_elements.map((progression_element) => (
                         <div>
                           <div
-                            className="col-12 d-flex flex-row"
+                            className="col-12 d-flex flex-row align-items-center"
                             key={"edit_" + progression_element.id}
                           >
                             <p

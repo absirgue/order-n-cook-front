@@ -1,6 +1,15 @@
 import { Button } from "reactstrap";
 import { useSWRConfig } from "swr";
 
+/**
+ * This component allows to delete an element, whether a progression element, an ingredient, or a sous recette.
+ * @param is_progression if the targetted element is a progression element
+ * @param is_ingredient if the targetted element is an ingredient
+ * @param is_sous_recette if the targetted element is a sous recette
+ * @param element the targetted element
+ * @param recette_id the id of the Recette on display
+ * @returns
+ */
 const DeleteButton = ({
   is_progression = false,
   is_ingredient = false,

@@ -2,6 +2,13 @@ import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import React from "react";
 import Select from "react-select";
 
+/**
+ * This component enables moving an Ingredient or a Progression Element to another section.
+ * @param {*} is_ingredient if the element targetted is an ingredient
+ * @param {*} is_progression if the element targetted is a progression element
+ * @param {*} element the element targetted
+ * @param {*} all_sections all the sections we can possibly switch the targetted element to.
+ */
 const ChangeSectionButton = ({
   is_ingredient = false,
   is_progression = false,

@@ -2,10 +2,20 @@ import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { useSWRConfig } from "swr";
+import {
+  get_all_existing_ingredient_categories_request,
+  get_all_existing_ingredient_sous_categories_request,
+  create_new_unit_conversion,
+} from "../../../../../utils/backend/ingredient_components_requests";
+import {
+  get_all_existing_ingredients_options,
+  create_ingredient_request,
+} from "../../../../../utils/backend/ingredient_requests";
+import { create_new_recette_ingredient } from "../../../../../utils/backend/recette_components_requests";
 
 /*
-A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
-quantity of said ingredient from a selected provider.
+A modal that enables creating a RecetteIngredient for the Recette dsplay.
+This includes the eventuality of creating a new Ingredient and a new Conversion for a given ingredient (and eventually both).
 */
 const AddIngredient = ({
   recette,
@@ -28,58 +38,18 @@ const AddIngredient = ({
   const [noteError, setNoteError] = React.useState(null);
   const { mutate } = useSWRConfig();
 
-  async function get_all_existing_ingredients_options() {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/all_ingredient_and_units/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-
-    // Awaiting response.json()
-    const resData = await response.json();
-
-    // Return response data
-    return resData;
-  }
-
+  // Returns all the existing categories for ingredients in a clean way (names only).
   async function get_all_existing_categories() {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/ingredient_categories/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-
-    // Awaiting response.json()
-    const resData = await response.json();
-
-    // Return response data
-    return resData.map((obj) => obj.name);
+    const all_ingredient_categories =
+      await get_all_existing_ingredient_categories_request();
+    return all_ingredient_categories.map((obj) => obj.name);
   }
 
+  // Returns all the existing sous categories for ingredients in a clean way (names only).
   async function get_all_existing_sous_categories() {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/ingredient_sous_categories/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-
-    // Awaiting response.json()
-    const resData = await response.json();
-
-    // Return response data
-    return resData.map((obj) => obj.name);
+    const all_ingredient_sous_categories =
+      await get_all_existing_ingredient_sous_categories_request();
+    return all_ingredient_sous_categories.map((obj) => obj.name);
   }
 
   const category_options = [];
@@ -88,9 +58,10 @@ const AddIngredient = ({
 
   let ingredient_options = [];
 
+  // Expands on the lists of ingredient options, sous_categories options and categories options to generate
+  // option list for the various Select components on the page.
   const generate_option_list = async () => {
     const helper = await get_all_existing_ingredients_options();
-
     helper.forEach((ingredient) =>
       ingredient_options.push({
         value: ingredient.id,
@@ -109,6 +80,7 @@ const AddIngredient = ({
     );
   };
 
+  // Reset all the error messages to be null.
   const reset_all_errors = () => {
     setQuantityError(null);
     setIngredientError(null);
@@ -120,101 +92,95 @@ const AddIngredient = ({
 
   generate_option_list();
 
+  // Handle page behavior when a new ingredient is created.
+  async function handle_ingredient_creation(event_target) {
+    let ingredient_creation_data = {};
+    if (event_target.ingredient_name.value) {
+      ingredient_creation_data["name"] = event_target.ingredient_name.value;
+    }
+    if (category) {
+      ingredient_creation_data["category"] = category.value;
+    } else {
+      setCategoryError(
+        "Veuillez renseigner une catégorie pour ce nouvel ingrédient."
+      );
+      return null;
+    }
+    if (sousCategory) {
+      ingredient_creation_data["sous_category"] = sousCategory.value;
+    } else {
+      setSousCategoryError(
+        "Veuillez renseigner une sous catégorie pour ce nouvel ingrédient."
+      );
+      return null;
+    }
+    console.log("CREATION DATA");
+    console.log(ingredient_creation_data);
+    const response = await create_ingredient_request(ingredient_creation_data);
+    if (response.status == 201) {
+      const result = await response.json();
+      return result.id;
+    } else if (response.status == 406) {
+      alert(
+        "L'ingrédient " +
+          ingredient_creation_data["name"] +
+          " existe déjà. Vous pouvez le trouver dans la liste d'ingrédient."
+      );
+      return null;
+    } else {
+      alert("Une erreur est survenue lors de la création de l'ingrédient.");
+      return null;
+    }
+  }
+
+  // Handle page behavior when a new unit is created.
+  async function handle_unit_creation(data, event_target) {
+    let create_unit_data = {};
+    if (event_target.new_unit_name.value) {
+      create_unit_data["unit"] = event_target.new_unit_name.value;
+    }
+    if (event_target.new_unit_conversion.value) {
+      create_unit_data["conversion_to_kilo"] =
+        event_target.new_unit_conversion.value;
+    }
+    if (data["ingredient"]) {
+      create_unit_data["ingredient"] = data["ingredient"];
+    } else {
+      return null;
+    }
+
+    const response = await create_new_unit_conversion(create_unit_data);
+    if (response.status == 201) {
+      const result = await response.json();
+      return result.unit;
+    }
+    // MAKE INTO DIFF FUNCTION THAT RETURNS A BOOLEAN
+    else if (response.status == 406) {
+      alert(
+        "L'unité " +
+          create_unit_data["unit"] +
+          " existe déjà pour cet ingrédient"
+      );
+      return null;
+    } else {
+      alert("Une erreur est survenue lors de la création de l'unité.");
+      return null;
+    }
+  }
+
+  // Combine all the elements of the form in a neat data object to create our new recette ingredient.
+  // This includes the cases of when an ingredient or a unity is created.
   async function assembleDataObject(event_target) {
     let data = {};
     if (createNewIngredient) {
-      let ingredient_creation_data = {};
-      if (event_target.ingredient_name.value) {
-        ingredient_creation_data["name"] = event_target.ingredient_name.value;
-      }
-      if (category) {
-        data["category"] = category.value;
-      } else {
-        setCategoryError(
-          "Veuillez renseigner une catégorie pour ce nouvel ingrédient."
-        );
-        return null;
-      }
-      if (sousCategory) {
-        data["sous_category"] = sousCategory.value;
-      } else {
-        setSousCategoryError(
-          "Veuillez renseigner une sous catégorie pour ce nouvel ingrédient."
-        );
-        return null;
-      }
-      const JSONdata = JSON.stringify(ingredient_creation_data);
-
-      // API endpoint where we send form data.
-      const endpoint = "http://127.0.0.1:8000/api/ingredients/";
-
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: "POST",
-        // Tell the server we're sending JSON.
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      };
-
-      // Send the form data to our forms API on Vercel and get a response.
-      const response = await fetch(endpoint, options);
-      if (response.status == 201) {
-        const result = await response.json();
-        data["ingredient"] = result.id;
-      } else {
-        return null;
-      }
+      data["ingredient"] = await handle_ingredient_creation(event_target);
     } else if (selectedIngredient) {
       data["ingredient"] = selectedIngredient.value;
     } else {
       setIngredientError("Veuillez sélectionner un ingrédient.");
     }
     if (createNewUnit) {
-      let create_unit_data = {};
-      if (event_target.new_unit_name.value) {
-        create_unit_data["unit"] = event_target.new_unit_name.value;
-      }
-      if (event_target.new_unit_conversion.value) {
-        create_unit_data["conversion_to_kilo"] =
-          event_target.new_unit_conversion.value;
-      }
-      if (data["ingredient"]) {
-        create_unit_data["ingredient"] = data["ingredient"];
-      } else {
-        return null;
-      }
-      console.log("PROBLEME ICI");
-      console.log(create_unit_data);
-
-      const JSONdata = JSON.stringify(create_unit_data);
-
-      // API endpoint where we send form data.
-      const endpoint = "http://127.0.0.1:8000/api/conversion_rate/";
-
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: "POST",
-        // Tell the server we're sending JSON.
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      };
-
-      // Send the form data to our forms API on Vercel and get a response.
-      const response = await fetch(endpoint, options);
-      if (response.status == 201) {
-        const result = await response.json();
-        data["unit"] = result.unit;
-      } else {
-        return null;
-      }
+      data["unit"] = await handle_unit_creation(data, event_target);
     } else if (event_target.unit) {
       if (event_target.unit.value === "default") {
         setUnitError("Veuillez renseigner une unité pour cet ingrédient");
@@ -230,24 +196,36 @@ const AddIngredient = ({
     if (event_target.note && event_target.note.value) {
       data["note"] = event_target.note.value;
     }
-
     if (section_id) {
       data["section"] = section_id;
     }
-
     data["recette"] = recette.id;
 
-    return data;
+    if (data["ingredient"] != null && data["unit"] != null) {
+      return data;
+    } else {
+      return null;
+    }
   }
 
+  /** Handles behavior on a successful RecetteIngredient creation request.
+   * This consists in:
+   *      - reloading the Recette data
+   *      - reseting all errors and selections
+   *      - closing the modal
+   */
   function handleSuccess() {
     mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
     reset_all_errors();
     resetSelections();
-
     setModalOpen(!modalOpen);
   }
 
+  /** Handles behavior on a successful RecetteIngredient creation request.
+   * This consists in:
+   *      - setting the field specific errors to show to the user
+   *      - OR (if no specific error is detected) showing an alert dialog
+   */
   function handleError(result) {
     let error_found = false;
     if (result.hasOwnProperty("quantity")) {
@@ -273,48 +251,26 @@ const AddIngredient = ({
     }
   }
 
+  // Handles the submitting of a form by coordinating the various behaviors needed.
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
 
-    // Get data from the form.
     const assembledData = await assembleDataObject(event.target);
+    console.log("TOTAL DATA");
+    console.log(assembledData);
     if (assembledData) {
-      const JSONdata = JSON.stringify(assembledData);
-
-      // API endpoint where we send form data.
-      const endpoint = "http://127.0.0.1:8000/api/recette_ingredients/";
-
-      // Form the request for sending data to the server.
-      const options = {
-        // The method is POST because we are sending data.
-        method: "POST",
-        // Tell the server we're sending JSON.
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Body of the request is the JSON data we created above.
-        body: JSONdata,
-      };
-
-      // Send the form data to our forms API on Vercel and get a response.
-      const response = await fetch(endpoint, options);
-
-      // Get the response data from server as JSON.
-      // If server returns the name submitted, that means the form works.
-      const result = await response.json();
-      console.log(response);
+      const response = await create_new_recette_ingredient(assembledData);
       if (response.status == 201) {
         handleSuccess();
       } else {
+        const result = await response.json();
         handleError(result);
       }
-    } else {
-      alert(
-        "Une erreur est survenue. Merci de vérifier votre saisie et de réessayer plus tard."
-      );
     }
   };
+
+  // Reset all the selections made on the page.
   const resetSelections = () => {
     setSelectedIngredient("");
     setSelectedUnit("default");
@@ -387,7 +343,8 @@ const AddIngredient = ({
                           style={{ aspectRatio: "1/1" }}
                           title="Revenir à la liste d'ingrédients"
                           onClick={() => {
-                            setCreateNewIngredient(!createNewIngredient);
+                            resetSelections();
+                            setCreateNewIngredient(false);
                           }}
                         >
                           {"<"}
@@ -447,7 +404,8 @@ const AddIngredient = ({
                         style={{ aspectRatio: "1/1" }}
                         title="Créer un nouvel ingrédient"
                         onClick={() => {
-                          setCreateNewIngredient(!createNewIngredient);
+                          resetSelections();
+                          setCreateNewIngredient(true);
                         }}
                       >
                         {"+"}
@@ -464,6 +422,7 @@ const AddIngredient = ({
                     type="number"
                     id="quantity"
                     name="quantity"
+                    step="any"
                     style={{
                       backgroundColor: "transparent",
                       border: 0,

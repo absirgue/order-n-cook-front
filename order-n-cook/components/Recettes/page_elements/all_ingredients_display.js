@@ -1,9 +1,15 @@
 import { Table } from "reactstrap";
-import RecetteIngredientListItem from "./recette_ingredient_list_item";
+import RecetteIngredientListItem from "./list_items/recette_ingredient_list_item";
 import AddIngredient from "./edit_only/add_buttons/add_ingredient";
 import AddSection from "./edit_only/add_buttons/add_section";
 import { useState } from "react";
 
+/**
+ * Shows all the ingredients of the Recette on display.
+ *
+ * @param recette the Recette object on display
+ * @returns the ingredients grouped by section and ranked in alpahetical order.
+ */
 function get_ingredient_data_grouped_and_sorted(recette) {
   if (recette.ingredients && recette.ingredients.length > 0) {
     const grouped_default_data = recette.ingredients.reduce(
@@ -64,7 +70,10 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
     }
   };
   const get_unused_sections_value = () => {
+    console.log("CHECKING UNUSED SECTION");
     if (recette.sections && recette.sections.length > 0) {
+      console.log("ENTERED THE CHECK HEHEHEHHEHH");
+      console.log(recette.sections);
       return recette.sections.filter(
         (section) =>
           recette.ingredients
@@ -84,7 +93,18 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
 
   return (
     <div className="d-flex flex-column justify-content-start align-items-center col-12 mt-4">
-      <h5>Ingrédients</h5>
+      <p
+        className="col-12"
+        style={{
+          background: "#CDCCCD",
+          paddingLeft: "10px",
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "500",
+        }}
+      >
+        Ingrédients
+      </p>
       {grouped_ingredient_data.length > 0 ? (
         <div className="col-12">
           {grouped_ingredient_data.map((group) => (
@@ -93,14 +113,9 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
               key={group.section_id ? group.section_id : "sans_section"}
             >
               {group.section_name ? (
-                <p
-                  style={{
-                    background: "#CDCCCD",
-                    paddingLeft: "10px",
-                  }}
-                >
+                <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
                   {group.section_name}
-                </p>
+                </h5>
               ) : null}
 
               <Table hover>

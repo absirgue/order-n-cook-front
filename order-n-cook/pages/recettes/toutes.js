@@ -1,9 +1,8 @@
-import RecetteListItem from "../../components/Recettes/page_elements/recette_list_item";
-import React, { useState, useEffect } from "react";
+import RecetteListItem from "../../components/Recettes/page_elements/list_items/recette_list_item";
+import React, { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter, Table } from "reactstrap";
 import Link from "next/link";
 import CreateNewRecetteButton from "../../components/Recettes/page_elements/create_new_recette_modal";
-import { useHistory } from "react-router-dom";
 
 const MONTHS = [
   "Janvier",
@@ -287,6 +286,7 @@ export default function AllRecettesDisplay({ allRecettesData }) {
   const [onTheMenuFilter, setOnTheMenuFilter] = useState(false);
   const [monthFilter, setMonthFilter] = useState("default");
   const [onNextMenuFilter, setOnNextMenuFilter] = useState(false);
+  const [toModifyFilter, setToModifyFilter] = useState(false);
 
   //   const [onlySeasonFilter, setOnlySeasonFilter] = useState(false);
   //   const [monthFilter, setMonthFilter] = useState("default");
@@ -305,8 +305,6 @@ export default function AllRecettesDisplay({ allRecettesData }) {
   const all_different_genres = Array.from(
     new Set(allRecettesData.map((recette) => recette.genres).flat())
   );
-
-  
 
   // Group the filtered data according to a given field.
   function group_list_based_on_field(list, groupField) {
@@ -365,6 +363,7 @@ export default function AllRecettesDisplay({ allRecettesData }) {
     setOnTheMenuFilter(false);
     setMonthFilter("default");
     setOnNextMenuFilter(false);
+    setToModifyFilter(false);
   };
 
   // Perform a filtered search based on the various filters inputted by the user.
@@ -376,7 +375,8 @@ export default function AllRecettesDisplay({ allRecettesData }) {
       genreFilter != "default" ||
       monthFilter != "default" ||
       onTheMenuFilter ||
-      onNextMenuFilter
+      onNextMenuFilter ||
+      toModifyFilter
     ) {
       var results = allRecettesData;
       if (searchString != "") {
@@ -413,6 +413,9 @@ export default function AllRecettesDisplay({ allRecettesData }) {
       }
       if (onNextMenuFilter) {
         results = results.filter((recette) => recette.selected_for_next_menu);
+      }
+      if (toModifyFilter) {
+        results = results.filter((recette) => recette.is_to_modify);
       }
       groupIngredientData(results, groupingField);
       setFilteredData(results);
@@ -581,7 +584,7 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       />
                     )}
                     <p style={{ fontSize: 16, marginLeft: "10px" }}>
-                      Seulement les recettes à la carte
+                      Recettes à la carte
                     </p>
                   </div>
                   <div className={"d-flex flex-row align-items-baseline"}>
@@ -600,7 +603,26 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       />
                     )}
                     <p style={{ fontSize: 16, marginLeft: "10px" }}>
-                      Seulement les recettes à la prochaine carte
+                      Recettes à la prochaine carte
+                    </p>
+                  </div>
+                  <div className={"d-flex flex-row align-items-baseline"}>
+                    {onNextMenuFilter ? (
+                      <input
+                        type="checkbox"
+                        id="example_checkbox"
+                        onChange={(event) => setToModifyFilter(false)}
+                        checked
+                      />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        id="example_checkbox"
+                        onChange={(event) => setToModifyFilter(true)}
+                      />
+                    )}
+                    <p style={{ fontSize: 16, marginLeft: "10px" }}>
+                      Recettes à modifier
                     </p>
                   </div>
                   <div className="d-flex flex-row justify-content-end col-12">

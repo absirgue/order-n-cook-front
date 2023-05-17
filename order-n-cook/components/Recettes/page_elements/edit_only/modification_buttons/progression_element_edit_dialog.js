@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useSWRConfig } from "swr";
 
+/**
+ * Faciliates the editing of a Progression Element.
+ */
 const ProgressionElementEditHelper = ({ progression_element, recette_id }) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [noteError, setNoteError] = useState(null);
