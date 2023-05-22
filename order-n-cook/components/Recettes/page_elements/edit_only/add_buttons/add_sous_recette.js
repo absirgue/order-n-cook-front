@@ -67,7 +67,7 @@ const AddSousRecette = ({ recette_id }) => {
     if (response.status == 201) {
       setModalOpen(false);
       reset_all_errors();
-      mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
+      mutate(`http://127.0.0.1:8000/api/general/recettes/${recette_id}/`);
     } else {
       const result = await response.json();
       let error_found = false;

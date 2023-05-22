@@ -17,7 +17,7 @@ export default function RecetteDetailsPage() {
 
   // Use a ternary operator to only fetch the data when the ID isn't undefined
   const { data: recette, error } = useSWR(
-    id ? `http://127.0.0.1:8000/api/recettes/${id}/` : null,
+    id ? `http://127.0.0.1:8000/api/general/recettes/${id}/` : null,
     fetcher
   );
 

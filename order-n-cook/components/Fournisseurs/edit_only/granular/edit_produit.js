@@ -25,7 +25,7 @@ const EditProduit = ({ produit, recette_id }) => {
 
   //   async function get_possible_units() {
   //     const endpoint =
-  //       "http://127.0.0.1:8000/api/ingredient_units/" + produit.id + "/";
+  //       "http://127.0.0.1:8000/api/general/ingredient_units/" + produit.id + "/";
   //     console.log(endpoint);
   //     // Form the request for sending data to the server.
   //     const options = {
@@ -88,7 +88,7 @@ const EditProduit = ({ produit, recette_id }) => {
     // }
     // const JSONdata = JSON.stringify(data);
     // // API endpoint where we send form data.
-    // let endpoint = "http://127.0.0.1:8000/api/";
+    // let endpoint = "http://127.0.0.1:8000/api/general/";
     // if (!is_sous_recette) {
     //   endpoint += "recette_ingredients/";
     // } else {
@@ -114,7 +114,7 @@ const EditProduit = ({ produit, recette_id }) => {
     // if (response.status == 200) {
     //   resetAllErrors();
     //   setModalOpen(false);
-    //   mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
+    //   mutate(`http://127.0.0.1:8000/api/general/recettes/${recette_id}/`);
     // } else {
     //   let error_found = false;
     //   if (result.hasOwnProperty("quantity")) {

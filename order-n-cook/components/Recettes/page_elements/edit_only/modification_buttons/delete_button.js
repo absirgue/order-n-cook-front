@@ -35,7 +35,7 @@ const DeleteButton = ({
   const deleteItem = async () => {
     console.log("ELEMENT");
     console.log(element);
-    let endpoint = "http://127.0.0.1:8000/api/";
+    let endpoint = "http://127.0.0.1:8000/api/general/";
     if (is_ingredient) {
       endpoint += "recette_ingredients/";
     } else if (is_progression) {
@@ -58,7 +58,7 @@ const DeleteButton = ({
     // Send the form data to our forms API on Vercel and get a response.
     const response = await fetch(endpoint, options);
     if (response.status == 204) {
-      mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
+      mutate(`http://127.0.0.1:8000/api/general/recettes/${recette_id}/`);
     } else {
       alert("Une erreur est survenue. Merci de réessayer plus tard.");
     }

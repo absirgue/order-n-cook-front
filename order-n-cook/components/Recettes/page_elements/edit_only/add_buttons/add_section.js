@@ -72,7 +72,7 @@ const AddSection = ({
         set_newly_imported_sections([...newly_imported_sections, data]);
         set_section_options([...all_sections, data]);
         reset_all_errors();
-        mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+        mutate(`http://127.0.0.1:8000/api/general/recettes/${recette.id}/`);
         setModalOpen(false);
       } else {
         const result = await response.json();

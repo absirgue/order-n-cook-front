@@ -1,6 +1,6 @@
 export async function get_all_existing_recette_categories() {
   const response = await fetch(
-    `http://127.0.0.1:8000/api/recette_categories/`,
+    `http://127.0.0.1:8000/api/general/recette_categories/`,
     {
       method: "GET",
       headers: {
@@ -18,7 +18,7 @@ export async function create_new_recette_ingredient(data) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = "http://127.0.0.1:8000/api/recette_ingredients/";
+  const endpoint = "http://127.0.0.1:8000/api/general/recette_ingredients/";
 
   // Form the request for sending data to the server.
   const options = {
@@ -42,7 +42,7 @@ export async function create_progression_element_request(data) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = `http://127.0.0.1:8000/api/recette_progression/`;
+  const endpoint = `http://127.0.0.1:8000/api/general/recette_progression/`;
 
   // Form the request for sending data to the server.
   const options = {
@@ -65,7 +65,7 @@ export async function create_recette_section(data) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = `http://127.0.0.1:8000/api/recette_section/`;
+  const endpoint = `http://127.0.0.1:8000/api/general/recette_section/`;
 
   // Form the request for sending data to the server.
   const options = {
@@ -86,7 +86,7 @@ export async function create_recette_section(data) {
 
 export async function get_all_possible_sous_recette(recette_id) {
   const response = await fetch(
-    `http://127.0.0.1:8000/api/sous_recette_options/${recette_id}`,
+    `http://127.0.0.1:8000/api/general/sous_recette_options/${recette_id}`,
     {
       method: "GET",
       headers: {
@@ -106,7 +106,7 @@ export async function create_sous_recette(data) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = "http://127.0.0.1:8000/api/sous_recette/";
+  const endpoint = "http://127.0.0.1:8000/api/general/sous_recette/";
 
   // Form the request for sending data to the server.
   const options = {

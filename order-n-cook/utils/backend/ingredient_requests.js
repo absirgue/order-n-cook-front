@@ -1,6 +1,6 @@
 export async function get_all_existing_ingredients_options() {
   const response = await fetch(
-    `http://127.0.0.1:8000/api/all_ingredient_and_units/`,
+    `http://127.0.0.1:8000/api/general/all_ingredient_and_units/`,
     {
       method: "GET",
       headers: {
@@ -20,7 +20,7 @@ export async function create_ingredient_request(data) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = "http://127.0.0.1:8000/api/ingredients/";
+  const endpoint = "http://127.0.0.1:8000/api/general/ingredients/";
 
   // Form the request for sending data to the server.
   const options = {

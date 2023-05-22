@@ -20,7 +20,7 @@ async function getRecetteData(id) {
   console.log("HERE");
   console.log("HERE");
   console.log(id);
-  const endpoint = `http://127.0.0.1:8000/api/recettes/${id}/`;
+  const endpoint = `http://127.0.0.1:8000/api/general/recettes/${id}/`;
   const data = await fetch(endpoint);
   return await data.json();
 }

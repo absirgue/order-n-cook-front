@@ -31,7 +31,7 @@ const RecetteTools = ({ recette }) => {
   const { mutate } = useSWRConfig();
   const duplicate_recette = async () => {
     let endpoint =
-      "http://127.0.0.1:8000/api/duplicate_recette/" + recette.id + "/";
+      "http://127.0.0.1:8000/api/general/duplicate_recette/" + recette.id + "/";
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
@@ -53,7 +53,8 @@ const RecetteTools = ({ recette }) => {
   };
 
   const delete_recette = async () => {
-    let endpoint = "http://127.0.0.1:8000/api/recettes/" + recette.id + "/";
+    let endpoint =
+      "http://127.0.0.1:8000/api/general/recettes/" + recette.id + "/";
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
@@ -79,7 +80,7 @@ const RecetteTools = ({ recette }) => {
     let body_data = {};
     body_data[field_to_change] = value;
     const response = await fetch(
-      `http://127.0.0.1:8000/api/recettes/${recette.id}/`,
+      `http://127.0.0.1:8000/api/general/recettes/${recette.id}/`,
       {
         method: "PUT",
         headers: {
@@ -107,7 +108,7 @@ const RecetteTools = ({ recette }) => {
     };
 
     mutate(
-      `http://127.0.0.1:8000/api/recettes/${recette.id}/`,
+      `http://127.0.0.1:8000/api/general/recettes/${recette.id}/`,
       perform_update_request(field_to_change, value),
       options
     );

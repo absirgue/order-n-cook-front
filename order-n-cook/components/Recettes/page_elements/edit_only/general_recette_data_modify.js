@@ -17,7 +17,7 @@ async function sendUpdateRecetteRequest(data, recette) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = `http://127.0.0.1:8000/api/recettes/${recette.id}/`;
+  const endpoint = `http://127.0.0.1:8000/api/general/recettes/${recette.id}/`;
 
   // Form the request for sending data to the server.
   const options = {
@@ -61,15 +61,15 @@ const GeneralRecetteDataModify = ({ recette }) => {
   const { mutate } = useSWRConfig();
 
   const { data: genreData, error: genreDataError } = useSWR(
-    `http://127.0.0.1:8000/api/recette_genres/`,
+    `http://127.0.0.1:8000/api/general/recette_genres/`,
     fetcher
   );
   const { data: tasteData, error: tasteDataError } = useSWR(
-    `http://127.0.0.1:8000/api/recette_tastes/`,
+    `http://127.0.0.1:8000/api/general/recette_tastes/`,
     fetcher
   );
   const { data: categoryData, error: categoryDataError } = useSWR(
-    `http://127.0.0.1:8000/api/recette_categories/`,
+    `http://127.0.0.1:8000/api/general/recette_categories/`,
     fetcher
   );
 
@@ -126,7 +126,7 @@ const GeneralRecetteDataModify = ({ recette }) => {
     // If server returns the name submitted, that means the form works.
 
     if (response.status == 200) {
-      mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+      mutate(`http://127.0.0.1:8000/api/general/recettes/${recette.id}/`);
       reset_all_errors();
     } else {
       const result = await response.json();
@@ -187,7 +187,7 @@ const GeneralRecetteDataModify = ({ recette }) => {
         alert(
           "Une erreur est survenue. Merci de vérifier les valeurs renseignées ou de réessayer utlérieurement."
         );
-        mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
+        mutate(`http://127.0.0.1:8000/api/general/recettes/${recette.id}/`);
       }
     }
     set_new_data_inputted(false);
