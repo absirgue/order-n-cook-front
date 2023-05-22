@@ -10,7 +10,7 @@ const FlecheBasButton = ({ element, recette_id }) => {
   const { mutate } = useSWRConfig();
   const handleClick = async () => {
     let endpoint =
-      "http://127.0.0.1:8000/api/general/decerement_progression_rank/" +
+      "http://127.0.0.1:8000/api/decerement_progression_rank/" +
       element.id +
       "/";
 
@@ -27,7 +27,7 @@ const FlecheBasButton = ({ element, recette_id }) => {
     // Send the form data to our forms API on Vercel and get a response.
     const response = await fetch(endpoint, options);
     if (response.status == 200) {
-      mutate(`http://127.0.0.1:8000/api/general/recettes/${recette_id}/`);
+      mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
     } else {
       alert(
         "Opération impossible. Merci de vérifier sa validité et de réessayer plus tard."

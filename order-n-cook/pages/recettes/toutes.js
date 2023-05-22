@@ -229,7 +229,7 @@ function getAllRecettesData() {
 
 export async function getServerSideProps() {
   // Fetch data from external API
-  const res = await fetch(`http://127.0.0.1:8000/api/general/recettes/`);
+  const res = await fetch(`http://127.0.0.1:8000/api/recettes/`);
   let allRecettesData = await res.json();
   allRecettesData = allRecettesData.sort(function (a, b) {
     if (a.name < b.name) {

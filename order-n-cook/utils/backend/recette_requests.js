@@ -1,7 +1,7 @@
 export async function sendCreateNewRecette(data) {
   const JSONdata = JSON.stringify(data);
   // API endpoint where we send form data.
-  const endpoint = "http://127.0.0.1:8000/api/general/recettes/";
+  const endpoint = "http://127.0.0.1:8000/api/recettes/";
 
   // Form the request for sending data to the server.
   const options = {

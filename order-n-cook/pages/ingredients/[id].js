@@ -148,7 +148,7 @@ function getIngredientData(id) {
 export const getStaticProps = async (context) => {
   const ingredientID = context.params?.id;
   const res = await fetch(
-    `http://127.0.0.1:8000/api/general/ingredients/` + ingredientID
+    `http://127.0.0.1:8000/api/ingredients/` + ingredientID
   );
 
   const ingredientData = await res.json();
@@ -160,7 +160,7 @@ export const getStaticProps = async (context) => {
 };
 
 export const getStaticPaths = async () => {
-  const res = await fetch(`http://127.0.0.1:8000/api/general/ingredients/`);
+  const res = await fetch(`http://127.0.0.1:8000/api/ingredients/`);
   const allIngredientsData = await res.json();
   const pathsWithParams = allIngredientsData.map((ingredient) => ({
     params: { id: ingredient.id.toString() },

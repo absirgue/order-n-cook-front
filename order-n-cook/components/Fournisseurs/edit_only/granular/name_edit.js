@@ -9,7 +9,7 @@ const perform_update_request = async (field_to_change, value, recette) => {
   //   let body_data = {};
   //   body_data[field_to_change] = value;
   //   const response = await fetch(
-  //     `http://127.0.0.1:8000/api/general/recettes/${recette.id}/`,
+  //     `http://127.0.0.1:8000/api/recettes/${recette.id}/`,
   //     {
   //       method: "PUT",
   //       headers: {
@@ -47,7 +47,7 @@ const FournsiseurName = ({ fournisseur }) => {
   //     };
 
   //     mutate(
-  //       `http://127.0.0.1:8000/api/general/recettes/${recette.id}/`,
+  //       `http://127.0.0.1:8000/api/recettes/${recette.id}/`,
   //       perform_update_request(field_to_change, value, recette),
   //       options
   //     );

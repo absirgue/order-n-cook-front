@@ -25,7 +25,7 @@ const ProgressionElementEditHelper = ({ progression_element, recette_id }) => {
 
       // API endpoint where we send form data.
       const endpoint =
-        `http://127.0.0.1:8000/api/general/recette_progression/` +
+        `http://127.0.0.1:8000/api/recette_progression/` +
         progression_element.id +
         "/";
 
@@ -46,7 +46,7 @@ const ProgressionElementEditHelper = ({ progression_element, recette_id }) => {
       if (response.status == 200) {
         setOpenEditModal(false);
         reset_all_errors();
-        mutate(`http://127.0.0.1:8000/api/general/recettes/${recette_id}/`);
+        mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
       } else {
         const result = await response.json();
         let error_found = false;

@@ -1,6 +1,6 @@
 export async function get_all_existing_ingredient_categories_request() {
   const response = await fetch(
-    `http://127.0.0.1:8000/api/general/ingredient_categories/`,
+    `http://127.0.0.1:8000/api/ingredient_categories/`,
     {
       method: "GET",
       headers: {
@@ -15,7 +15,7 @@ export async function get_all_existing_ingredient_categories_request() {
 
 export async function get_all_existing_ingredient_sous_categories_request() {
   const response = await fetch(
-    `http://127.0.0.1:8000/api/general/ingredient_sous_categories/`,
+    `http://127.0.0.1:8000/api/ingredient_sous_categories/`,
     {
       method: "GET",
       headers: {
@@ -32,7 +32,7 @@ export async function create_new_unit_conversion(data) {
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
-  const endpoint = "http://127.0.0.1:8000/api/general/conversion_rate/";
+  const endpoint = "http://127.0.0.1:8000/api/conversion_rate/";
 
   // Form the request for sending data to the server.
   const options = {

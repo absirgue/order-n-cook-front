@@ -24,7 +24,7 @@ const AddRecetteTagButton = ({
       const JSONdata = JSON.stringify(data);
 
       // API endpoint where we send form data.
-      let endpoint = "http://127.0.0.1:8000/api/general/";
+      let endpoint = "http://127.0.0.1:8000/api/";
       if (is_category) {
         endpoint += "recette_categories/";
       } else if (is_genre) {
@@ -49,11 +49,11 @@ const AddRecetteTagButton = ({
       const response = await fetch(endpoint, options);
       if (response.status == 201) {
         if (is_category) {
-          mutate("http://127.0.0.1:8000/api/general/recette_categories/");
+          mutate("http://127.0.0.1:8000/api/recette_categories/");
         } else if (is_genre) {
-          mutate("http://127.0.0.1:8000/api/general/recette_genres/");
+          mutate("http://127.0.0.1:8000/api/recette_genres/");
         } else if (is_taste) {
-          mutate("http://127.0.0.1:8000/api/general/recette_tastes/");
+          mutate("http://127.0.0.1:8000/api/recette_tastes/");
         }
         setModalOpen(false);
         setNameError(null);

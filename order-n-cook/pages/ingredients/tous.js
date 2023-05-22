@@ -19,7 +19,7 @@ const MONTHS = [
 
 export async function getServerSideProps() {
   // Fetch data from external API
-  const res = await fetch(`http://127.0.0.1:8000/api/general/ingredients/`);
+  const res = await fetch(`http://127.0.0.1:8000/api/ingredients/`);
   let allIngredientsData = await res.json();
   allIngredientsData = allIngredientsData.sort(function (a, b) {
     if (a.name < b.name) {

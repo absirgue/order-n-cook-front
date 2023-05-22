@@ -72,7 +72,7 @@ const AddProgressionElement = ({
     if (response.status == 201) {
       setModalOpen(false);
       reset_all_errors();
-      mutate(`http://127.0.0.1:8000/api/general/recettes/${recette.id}/`);
+      mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
     } else {
       const result = await response.json();
       let error_found = false;
