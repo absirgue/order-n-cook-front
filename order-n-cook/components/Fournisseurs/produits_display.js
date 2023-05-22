@@ -44,6 +44,7 @@ function get_initial_data_grouped_and_sorted(fournisseurIngredientsData) {
 
 export default function FournisseurProduitsDisplay({
   fournisseurIngredientsData,
+  isEdit = false,
 }) {
   // State variable for the filtered search modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -477,7 +478,10 @@ export default function FournisseurProduitsDisplay({
               <Table hover className="mb-2">
                 <tbody>
                   {group.produits.map((produit) => (
-                    <ProduitListItem produit={produit}></ProduitListItem>
+                    <ProduitListItem
+                      produit={produit}
+                      isEdit={isEdit}
+                    ></ProduitListItem>
                   ))}
                 </tbody>
               </Table>

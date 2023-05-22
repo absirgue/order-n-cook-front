@@ -73,7 +73,7 @@ const FournsiseurName = ({ fournisseur }) => {
       <form
         className="col-12 d-flex flex-column justify-content-center"
         style={{
-          fontSize: "14px",
+          fontSize: "18px",
           marginBottom: "0px",
         }}
         onSubmit={handleSubmit}
@@ -84,7 +84,7 @@ const FournsiseurName = ({ fournisseur }) => {
           style={{
             textAlign: "center",
             backgroundColor: "transparent",
-            fontSize: "22px",
+            fontSize: "30px",
             border: 0,
             color: "black",
           }}

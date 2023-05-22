@@ -1,45 +1,167 @@
 import React from "react";
 
 // reactstrap components
-import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
+import {
+  Button,
+  UncontrolledPopover,
+  PopoverHeader,
+  PopoverBody,
+} from "reactstrap";
+import Modal from "react-bootstrap/Modal";
+
+function get_produits_for_ingredient() {
+  return [
+    {
+      fournisseur_name: "Anthès",
+      real_unit: { unit: "plaquette", quantity: "1" },
+      conversion_unit: { unit: "gramme", quantity: 250 },
+      price: 5.5,
+      kilogramme_price: 22,
+      geographic_location: "Bretagne",
+      labels: [
+        { id: 1, name: "AOC" },
+        { id: 2, name: "Bio" },
+      ],
+    },
+    {
+      fournisseur_name: "Anthès",
+      real_unit: { unit: "plaquette", quantity: "1" },
+      conversion_unit: { unit: "gramme", quantity: 250 },
+      price: 5.5,
+      kilogramme_price: 22,
+      geographic_location: "Bretagne",
+      labels: [
+        { id: 1, name: "AOC" },
+        { id: 2, name: "Bio" },
+      ],
+    },
+    {
+      fournisseur_name: "Anthès",
+      real_unit: { unit: "plaquette", quantity: "1" },
+      conversion_unit: { unit: "gramme", quantity: 250 },
+      price: 5.5,
+      kilogramme_price: 22,
+      geographic_location: "Bretagne",
+      labels: [
+        { id: 1, name: "AOC" },
+        { id: 2, name: "Bio" },
+      ],
+    },
+  ];
+}
 
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const PurchaseIngredientHelper = () => {
+const PurchaseIngredientHelper = ({ ingredient }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
+
+  const produits_for_ingredient = get_produits_for_ingredient();
+
+  // var label_string = "";
+  // if (produit.labels && produit.labels.length > 0) {
+  //   produit.labels.forEach((label) => (label_string += label.name + "; "));
+  //   label_string = label_string.substring(0, label_string.length - 2);
+  // }
 
   return (
     <>
       <Button className="emoji_button" onClick={() => setModalOpen(!modalOpen)}>
         🛒
       </Button>
-      <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
-        <div className="modal-header">
-          <h5 className="modal-title">
-            Vos fournisseurs proposant cet ingrédient
-          </h5>
-          <button
-            aria-label="Close"
-            className=" close"
-            type="button"
-            onClick={() => setModalOpen(!modalOpen)}
-            style={{ backgroundColor: "transparent", border: 0 }}
-          >
-            x
-          </button>
-        </div>
-        <ModalBody>... to be implemented ... </ModalBody>
-        <ModalFooter>
-          <Button
-            className="btn-primary"
-            type="button"
-            onClick={() => setModalOpen(!modalOpen)}
-          >
-            Fermer
-          </Button>
-        </ModalFooter>
+      <Modal
+        size="lg"
+        show={modalOpen}
+        onHide={() => setModalOpen(!modalOpen)}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <div className="d-flex flex-row justify-content-between col-11 align-items-end">
+            <Modal.Title id="example-modal-sizes-title-lg">
+              Passer commande - {ingredient.name}
+            </Modal.Title>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          {produits_for_ingredient.map((produit) => (
+            <div className="d-flex flex-row justify-content-start align-items-center">
+              <Button
+                className="emoji_button"
+                onClick={() => setModalOpen(!modalOpen)}
+              >
+                🛒
+              </Button>
+              <p className="col-3" style={{ textAlign: "center" }}>
+                {produit.fournisseur_name}
+              </p>
+              <p className="col-3 me-2">
+                {produit.real_unit.quantity + " " + produit.real_unit.unit}
+                {produit.conversion_unit
+                  ? " (" +
+                    produit.conversion_unit.quantity +
+                    produit.conversion_unit.unit +
+                    ")"
+                  : null}
+              </p>
+              <p className="col-1 align-items-end">{produit.price + "€"}</p>
+              <p className="col-1 align-items-end">
+                {produit.kilogramme_price + "€/kg"}
+              </p>
+              {produit.labels && produit.labels.length > 0 ? (
+                <div className="d-flex flex-row justify-content-end">
+                  <Button
+                    color="white"
+                    type="button"
+                    id="see-labels"
+                    style={{ textDecoration: "underline", color: "blue" }}
+                  >
+                    Labels
+                  </Button>
+                  <UncontrolledPopover
+                    placement="bottom"
+                    target="see-labels"
+                    trigger="legacy"
+                  >
+                    <PopoverHeader>Labels</PopoverHeader>
+                    <PopoverBody>
+                      {produit.labels.reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + currentValue.name + " ",
+                        ""
+                      )}
+                    </PopoverBody>
+                  </UncontrolledPopover>
+                </div>
+              ) : null}
+              {produit.geographic_location ? (
+                <div className="d-flex flex-row justify-content-end">
+                  <Button
+                    color="white"
+                    type="button"
+                    id="see-labels"
+                    style={{ textDecoration: "underline", color: "blue" }}
+                  >
+                    Provenance
+                  </Button>
+                  <UncontrolledPopover
+                    placement="bottom"
+                    target="see-labels"
+                    trigger="legacy"
+                  >
+                    <PopoverHeader>Labels</PopoverHeader>
+                    <PopoverBody>{produit.geographic_location}</PopoverBody>
+                  </UncontrolledPopover>
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="col-12 d-flex flex-row justify-content-end">
+            <Button onClick={() => setModalOpen(!modalOpen)}>Fermer</Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );

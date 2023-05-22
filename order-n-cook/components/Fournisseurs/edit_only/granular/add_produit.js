@@ -1,62 +1,39 @@
-import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
+import { useState } from "react";
 import Select from "react-select";
-import { useSWRConfig } from "swr";
-import {
-  get_all_existing_ingredient_categories_request,
-  get_all_existing_ingredient_sous_categories_request,
-  create_new_unit_conversion,
-} from "../../../../../utils/backend/ingredient_components_requests";
-import {
-  get_all_existing_ingredients_options,
-  create_ingredient_request,
-} from "../../../../../utils/backend/ingredient_requests";
-import { create_new_recette_ingredient } from "../../../../../utils/backend/recette_components_requests";
 
-/*
-A modal that enables creating a RecetteIngredient for the Recette dsplay.
-This includes the eventuality of creating a new Ingredient and a new Conversion for a given ingredient (and eventually both).
-*/
-const AddIngredient = ({
-  recette,
-  section_id,
-  sans_section = false,
-  all_ingredients_with_units,
-}) => {
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedIngredient, setSelectedIngredient] = React.useState("");
-  const [selectedUnit, setSelectedUnit] = React.useState("default");
-  const [createNewIngredient, setCreateNewIngredient] = React.useState(false);
-  const [createNewUnit, setCreateNewUnit] = React.useState(false);
-  const [categoryError, setCategoryError] = React.useState(false);
-  const [sousCategoryError, setSousCategoryError] = React.useState(false);
-  const [quantityError, setQuantityError] = React.useState(null);
-  const [ingredientError, setIngredientError] = React.useState(null);
-  const [unitError, setUnitError] = React.useState(null);
-  const [category, setCategory] = React.useState(null);
-  const [sousCategory, setSousCategory] = React.useState(null);
-  const [noteError, setNoteError] = React.useState(null);
-  const { mutate } = useSWRConfig();
-
-  // Returns all the existing categories for ingredients in a clean way (names only).
-  async function get_all_existing_categories() {
-    const all_ingredient_categories =
-      await get_all_existing_ingredient_categories_request();
-    return all_ingredient_categories.map((obj) => obj.name);
-  }
-
-  // Returns all the existing sous categories for ingredients in a clean way (names only).
-  async function get_all_existing_sous_categories() {
-    const all_ingredient_sous_categories =
-      await get_all_existing_ingredient_sous_categories_request();
-    return all_ingredient_sous_categories.map((obj) => obj.name);
-  }
+export default function AddProduit({ fournisseur_id }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [createNewIngredient, setCreateNewIngredient] = useState(false);
+  const [selectedIngredient, setSelectedIngredient] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState("default");
+  const [ingredientError, setIngredientError] = useState(null);
+  const [unitError, setUnitError] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [sousCategory, setSousCategory] = useState(null);
+  const [noteError, setNoteError] = useState(null);
+  const [createNewUnit, setCreateNewUnit] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [sousCategoryError, setSousCategoryError] = useState(false);
+  const [quantityError, setQuantityError] = useState(null);
 
   const category_options = [];
 
   const sous_category_options = [];
 
   let ingredient_options = [];
+
+  function get_all_existing_ingredients_options() {
+    return [{ id: 1, name: "ingredient 1", units: ["unit"] }];
+  }
+
+  function get_all_existing_categories() {
+    return ["cat 1", "cat 2"];
+  }
+
+  function get_all_existing_sous_categories() {
+    return ["sous cat 1", "sous cat 2"];
+  }
 
   // Expands on the lists of ingredient options, sous_categories options and categories options to generate
   // option list for the various Select components on the page.
@@ -80,196 +57,6 @@ const AddIngredient = ({
     );
   };
 
-  // Reset all the error messages to be null.
-  const reset_all_errors = () => {
-    setQuantityError(null);
-    setIngredientError(null);
-    setUnitError(null);
-    setNoteError(null);
-    setCategoryError(null);
-    setSousCategoryError(null);
-  };
-
-  generate_option_list();
-
-  // Handle page behavior when a new ingredient is created.
-  async function handle_ingredient_creation(event_target) {
-    let ingredient_creation_data = {};
-    if (event_target.ingredient_name.value) {
-      ingredient_creation_data["name"] = event_target.ingredient_name.value;
-    }
-    if (category) {
-      ingredient_creation_data["category"] = category.value;
-    } else {
-      setCategoryError(
-        "Veuillez renseigner une catégorie pour ce nouvel ingrédient."
-      );
-      return null;
-    }
-    if (sousCategory) {
-      ingredient_creation_data["sous_category"] = sousCategory.value;
-    } else {
-      setSousCategoryError(
-        "Veuillez renseigner une sous catégorie pour ce nouvel ingrédient."
-      );
-      return null;
-    }
-    console.log("CREATION DATA");
-    console.log(ingredient_creation_data);
-    const response = await create_ingredient_request(ingredient_creation_data);
-    if (response.status == 201) {
-      const result = await response.json();
-      return result.id;
-    } else if (response.status == 406) {
-      alert(
-        "L'ingrédient " +
-          ingredient_creation_data["name"] +
-          " existe déjà. Vous pouvez le trouver dans la liste d'ingrédient."
-      );
-      return null;
-    } else {
-      alert("Une erreur est survenue lors de la création de l'ingrédient.");
-      return null;
-    }
-  }
-
-  // Handle page behavior when a new unit is created.
-  async function handle_unit_creation(data, event_target) {
-    let create_unit_data = {};
-    if (event_target.new_unit_name.value) {
-      create_unit_data["unit"] = event_target.new_unit_name.value;
-    }
-    if (event_target.new_unit_conversion.value) {
-      create_unit_data["conversion_to_kilo"] =
-        event_target.new_unit_conversion.value;
-    }
-    if (data["ingredient"]) {
-      create_unit_data["ingredient"] = data["ingredient"];
-    } else {
-      return null;
-    }
-
-    const response = await create_new_unit_conversion(create_unit_data);
-    if (response.status == 201) {
-      const result = await response.json();
-      return result.unit;
-    }
-    // MAKE INTO DIFF FUNCTION THAT RETURNS A BOOLEAN
-    else if (response.status == 406) {
-      alert(
-        "L'unité " +
-          create_unit_data["unit"] +
-          " existe déjà pour cet ingrédient"
-      );
-      return null;
-    } else {
-      alert("Une erreur est survenue lors de la création de l'unité.");
-      return null;
-    }
-  }
-
-  // Combine all the elements of the form in a neat data object to create our new recette ingredient.
-  // This includes the cases of when an ingredient or a unity is created.
-  async function assembleDataObject(event_target) {
-    let data = {};
-    if (createNewIngredient) {
-      data["ingredient"] = await handle_ingredient_creation(event_target);
-    } else if (selectedIngredient) {
-      data["ingredient"] = selectedIngredient.value;
-    } else {
-      setIngredientError("Veuillez sélectionner un ingrédient.");
-    }
-    if (createNewUnit) {
-      data["unit"] = await handle_unit_creation(data, event_target);
-    } else if (event_target.unit) {
-      if (event_target.unit.value === "default") {
-        setUnitError("Veuillez renseigner une unité pour cet ingrédient");
-      } else {
-        data["unit"] = event_target.unit.value;
-      }
-    } else {
-      return null;
-    }
-    if (event_target.quantity.value && event_target.quantity) {
-      data["quantity"] = event_target.quantity.value;
-    }
-    if (event_target.note && event_target.note.value) {
-      data["note"] = event_target.note.value;
-    }
-    if (section_id) {
-      data["section"] = section_id;
-    }
-    data["recette"] = recette.id;
-
-    if (data["ingredient"] != null && data["unit"] != null) {
-      return data;
-    } else {
-      return null;
-    }
-  }
-
-  /** Handles behavior on a successful RecetteIngredient creation request.
-   * This consists in:
-   *      - reloading the Recette data
-   *      - reseting all errors and selections
-   *      - closing the modal
-   */
-  function handleSuccess() {
-    mutate(`http://127.0.0.1:8000/api/recettes/${recette.id}/`);
-    reset_all_errors();
-    resetSelections();
-    setModalOpen(!modalOpen);
-  }
-
-  /** Handles behavior on a successful RecetteIngredient creation request.
-   * This consists in:
-   *      - setting the field specific errors to show to the user
-   *      - OR (if no specific error is detected) showing an alert dialog
-   */
-  function handleError(result) {
-    let error_found = false;
-    if (result.hasOwnProperty("quantity")) {
-      setQuantityError(result.quantity);
-      error_found = true;
-    }
-    if (result.hasOwnProperty("unit")) {
-      setUnitError(result.unit);
-      error_found = true;
-    }
-    if (result.hasOwnProperty("ingredient")) {
-      setIngredientError(result.ingredient);
-      error_found = true;
-    }
-    if (result.hasOwnProperty("note")) {
-      setNoteError(result.note);
-      error_found = true;
-    }
-    if (!error_found) {
-      alert(
-        "Une erreur est survenue. Merci de vérifier les valeurs renseignées et de réessayer ultérieurement."
-      );
-    }
-  }
-
-  // Handles the submitting of a form by coordinating the various behaviors needed.
-  const handleSubmit = async (event) => {
-    // Stop the form from submitting and refreshing the page.
-    event.preventDefault();
-
-    const assembledData = await assembleDataObject(event.target);
-    console.log("TOTAL DATA");
-    console.log(assembledData);
-    if (assembledData) {
-      const response = await create_new_recette_ingredient(assembledData);
-      if (response.status == 201) {
-        handleSuccess();
-      } else {
-        const result = await response.json();
-        handleError(result);
-      }
-    }
-  };
-
   // Reset all the selections made on the page.
   const resetSelections = () => {
     setSelectedIngredient("");
@@ -281,21 +68,20 @@ const AddIngredient = ({
     setSousCategory(null);
   };
 
+  generate_option_list();
+
+  function handleSubmit() {}
   return (
     <>
-      <Button
-        className="btn btn-primary mb-2"
-        onClick={() => setModalOpen(!modalOpen)}
-      >
-        Ajouter un ingrédient{sans_section ? null : " à cette section"}
+      <Button className="btn-primary" onClick={() => setModalOpen(true)}>
+        Ajouter un produit
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
           <h5 className="modal-title">
             {createNewIngredient
-              ? "Créer un nouvel ingrédient et l'ajouter à la section"
-              : "Ajouter un ingrédient"}
-            {!createNewIngredient && sans_section ? null : " à cette section"}
+              ? "Créer un nouveau produit et l'ajouter à ce fournisseur"
+              : "Ajouter un produit à ce fournisseur"}
           </h5>
           <button
             aria-label="Close"
@@ -458,7 +244,7 @@ const AddIngredient = ({
                           </option>
                         ) : (
                           <option disabled value="default">
-                            Sélectionnez une unité
+                            Sélectionnez un ingrédient
                           </option>
                         )}
                         {selectedIngredient
@@ -543,18 +329,18 @@ const AddIngredient = ({
                     </Button>
                   </div>
                 ) : null}
-                <div className="d-flex flex-row justify-content-start mt-2">
-                  <label htmlFor="note" className="col-3">
-                    Note (optionnel):
-                  </label>
-                  <textarea
-                    id="note"
-                    name="note"
-                    rows="2"
-                    cols="50"
-                    className="col-9"
-                    placeholder="émondées"
+                <div className="d-flex flex-row justify-content-start mt-2 col-12 flex-grow-1 align-items-center">
+                  <label htmlFor="price">Prix unitaire:</label>
+                  <input
+                    id="price"
+                    type="number"
+                    step="any"
+                    name="price"
+                    className="ms-1"
+                    style={{ maxWidth: "100px", textAlign: "end" }}
+                    placeholder={2.2}
                   />
+                  <label htmlFor="price">€</label>
                 </div>
                 {noteError ? <p className="form-error">{noteError}</p> : null}
               </div>
@@ -580,6 +366,4 @@ const AddIngredient = ({
       </Modal>
     </>
   );
-};
-
-export default AddIngredient;
+}

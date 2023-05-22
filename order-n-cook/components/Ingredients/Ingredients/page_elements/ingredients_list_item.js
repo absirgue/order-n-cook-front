@@ -32,6 +32,7 @@ const IngredientListItem = ({ ingredient }) => {
     <tr>
       <td className={"w-10"}>
         <PurchaseIngredientHelper
+          ingredient={ingredient}
           onClose={() => setShowPurchaseModal(false)}
           show={showPurchaseModal}
         ></PurchaseIngredientHelper>

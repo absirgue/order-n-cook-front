@@ -22,6 +22,7 @@ const RecetteIngredientListItem = ({
       {!is_edit ? (
         <td className={"col-1"}>
           <PurchaseIngredientHelper
+            ingredient={ingredient}
             onClose={() => setShowPurchaseModal(false)}
             show={showPurchaseModal}
           ></PurchaseIngredientHelper>

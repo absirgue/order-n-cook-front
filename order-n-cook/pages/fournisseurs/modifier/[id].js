@@ -4,6 +4,7 @@ import FournisseurProduitsDisplay from "../../../components/Fournisseurs/produit
 import Link from "next/link";
 import FournsiseurName from "../../../components/Fournisseurs/edit_only/granular/name_edit";
 import EditFournisseurGeneralData from "../../../components/Fournisseurs/edit_only/granular/general_data_edit";
+import AddProduit from "../../../components/Fournisseurs/edit_only/granular/add_produit";
 function getIngredientData() {
   return {
     id: 1,
@@ -169,14 +170,14 @@ export default function SingleFournisseurPage({ fournisseurData }) {
           fournisseur={fournisseurData}
         ></EditFournisseurGeneralData>
       </div>
-      <div className={"col-6 d-flex justify-content-center"}>
-        <DeliveryDaysDisplay
-          fournisseurData={fournisseurData}
-        ></DeliveryDaysDisplay>
+      <div className={"col-6 d-flex justify-content-center"}></div>
+      <div className="col-11 col-lg-10 d-flex flex-row justify-content-end">
+        <AddProduit fournisseur_id={fournisseurData.id}></AddProduit>
       </div>
       <div className="col-12 d-flex flex-row justify-content-center">
         <FournisseurProduitsDisplay
           fournisseurIngredientsData={fournisseurData.produits}
+          isEdit={true}
         ></FournisseurProduitsDisplay>
       </div>
     </div>

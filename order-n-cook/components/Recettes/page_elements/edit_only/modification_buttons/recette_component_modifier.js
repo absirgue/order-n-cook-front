@@ -208,7 +208,9 @@ const RecetteComponentModifier = ({
                       required
                     >
                       <option disabled value="default">
-                        Unité
+                        {component.unit
+                          ? component.unit.toLowerCase()
+                          : "unité"}
                       </option>
                       {possibleUnit
                         ? possibleUnit.map((unit) => {

@@ -2,12 +2,12 @@ import DeliveryDaysDisplay from "../../components/Fournisseurs/delivery_days_dis
 import FournisseurProduitsDisplay from "../../components/Fournisseurs/produits_display";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "reactstrap";
-import Modal from "react-bootstrap/Modal";
+import FicheContact from "../../components/Fournisseurs/fiche_contact";
 function getIngredientData() {
   return {
     id: 1,
     name: "Anthès",
+    last_order_time: "16h30",
     category: "Crèmerie",
     specialty: "Maître Frommager",
     address: "12 avenue de la Gare",
@@ -19,7 +19,7 @@ function getIngredientData() {
     client_code: "CECIESTEST",
     principal_phone_number: "0789654567",
     ordering_phone_number: "0719651567",
-    accounting_phone_number: "0719651567",
+    // accounting_phone_number: "0719651567",
     principal_email: "anthes@test.org",
     ordering_email: "anthes@test.org",
     cc_sales_email: "anthes@test.org",
@@ -199,8 +199,6 @@ export const getStaticPaths = async () => {
 };
 
 export default function SingleFournisseurPage({ fournisseurData }) {
-  const [ficheContactShow, setFicheContactShow] = useState(false);
-
   return (
     <div className="col-12 d-flex flex-column justify-content-center align-items-center">
       <div className={"d-flex flex-row mb-2 justify-content-center col-11"}>
@@ -210,131 +208,7 @@ export default function SingleFournisseurPage({ fournisseurData }) {
           }
         >
           <div className={"col-3 d-flex flex-row justify-content-end"}>
-            <Button
-              className="btn btn-primary"
-              onClick={() => {
-                setFicheContactShow(true);
-                console.log("FICHE CONTACT SHOW");
-              }}
-            >
-              Fiche Contact
-            </Button>
-            <Modal
-              size="lg"
-              show={ficheContactShow}
-              onHide={() => setFicheContactShow(false)}
-              aria-labelledby="example-modal-sizes-title-lg"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title id="example-modal-sizes-title-lg">
-                  Fiche Contact pour {fournisseurData.name}
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="col-12 p-2 d-flex flex-row justify-content-between">
-                  <div className="col-6 ps-1 d-flex flex-column">
-                    {fournisseurData.ordering_email ? (
-                      <p style={{ fontWeight: 600 }}>
-                        <span className="greyed-label">Email commande: </span>
-                        {fournisseurData.ordering_email}
-                      </p>
-                    ) : (
-                      <p style={{ color: "red" }}>
-                        Email de commande non su, les commandes ne pourront pas
-                        être passée automatiquement.
-                      </p>
-                    )}
-                    {fournisseurData.principal_email ? (
-                      <p>
-                        <span className="greyed-label">Email principal: </span>
-                        {fournisseurData.principal_email}
-                      </p>
-                    ) : null}
-                    {fournisseurData.cc_sales_email ? (
-                      <p>
-                        <span className="greyed-label">
-                          En copie commercial:{" "}
-                        </span>
-                        {fournisseurData.cc_sales_email}
-                      </p>
-                    ) : null}
-                    <div className="mb-3"></div>
-                    {fournisseurData.ordering_phone_number ? (
-                      <p style={{ fontWeight: 600 }}>
-                        <span className="greyed-label">
-                          Téléphone commande:{" "}
-                        </span>
-                        {fournisseurData.ordering_phone_number}
-                      </p>
-                    ) : fournisseurData.ordering_email ? null : (
-                      <p style={{ color: "red" }}>
-                        Il est préférable de renseigner une adresse email ou un
-                        numéro de téléphone destiné au passage de commande.
-                      </p>
-                    )}
-                    {fournisseurData.principal_phone_number ? (
-                      <p>
-                        <span className="greyed-label">
-                          Téléphone principal:{" "}
-                        </span>
-                        {fournisseurData.principal_phone_number}
-                      </p>
-                    ) : null}
-                    {fournisseurData.accounting_phone_number ? (
-                      <p>
-                        <span className="greyed-label">
-                          Téléphone comptabilité:{" "}
-                        </span>
-                        {fournisseurData.accounting_phone_number}
-                      </p>
-                    ) : null}
-                  </div>
-                  <div className="col-6 pe-1 d-flex flex-column">
-                    <p>
-                      <span className="greyed-label">Adresse: </span>
-                      {fournisseurData.address}
-                    </p>
-                    {fournisseurData.address_line_2 ? (
-                      <p>
-                        <span className="greyed-label">Adresse (suite): </span>
-                        {fournisseurData.address_line_2}
-                      </p>
-                    ) : null}
-                    {fournisseurData.postal_code ? (
-                      <p>
-                        <span className="greyed-label">Code postal: </span>
-                        {fournisseurData.postal_code}
-                      </p>
-                    ) : null}
-                    {fournisseurData.city ? (
-                      <p>
-                        <span className="greyed-label">Ville: </span>
-                        {fournisseurData.city}
-                      </p>
-                    ) : null}
-                    {fournisseurData.department ? (
-                      <p>
-                        <span className="greyed-label">Département: </span>
-                        {fournisseurData.department}
-                      </p>
-                    ) : null}
-                    {fournisseurData.country ? (
-                      <p>
-                        <span className="greyed-label">Pays: </span>
-                        {fournisseurData.country}
-                      </p>
-                    ) : null}
-                    <div className="mb-3"></div>
-                    {fournisseurData.client_code ? (
-                      <p style={{ fontWeight: 600 }}>
-                        <span className="greyed-label">Code client: </span>
-                        {fournisseurData.client_code}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              </Modal.Body>
-            </Modal>
+            <FicheContact fournisseurData={fournisseurData}></FicheContact>
           </div>
           <div
             className={
@@ -359,10 +233,17 @@ export default function SingleFournisseurPage({ fournisseurData }) {
 
         <h2></h2>
       </div>
-      <div className={"col-6 d-flex justify-content-center"}>
+      <div
+        className={
+          "col-6 d-flex flex-column align-items-center justify-content-center"
+        }
+      >
         <DeliveryDaysDisplay
           fournisseurData={fournisseurData}
         ></DeliveryDaysDisplay>
+        <p className="align-self-end" style={{ color: "#95929c" }}>
+          Dernière heure de commande: {fournisseurData.last_order_time}
+        </p>
       </div>
       <div className="col-12 d-flex flex-row justify-content-center">
         <FournisseurProduitsDisplay
