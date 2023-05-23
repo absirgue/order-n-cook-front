@@ -35,10 +35,8 @@ export default function ProduitListItem({ produit, isEdit = false }) {
         className="col-3 d-flex flex-column justify-content-center"
         title="Quantité proposée et sa conversion en unité de masse"
       >
-        {produit.real_data.quantity +
-        " " +
-        produit.real_data.unit +
-        produit.conversion_unit
+        {produit.real_data.quantity + " " + produit.real_data.unit}
+        {produit.conversion
           ? " (" + produit.conversion.quantity + produit.conversion.unit + ")"
           : null}
       </p>

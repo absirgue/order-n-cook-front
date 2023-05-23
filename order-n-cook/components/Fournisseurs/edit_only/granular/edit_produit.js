@@ -1,13 +1,14 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useSWRConfig } from "swr";
+import Select from "react-select";
 
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
 
-const EditProduit = ({ produit, recette_id }) => {
+const EditProduit = ({ produit }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedUnit, setSelectedUnit] = React.useState("default");
   const [untiError, setUnitError] = React.useState(null);
@@ -15,6 +16,12 @@ const EditProduit = ({ produit, recette_id }) => {
   const [noteError, setNoteError] = React.useState(null);
   const [possibleUnit, setPossibleUnit] = React.useState(["kilo", "test"]);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [labels, setLabels] = React.useState(
+    produit.ingredient.labels?.map((label) => {
+      return { value: label.name, label: label.name };
+    })
+  );
+
   const { mutate } = useSWRConfig();
 
   function resetAllErrors() {
@@ -137,6 +144,18 @@ const EditProduit = ({ produit, recette_id }) => {
     // }
   };
 
+  function get_all_existing_labels() {
+    return ["AOC", "AOP"];
+  }
+
+  const labelData = get_all_existing_labels();
+
+  const label_options = [];
+
+  labelData.forEach((label) =>
+    label_options.push({ value: label, label: label })
+  );
+
   return (
     <>
       <Button className="emoji_button" onClick={() => setModalOpen(!modalOpen)}>
@@ -145,7 +164,7 @@ const EditProduit = ({ produit, recette_id }) => {
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
           <h5 className="modal-title">
-            Modifier le produit {produit.ingredient.name.toLowerCase()}
+            Modifier le produit: {produit.ingredient.name.toLowerCase()}
           </h5>
           <button
             aria-label="Close"
@@ -230,6 +249,17 @@ const EditProduit = ({ produit, recette_id }) => {
                   ></input>
                   <label htmlFor="price">€</label>
                 </div>
+                <Select
+                  className="flex-grow-1 col-12"
+                  options={label_options}
+                  placeholder="Ajouter des labels"
+                  isSearchable={true}
+                  value={labels}
+                  onChange={(data) => {
+                    setLabels(data);
+                  }}
+                  isMulti
+                />
                 <div className="d-flex flex-row justify-content-start align-items-baseline mt-1 col-12">
                   <label htmlFor="geographic_origin">
                     Origine géographique:

@@ -65,7 +65,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="principal_email">Email principal:</label>
                     <input
                       type="text"
@@ -85,7 +85,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="cc_sales_email">En copie commercial:</label>
                     <input
                       type="text"
@@ -106,7 +106,7 @@ export default function FicheContact({ fournisseurData }) {
                     ></input>
                   </div>
                   <div className="mb-3"></div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="ordering_phone_number">
                       Téléphone commande:
                     </label>
@@ -128,7 +128,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="principal_phone_number">
                       Téléphone principal:
                     </label>
@@ -151,7 +151,7 @@ export default function FicheContact({ fournisseurData }) {
                     ></input>
                   </div>
 
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="accounting_phone_number">
                       Téléphone comptabilité:
                     </label>
@@ -175,7 +175,7 @@ export default function FicheContact({ fournisseurData }) {
                   </div>
                 </div>
                 <div className="col-6 pe-1 d-flex flex-column">
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="address">Adresse:</label>
                     <input
                       type="text"
@@ -193,7 +193,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="address_line_2">Adresse (suite):</label>
                     <input
                       type="text"
@@ -213,7 +213,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="postal_code">Code postal:</label>
                     <input
                       type="text"
@@ -233,7 +233,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="city">Ville:</label>
                     <input
                       type="text"
@@ -249,7 +249,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="department">Département:</label>
                     <input
                       type="text"
@@ -269,7 +269,7 @@ export default function FicheContact({ fournisseurData }) {
                       }
                     ></input>
                   </div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="country">Pays:</label>
                     <input
                       type="text"
@@ -289,7 +289,7 @@ export default function FicheContact({ fournisseurData }) {
                   </div>
 
                   <div className="mb-3"></div>
-                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12">
+                  <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mt-2">
                     <label htmlFor="client_code">Code client:</label>
                     <input
                       type="text"
@@ -418,7 +418,14 @@ export default function FicheContact({ fournisseurData }) {
         {isModify ? (
           <Modal.Footer>
             <div className="col-12 d-flex flex-row justify-content-end">
-              <Button onClick={() => closeModal()}>Annuler</Button>
+              <Button
+                onClick={() => {
+                  setIsModify(false);
+                  set_new_data_inputted(false);
+                }}
+              >
+                Annuler
+              </Button>
               {newDataInputted ? (
                 <Button className="btn btn-primary ms-3">Enregistrer</Button>
               ) : null}

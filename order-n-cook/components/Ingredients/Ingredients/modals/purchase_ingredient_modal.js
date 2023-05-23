@@ -1,4 +1,5 @@
 import React from "react";
+import PlaceOrder from "../../../general/place_order";
 
 // reactstrap components
 import {
@@ -6,6 +7,7 @@ import {
   UncontrolledPopover,
   PopoverHeader,
   PopoverBody,
+  Placeholder,
 } from "reactstrap";
 import Modal from "react-bootstrap/Modal";
 
@@ -56,7 +58,7 @@ quantity of said ingredient from a selected provider.
 */
 const PurchaseIngredientHelper = ({ ingredient }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-
+  const [orderModalOpened, setOrderModalOpened] = React.useState(false);
   const produits_for_ingredient = get_produits_for_ingredient();
 
   // var label_string = "";
@@ -73,6 +75,7 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
       <Modal
         size="lg"
         show={modalOpen}
+        style={orderModalOpened ? { zIndex: 1 } : null}
         onHide={() => setModalOpen(!modalOpen)}
         aria-labelledby="example-modal-sizes-title-lg"
       >
@@ -86,12 +89,10 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
         <Modal.Body>
           {produits_for_ingredient.map((produit) => (
             <div className="d-flex flex-row justify-content-start align-items-center">
-              <Button
-                className="emoji_button"
-                onClick={() => setModalOpen(!modalOpen)}
-              >
-                🛒
-              </Button>
+              <PlaceOrder
+                produit={{ ...produit, ingredient_name: ingredient.name }}
+                toggleOnOpen={setModalOpen}
+              ></PlaceOrder>
               <p className="col-3" style={{ textAlign: "center" }}>
                 {produit.fournisseur_name}
               </p>

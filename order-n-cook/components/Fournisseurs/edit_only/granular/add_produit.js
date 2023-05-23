@@ -16,6 +16,7 @@ export default function AddProduit({ fournisseur_id }) {
   const [categoryError, setCategoryError] = useState(false);
   const [sousCategoryError, setSousCategoryError] = useState(false);
   const [quantityError, setQuantityError] = useState(null);
+  const [labels, setLabels] = useState([]);
 
   const category_options = [];
 
@@ -34,6 +35,14 @@ export default function AddProduit({ fournisseur_id }) {
   function get_all_existing_sous_categories() {
     return ["sous cat 1", "sous cat 2"];
   }
+
+  function get_all_existing_labels() {
+    return ["AOC", "AOP"];
+  }
+
+  const labelData = get_all_existing_labels();
+
+  const label_options = [];
 
   // Expands on the lists of ingredient options, sous_categories options and categories options to generate
   // option list for the various Select components on the page.
@@ -54,6 +63,10 @@ export default function AddProduit({ fournisseur_id }) {
       await get_all_existing_sous_categories();
     all_existing_sous_categories.forEach((sous_category) =>
       sous_category_options.push({ value: sous_category, label: sous_category })
+    );
+
+    labelData.forEach((label) =>
+      label_options.push({ value: label, label: label })
     );
   };
 
@@ -244,7 +257,7 @@ export default function AddProduit({ fournisseur_id }) {
                           </option>
                         ) : (
                           <option disabled value="default">
-                            Sélectionnez un ingrédient
+                            Sélectionnez une unité
                           </option>
                         )}
                         {selectedIngredient
@@ -337,14 +350,51 @@ export default function AddProduit({ fournisseur_id }) {
                     step="any"
                     name="price"
                     className="ms-1"
-                    style={{ maxWidth: "100px", textAlign: "end" }}
+                    style={{ maxWidth: "100px", textAlign: "end", border: 0 }}
                     placeholder={2.2}
                   />
                   <label htmlFor="price">€</label>
                 </div>
                 {noteError ? <p className="form-error">{noteError}</p> : null}
               </div>
-              <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
+              <div
+                className="col-12 d-flex flex-column justify-content-end"
+                style={{
+                  marginTop: "25px",
+                }}
+              >
+                <p style={{ color: "grey" }}>Optionnel:</p>
+                <Select
+                  className="flex-grow-1"
+                  options={label_options}
+                  placeholder="Ajouter des labels"
+                  isSearchable={true}
+                  value={labels}
+                  onChange={(data) => {
+                    setLabels(data);
+                  }}
+                  isMulti
+                />
+                <div className="d-flex flex-row justify-content-start align-items-baseline mt-1 col-12">
+                  <label htmlFor="geographic_origin">
+                    Origine géographique:
+                  </label>
+                  <input
+                    type="text"
+                    id="geographic_origin"
+                    name="geographic_origin"
+                    step="any"
+                    style={{
+                      backgroundColor: "transparent",
+                      border: 0,
+                      borderBottom: "5px",
+                      textAlign: "start",
+                      width: "60%",
+                    }}
+                    placeholder={"Roquefort, Aveyron"}
+                  ></input>
+                </div>
+              </div>
             </div>
           </ModalBody>
           <ModalFooter>
