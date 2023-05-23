@@ -56,9 +56,13 @@ function get_produits_for_ingredient() {
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
-const PurchaseIngredientHelper = ({ ingredient }) => {
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [orderModalOpened, setOrderModalOpened] = React.useState(false);
+const PurchaseIngredientHelper = ({
+  ingredient,
+  modalOpen,
+  setModalOpen,
+  setOtherModalProduit,
+  openOtherModal,
+}) => {
   const produits_for_ingredient = get_produits_for_ingredient();
 
   // var label_string = "";
@@ -69,14 +73,13 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
 
   return (
     <>
-      <Button className="emoji_button" onClick={() => setModalOpen(!modalOpen)}>
-        🛒
-      </Button>
       <Modal
         size="lg"
         show={modalOpen}
-        style={orderModalOpened ? { zIndex: 1 } : null}
-        onHide={() => setModalOpen(!modalOpen)}
+        onHide={() => {
+          setModalOpen(!modalOpen);
+          openOtherModal(true);
+        }}
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
@@ -89,10 +92,20 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
         <Modal.Body>
           {produits_for_ingredient.map((produit) => (
             <div className="d-flex flex-row justify-content-start align-items-center">
-              <PlaceOrder
-                produit={{ ...produit, ingredient_name: ingredient.name }}
-                toggleOnOpen={setModalOpen}
-              ></PlaceOrder>
+              <Button
+                className="emoji_button"
+                onClick={() => {
+                  console.log("OPEN IT UP");
+                  setModalOpen(false);
+                  setOtherModalProduit({
+                    ...produit,
+                    ingredient_name: ingredient.name,
+                  });
+                  openOtherModal(true);
+                }}
+              >
+                🛒
+              </Button>
               <p className="col-3" style={{ textAlign: "center" }}>
                 {produit.fournisseur_name}
               </p>
@@ -160,7 +173,14 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
         </Modal.Body>
         <Modal.Footer>
           <div className="col-12 d-flex flex-row justify-content-end">
-            <Button onClick={() => setModalOpen(!modalOpen)}>Fermer</Button>
+            <Button
+              onClick={() => {
+                setModalOpen(!modalOpen);
+                openOtherModal(true);
+              }}
+            >
+              Fermer
+            </Button>
           </div>
         </Modal.Footer>
       </Modal>

@@ -6,28 +6,17 @@ import React from "react";
 
 // dispatch(addToCart(product))
 
-export default function PlaceOrder({ produit, toggleOnOpen = null }) {
-  const [orderModalOpen, setOrderModalOpen] = React.useState(false);
+export default function PlaceOrder({ produit, toggleOpen, open }) {
   const [quantity, setQuantity] = React.useState(null);
 
   function handleSubmit() {}
   return (
     <>
-      <Button
-        className="emoji_button"
-        onClick={() => {
-          //   toggleOnOpen(false);
-          setOrderModalOpen(!orderModalOpen);
-        }}
-      >
-        🛒
-      </Button>
       <Modal
         toggle={() => {
-          setOrderModalOpen(!orderModalOpen);
+          toggleOpen(!open);
         }}
-        isOpen={orderModalOpen}
-        style={{ zIndex: 6 }}
+        isOpen={open}
       >
         <div className="modal-header">
           <h5 className="modal-title">
@@ -38,7 +27,7 @@ export default function PlaceOrder({ produit, toggleOnOpen = null }) {
             className=" close"
             type="button"
             onClick={() => {
-              setOrderModalOpen(!orderModalOpen);
+              toggleOpen(false);
               resetSelections();
             }}
             style={{ backgroundColor: "transparent", border: 0 }}
@@ -82,7 +71,7 @@ export default function PlaceOrder({ produit, toggleOnOpen = null }) {
             className="btn-secondary"
             type="button"
             onClick={() => {
-              setOrderModalOpen(!orderModalOpen);
+              toggleOpen(false);
             }}
           >
             Fermer
