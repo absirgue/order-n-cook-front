@@ -1,26 +1,27 @@
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
-import { sendCreateNewRecette } from "../../../utils/backend/recette_requests";
-import { get_all_existing_recette_categories } from "../../../utils/backend/recette_components_requests";
-import AddRecetteTagButton from "./edit_only/add_buttons/add_recette_tag_button";
-function redirectToNewlyCreatedRecette(new_recette_id) {
-  window.location.href = "/recettes/" + new_recette_id;
+import { sendCreateNewFournisseur } from "../../utils/backend/fournisseur_requests";
+import { get_all_existing_fournisseur_categories } from "../../utils/backend/fournisseur_requests";
+import AddFournisseurTagButton from "./edit_only/granular/add_fournisseur_tag";
+
+function redirectToNewlyCreatedFournisseur(new_fournisseur_id) {
+  window.location.href = "/fournisseurs/" + new_fournisseur_id;
 }
 
 /**
- * A button and model to create a new recipe.
+ * A button and model to create a new fournisseur.
  */
-const CreateNewRecetteButton = () => {
+const CreateNewFournisseurButton = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [category, setCategory] = React.useState(null);
 
   const category_options = [];
 
   const generate_option_list = async () => {
-    const all_existing_recette_categories =
-      await get_all_existing_recette_categories();
-    all_existing_recette_categories.forEach((category) =>
+    const all_existing_fournisseur_categories =
+      await get_all_existing_fournisseur_categories();
+    all_existing_fournisseur_categories.forEach((category) =>
       category_options.push({ value: category, label: category })
     );
   };
@@ -39,20 +40,20 @@ const CreateNewRecetteButton = () => {
     if (category != null) {
       data["category"] = category.value;
 
-      const response = await sendCreateNewRecette(data);
+      const response = await sendCreateNewFournisseur(data);
       if (response.status != 201) {
         alert(
           "Une erreur est survenue. Merci de vérifier les valeurs renseignées ou de réessayer ultérieurement"
         );
       } else {
         const result = await response.json();
-        redirectToNewlyCreatedRecette(result.id);
+        redirectToNewlyCreatedFournisseur(result.id);
         setCategory(null);
         setModalOpen(false);
       }
     } else {
       alert(
-        "Merci de renseignez une catégorie pour cette nouvelle recette. Vous pourrez la modifier ultérieurement."
+        "Merci de renseignez une catégorie pour ce nouveau fournisseur. Vous pourrez la modifier ultérieurement."
       );
     }
   };
@@ -64,7 +65,7 @@ const CreateNewRecetteButton = () => {
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
-          <h5 className="modal-title">Créer une nouvelle recette</h5>
+          <h5 className="modal-title">Créer un nouveau fournisseur</h5>
           <button
             aria-label="Close"
             className=" close"
@@ -95,7 +96,7 @@ const CreateNewRecetteButton = () => {
                     height: "40px",
                     paddingLeft: "5px",
                   }}
-                  placeholder="Nom de la nouvelle recette"
+                  placeholder="Nom du nouveau fournisseur"
                   required
                 />
                 <div className="col-12 d-flex flew-row justify-content-between align-items-baseline mb-2">
@@ -104,7 +105,7 @@ const CreateNewRecetteButton = () => {
                   </label>
                   <Select
                     id="categories"
-                    className="flex-grow-1"
+                    className="flex-grow-1 me-1"
                     options={category_options}
                     placeholder="Sélectionner une catégorie"
                     isSearchable={true}
@@ -113,7 +114,9 @@ const CreateNewRecetteButton = () => {
                       setCategory(data);
                     }}
                   />
-                  <AddRecetteTagButton is_category={true}></AddRecetteTagButton>
+                  <AddFournisseurTagButton
+                    is_category={true}
+                  ></AddFournisseurTagButton>
                 </div>
               </div>
             </div>
@@ -137,4 +140,4 @@ const CreateNewRecetteButton = () => {
   );
 };
 
-export default CreateNewRecetteButton;
+export default CreateNewFournisseurButton;

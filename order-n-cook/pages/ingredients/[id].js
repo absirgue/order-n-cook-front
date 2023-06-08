@@ -1,149 +1,5 @@
 import SeasonnalityDisplay from "../../components/Ingredients/Ingredients/page_elements/seasonnality_display";
-
-function getIngredientData(id) {
-  const list = [
-    {
-      id: 1,
-      name: "Fraise",
-      category: "fruit",
-      sous_category: "fruit rouge",
-      labels: [
-        { id: 1, name: "AOC" },
-        { id: 2, name: "AOP" },
-      ],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 2,
-      name: "Artichaut",
-      category: "légume",
-      sous_category: "légume feuille",
-      labels: [{ id: 1, name: "AOC" }],
-      allergenes: [],
-      season: [
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 3,
-      name: "Côte de boeuf",
-      category: "viande",
-      sous_category: "viande rouge",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 4,
-      name: "Sole",
-      category: "poisson",
-      sous_category: "poisson à chair blanche",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 5,
-      name: "Carotte",
-      category: "légume",
-      sous_category: "légume racine",
-      labels: [],
-      allergenes: [
-        { id: 1, name: "lactose" },
-        { id: 2, name: "noix" },
-      ],
-      season: [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-      ],
-    },
-    {
-      id: 6,
-      name: "Framboise",
-      sous_category: "fruit rouge",
-      category: "fruit",
-      labels: [],
-      allergenes: [{ id: 1, name: "lactose" }],
-      season: [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-      ],
-    },
-  ];
-
-  return list.filter((ingredient) => ingredient.id == id)[0];
-}
+import ProductListItem from "../../components/Ingredients/Ingredients/page_elements/produit_list_item";
 
 export const getStaticProps = async (context) => {
   const ingredientID = context.params?.id;
@@ -201,9 +57,17 @@ export default function SingleIngredientPage({ ingredientData }) {
           </div>
           <div className={"col-3"}>{/* This div is purposefully empty */}</div>
         </div>
-
-        <h2></h2>
       </div>
+      {ingredientData.associated_produits.length > 0 ? (
+        <div className="col-12 d-flex flex-column align-items-center">
+          <h3 className="mt-4 mb-3">
+            Vos fournisseurs proposant cet ingrédient
+          </h3>
+          {ingredientData.associated_produits.map((produit) => (
+            <ProductListItem produit={produit}></ProductListItem>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

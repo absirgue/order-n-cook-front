@@ -44,13 +44,17 @@ const AddSousRecette = ({ recette_id }) => {
   generate_option_list();
 
   const handleSubmit = async (event) => {
+    if (!selectedRecette) {
+      alert("Merci de choisir une recette.");
+      return;
+    }
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
 
     // Get data from the form.
     let data = {};
-    if (event.target.unit && event.target.unit.value) {
-      data["unit"] = event.target.unit.value;
+    if (selectedRecette.unit) {
+      data["unit"] = selectedRecette.unit;
     }
     if (event.target.quantity && event.target.quantity.value) {
       data["quantity"] = event.target.quantity.value;
@@ -62,9 +66,13 @@ const AddSousRecette = ({ recette_id }) => {
       data["sous_recette"] = selectedRecette.value;
     }
     data["recette"] = recette_id;
-
+    console.log(data);
     const response = await create_sous_recette(data);
+    console.log("CREATED DATA");
+    console.log(response);
+
     if (response.status == 201) {
+      console.log("HERE");
       setModalOpen(false);
       reset_all_errors();
       mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);

@@ -40,6 +40,8 @@ const DeleteButton = ({
       endpoint += "recette_ingredients/";
     } else if (is_progression) {
       endpoint += "recette_progression/";
+    } else if (is_sous_recette) {
+      endpoint += "sous_recette/";
     }
     endpoint += element.id;
     console.log("ENDPOINT");

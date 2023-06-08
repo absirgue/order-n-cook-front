@@ -15,7 +15,7 @@ import { create_new_recette_ingredient } from "../../../../../utils/backend/rece
 
 /*
 A modal that enables creating a RecetteIngredient for the Recette dsplay.
-This includes the eventuality of creating a new Ingredient and a new Conversion for a given ingredient (and eventually both).
+This includes the eventuality of creating a new Ingredient and a new conversion_unit for a given ingredient (and eventually both).
 */
 const AddIngredient = ({
   recette,
@@ -510,7 +510,7 @@ const AddIngredient = ({
                       </div>
                       <div className="d-flex flex-row col-12 align-items-baseline">
                         <label htmlFor="new_unit_conversion">
-                          Conversion en kg:
+                          conversion_unit en kg:
                         </label>
                         <input
                           type="number"

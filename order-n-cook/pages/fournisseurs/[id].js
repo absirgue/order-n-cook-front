@@ -1,7 +1,8 @@
 import DeliveryDaysDisplay from "../../components/Fournisseurs/delivery_days_display";
 import FournisseurProduitsDisplay from "../../components/Fournisseurs/produits_display";
 import Link from "next/link";
-import { useState } from "react";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 import FicheContact from "../../components/Fournisseurs/fiche_contact";
 function getIngredientData() {
   return {
@@ -61,11 +62,11 @@ function getIngredientData() {
           category: "crémerie",
           sous_category: "crème",
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "plaquette",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 250,
           unit: "gramme",
         },
@@ -95,11 +96,11 @@ function getIngredientData() {
           ],
           id: 2,
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "kilogramme",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 250,
           unit: "gramme",
         },
@@ -126,11 +127,11 @@ function getIngredientData() {
           ],
           id: 2,
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "unité",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 300,
           unit: "gramme",
         },
@@ -160,11 +161,11 @@ function getIngredientData() {
           ],
           id: 2,
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "pot",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 300,
           unit: "gramme",
         },
@@ -175,30 +176,30 @@ function getIngredientData() {
     ],
   };
 }
+const fetcher = (url) => fetch(url).then((res) => res.json());
+/**
+ * Page to display Fournisseur details
+ */
+export default function FournisseurDetailPage() {
+  const router = useRouter();
+  const { id } = router.query;
 
-export const getStaticProps = async (context) => {
-  const ingredientID = context.params?.id;
-  const fournisseurData = getIngredientData();
-  return {
-    props: {
-      fournisseurData,
-    },
-  };
-};
+  // Use a ternary operator to only fetch the data when the ID isn't undefined
+  const { data: fournisseurData, error } = useSWR(
+    id ? `http://127.0.0.1:8000/api/fournisseurs/${id}/` : null,
+    fetcher
+  );
 
-export const getStaticPaths = async () => {
-  const data = { stars: [{ id: "1" }] };
-  const pathsWithParams = data.stars.map((star) => ({
-    params: { id: star.id },
-  }));
-
-  return {
-    paths: pathsWithParams,
-    fallback: true,
-  };
-};
-
-export default function SingleFournisseurPage({ fournisseurData }) {
+  if (error) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
+  if (!fournisseurData) return <div>Chargement en cours ...</div>;
+  console.log(fournisseurData);
   return (
     <div className="col-12 d-flex flex-column justify-content-center align-items-center">
       <div className={"d-flex flex-row mb-2 justify-content-center col-11"}>
@@ -207,7 +208,14 @@ export default function SingleFournisseurPage({ fournisseurData }) {
             "d-flex flex-row justify-content-center col-11 align-items-center"
           }
         >
-          <div className={"col-3 d-flex flex-row justify-content-end"}>
+          <div
+            className={
+              "col-3 d-flex flex-row justify-content-end align-items-baseline"
+            }
+          >
+            <Link className="me-5" href="/fournisseurs/tous">
+              {"< Quitter"}
+            </Link>
             <FicheContact fournisseurData={fournisseurData}></FicheContact>
           </div>
           <div
@@ -241,14 +249,25 @@ export default function SingleFournisseurPage({ fournisseurData }) {
         <DeliveryDaysDisplay
           fournisseurData={fournisseurData}
         ></DeliveryDaysDisplay>
-        <p className="align-self-end" style={{ color: "#95929c" }}>
-          Dernière heure de commande: {fournisseurData.last_order_time}
-        </p>
+        {fournisseurData.last_order_time ? (
+          <p className="align-self-end" style={{ color: "#95929c" }}>
+            Dernière heure de commande: {fournisseurData.last_order_time}
+          </p>
+        ) : null}
       </div>
       <div className="col-12 d-flex flex-row justify-content-center">
-        <FournisseurProduitsDisplay
-          fournisseurIngredientsData={fournisseurData.produits}
-        ></FournisseurProduitsDisplay>
+        {fournisseurData.produits ? (
+          <FournisseurProduitsDisplay
+            fournisseur_name={fournisseurData.name}
+            fournisseur_id={fournisseurData.id}
+            fournisseurIngredientsData={fournisseurData.produits}
+          ></FournisseurProduitsDisplay>
+        ) : (
+          <p>
+            Aucun ingrédient n'a encore été renseigné pour ce fournisseur.
+            Modifier la recette pour ajouter des ingrédients.
+          </p>
+        )}
       </div>
     </div>
   );

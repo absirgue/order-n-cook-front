@@ -44,6 +44,8 @@ function get_initial_data_grouped_and_sorted(fournisseurIngredientsData) {
 
 export default function FournisseurProduitsDisplay({
   fournisseurIngredientsData,
+  fournisseur_name,
+  fournisseur_id,
   isEdit = false,
 }) {
   // State variable for the filtered search modal
@@ -480,7 +482,9 @@ export default function FournisseurProduitsDisplay({
                   {group.produits.map((produit) => (
                     <ProduitListItem
                       produit={produit}
+                      fournisseur_id={fournisseur_id}
                       isEdit={isEdit}
+                      fournisseur_name={fournisseur_name}
                     ></ProduitListItem>
                   ))}
                 </tbody>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import PurchaseIngredientHelper from "../modals/purchase_ingredient_modal";
+import PurchaseIngredientHelper from "../../../general/purchase_ingredient_modal";
 import {
   Button,
   UncontrolledPopover,
@@ -32,7 +32,7 @@ const IngredientListItem = ({ ingredient }) => {
     <tr>
       <td className={"w-10"}>
         <PurchaseIngredientHelper
-          ingredient={ingredient}
+          ingredient={{ ...ingredient, ingredient_id: ingredient.id }}
           onClose={() => setShowPurchaseModal(false)}
           show={showPurchaseModal}
         ></PurchaseIngredientHelper>

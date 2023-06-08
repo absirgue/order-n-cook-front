@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter, Table } from "reactstrap";
 import FournisseurListItem from "../../components/Fournisseurs/fournisseur_list_item";
-
+import CreateNewFournisseurButton from "../../components/Fournisseurs/create_fournisseur_button";
 const DAYS = [
   "Dimanche",
   "Lundi",
@@ -12,70 +12,11 @@ const DAYS = [
   "Samedi",
 ];
 
-function getAllIngredientsData() {
-  // var list = []
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Fraise", "category": "fruit", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Carotte", "category": "légume", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Boeuf", "category": "viande", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Poisson", "category": "poisson", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // for (var i =0; i<100;i++){
-  //     list.push({ "id": 1, "name": "Pate", "category": "epicerie", "labels":[{id:1,name:"AOC"},{id:2,name:"AOP"}],"allergenes": [{ "id": 1, "name": "lactose" }] })
-  // }
-  // return list.sort(function (a, b) {
-  //     if (a.name < b.name) {
-  //       return -1;
-  //     }
-  //     if (a.name > b.name) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-  return [
-    {
-      id: 1,
-      name: "Anthès",
-      category: "Crèmerie",
-      delivers_monday: true,
-      delivers_tuesday: false,
-      delivers_wednesday: false,
-      delivers_thursday: false,
-      delivers_friday: true,
-      delivers_saturday: true,
-      delivers_sunday: true,
-    },
-    {
-      id: 1,
-      name: "Bourjot",
-      category: "Maraîcher",
-      delivers_monday: false,
-      delivers_tuesday: false,
-      delivers_wednesday: false,
-      delivers_thursday: true,
-      delivers_friday: true,
-      delivers_saturday: true,
-      delivers_sunday: false,
-    },
-    {
-      id: 1,
-      name: "Caillot EARL",
-      category: "Maraîcher",
-      delivers_monday: false,
-      delivers_tuesday: false,
-      delivers_wednesday: false,
-      delivers_thursday: false,
-      delivers_friday: true,
-      delivers_saturday: true,
-      delivers_sunday: true,
-    },
-  ].sort(function (a, b) {
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`http://127.0.0.1:8000/api/fournisseurs/`);
+  let allFournisseursData = await res.json();
+  allFournisseursData = allFournisseursData.sort(function (a, b) {
     if (a.name < b.name) {
       return -1;
     }
@@ -84,15 +25,9 @@ function getAllIngredientsData() {
     }
     return 0;
   });
-}
 
-export async function getStaticProps() {
-  const allFournisseursData = getAllIngredientsData();
-  return {
-    props: {
-      allFournisseursData,
-    },
-  };
+  // Pass data to the page via props
+  return { props: { allFournisseursData } };
 }
 
 // The initial data needs to be grouped and sorted in alphabetical order so that this alphabetical order is
@@ -241,6 +176,9 @@ export default function AllFournisseursData({ allFournisseursData }) {
 
   return (
     <div className="col-12 col-lg-10">
+      <div className={"d-flex flex-row col-12 mt-1 mb-2 justify-content-end"}>
+        <CreateNewFournisseurButton></CreateNewFournisseurButton>
+      </div>
       <div className={"d-flex flex-row m-1 mb-2"}>
         <div className={"col-5 d-flex flex-row justify-content-start"}>
           <Button
@@ -388,10 +326,18 @@ export default function AllFournisseursData({ allFournisseursData }) {
         </div>
       ) : (
         <div className={"d-flex flex-row justify-content-center"}>
-          <p>
-            Aucun ingrédient ne correspond à cette recherche. Si vous n'avez pas
-            effectué de recherche, merci de vérifier votre connexion internet
-          </p>
+          {allFournisseursData.length > 0 ? (
+            <p>
+              Aucun fournisseur ne correspond à cette recherche. Si vous n'avez
+              pas effectué de recherche, merci de vérifier votre connexion
+              internet.
+            </p>
+          ) : (
+            <p>
+              Aucun fournisseur n'a encore été créé. Si ce n'est pas le cas,
+              merci de vérifier votre connexion internet
+            </p>
+          )}
         </div>
       )}
     </div>

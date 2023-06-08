@@ -38,7 +38,11 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
         </p>
       </td>
       <td className={"col-7"} style={{ verticalAlign: "middle" }}>
-        <Link href={"/sous_recettes/" + recette_id + "/" + sous_recette.id}>
+        <Link
+          href={
+            "/sous_recettes/" + recette_id + "/" + sous_recette.sous_recette_id
+          }
+        >
           {sous_recette.name}
         </Link>
         {sous_recette.note ? " (" + sous_recette.note + ")" : null}

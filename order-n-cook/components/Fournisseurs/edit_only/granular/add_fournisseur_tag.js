@@ -1,15 +1,13 @@
-import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 
 /*
-This implements a Buttona and linked Modal to create a new Recette tag item, whether Category, Genre, or Taste.
+This implements a Button and linked Modal to create a new Fournisseur tag item, whether Category, or Specialty.
 */
-const AddRecetteTagButton = ({
+const AddFournisseurTagButton = ({
   is_category = false,
-  is_taste = false,
-  is_genre = false,
+  is_specialty = false,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [nameError, setNameError] = useState(null);
@@ -17,8 +15,6 @@ const AddRecetteTagButton = ({
   const { mutate } = useSWRConfig();
   const handleTagCreation = async () => {
     let data = {};
-    console.log("NAME INPUT");
-    console.log(nameInput);
     if (nameInput) {
       data["name"] = nameInput;
       const JSONdata = JSON.stringify(data);
@@ -26,11 +22,9 @@ const AddRecetteTagButton = ({
       // API endpoint where we send form data.
       let endpoint = "http://127.0.0.1:8000/api/";
       if (is_category) {
-        endpoint += "recette_categories/";
-      } else if (is_genre) {
-        endpoint += "recette_genres/";
-      } else if (is_taste) {
-        endpoint += "recette_tastes/";
+        endpoint += "fournisseur_categories/";
+      } else if (is_specialty) {
+        endpoint += "fournisseur_specialties/";
       }
 
       // Form the request for sending data to the server.
@@ -49,14 +43,24 @@ const AddRecetteTagButton = ({
       const response = await fetch(endpoint, options);
       if (response.status == 201) {
         if (is_category) {
-          mutate("http://127.0.0.1:8000/api/recette_categories/");
-        } else if (is_genre) {
-          mutate("http://127.0.0.1:8000/api/recette_genres/");
-        } else if (is_taste) {
-          mutate("http://127.0.0.1:8000/api/recette_tastes/");
+          mutate("http://127.0.0.1:8000/api/fournisseur_categories/");
+        } else if (is_specialty) {
+          mutate("http://127.0.0.1:8000/api/fournisseur_specialties/");
         }
+
         setModalOpen(false);
+        alert(
+          "La " +
+            (is_category
+              ? "catéogorie "
+              : is_specialty
+              ? "spécialité "
+              : null) +
+            nameInput +
+            " a bien été créée. Si elle n'apparaît pas immédiatement, merci de rafraîchir la page."
+        );
         setNameError(null);
+        setNameInput(null);
       } else {
         const result = await response.json();
         let error_found = false;
@@ -82,10 +86,8 @@ const AddRecetteTagButton = ({
             Ajouter{" "}
             {is_category
               ? "une catégorie"
-              : is_taste
-              ? "un goût"
-              : is_genre
-              ? "un genre"
+              : is_specialty
+              ? "une spécialité"
               : null}
           </h5>
           <button
@@ -146,4 +148,4 @@ const AddRecetteTagButton = ({
   );
 };
 
-export default AddRecetteTagButton;
+export default AddFournisseurTagButton;

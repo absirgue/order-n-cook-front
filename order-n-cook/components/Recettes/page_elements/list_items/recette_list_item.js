@@ -72,11 +72,24 @@ const RecetteListItem = ({ recette }) => {
             style={{
               verticalAlign: "center",
               marginBottom: 0,
-              color: "#0254c7",
               fontSize: "26px",
+              color: recette.selling_price.evolution
+                ? recette.selling_price.evolution == "HIGHER"
+                  ? "#f19494"
+                  : recette.selling_price.evolution == "LOWER"
+                  ? "#77af85"
+                  : "#0254c7"
+                : "#0254c7",
             }}
           >
-            {recette.selling_price + "€"}
+            {recette.selling_price.price + "€"}
+            {recette.selling_price.evolution
+              ? recette.selling_price.evolution == "HIGHER"
+                ? "📈"
+                : recette.selling_price.evolution == "LOWER"
+                ? "📉"
+                : "="
+              : null}
           </h5>
         </div>
       </div>

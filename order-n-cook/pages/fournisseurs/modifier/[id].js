@@ -1,6 +1,8 @@
 import { Button } from "reactstrap";
 import DeliveryDaysDisplay from "../../../components/Fournisseurs/delivery_days_display";
 import FournisseurProduitsDisplay from "../../../components/Fournisseurs/produits_display";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import FournsiseurName from "../../../components/Fournisseurs/edit_only/granular/name_edit";
 import EditFournisseurGeneralData from "../../../components/Fournisseurs/edit_only/granular/general_data_edit";
@@ -48,11 +50,11 @@ function getIngredientData() {
           category: "crémerie",
           sous_category: "crème",
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "plaquette",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 250,
           unit: "gramme",
         },
@@ -68,11 +70,11 @@ function getIngredientData() {
           sous_category: "beurre",
           id: 2,
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "kilogramme",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 250,
           unit: "gramme",
         },
@@ -85,11 +87,11 @@ function getIngredientData() {
           sous_category: "frommage",
           id: 2,
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "unité",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 300,
           unit: "gramme",
         },
@@ -105,11 +107,11 @@ function getIngredientData() {
           sous_category: "crème",
           id: 2,
         },
-        real_data: {
+        real_unit: {
           quantity: 1,
           unit: "pot",
         },
-        conversion: {
+        conversion_unit: {
           quantity: 300,
           unit: "gramme",
         },
@@ -120,30 +122,52 @@ function getIngredientData() {
     ],
   };
 }
+const fetcher = (url) => fetch(url).then((res) => res.json());
+/**
+ * Page to display Fournisseur details
+ */
+export default function EditFournisseurDetailPage() {
+  const router = useRouter();
+  const { id } = router.query;
 
-export const getStaticProps = async (context) => {
-  const ingredientID = context.params?.id;
-  const fournisseurData = getIngredientData();
-  return {
-    props: {
-      fournisseurData,
-    },
-  };
-};
+  async function deleteFournisseur() {
+    let endpoint = `http://127.0.0.1:8000/api/fournisseurs/${id}/`;
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: "DELETE",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+    };
 
-export const getStaticPaths = async () => {
-  const data = { stars: [{ id: "1" }] };
-  const pathsWithParams = data.stars.map((star) => ({
-    params: { id: star.id },
-  }));
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options);
 
-  return {
-    paths: pathsWithParams,
-    fallback: true,
-  };
-};
+    if (response.status == 204) {
+      window.location.href = "/fournisseurs/tous";
+    } else {
+      alert("Une erreur est survenue. Merci de réessayer plus tard.");
+    }
+  }
 
-export default function SingleFournisseurPage({ fournisseurData }) {
+  // Use a ternary operator to only fetch the data when the ID isn't undefined
+  const { data: fournisseurData, error } = useSWR(
+    id ? `http://127.0.0.1:8000/api/fournisseurs/${id}/` : null,
+    fetcher
+  );
+
+  if (error) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
+  if (!fournisseurData) return <div>Chargement en cours ...</div>;
   return (
     <div className="col-12 d-flex flex-column justify-content-center align-items-center">
       <div className={"d-flex flex-row mb-2 justify-content-center col-11"}>
@@ -152,7 +176,17 @@ export default function SingleFournisseurPage({ fournisseurData }) {
             "d-flex flex-row justify-content-center col-11 align-items-center"
           }
         >
-          <div className={"col-3"}>{/* Purposefully empty */}</div>
+          <div className={"col-3 d-flex flex-row justify-content-end"}>
+            {" "}
+            <Button
+              className="btn"
+              color="white"
+              style={{ color: "#0D6EFD", textDecoration: "underline" }}
+              onClick={deleteFournisseur}
+            >
+              Supprimer
+            </Button>
+          </div>
           <div
             className={
               "d-flex flex-column justify-content-center align-items-center col-8"
@@ -161,7 +195,9 @@ export default function SingleFournisseurPage({ fournisseurData }) {
             <FournsiseurName fournisseur={fournisseurData}></FournsiseurName>
           </div>
           <div className={"col-3 d-flex flex-row justify-content-start"}>
-            <Link href={"/fournisseurs/" + fournisseurData.id}>Quitter</Link>
+            <Link href={"/fournisseurs/" + fournisseurData.id}>
+              Quitter la modification
+            </Link>
           </div>
         </div>
       </div>
@@ -175,10 +211,19 @@ export default function SingleFournisseurPage({ fournisseurData }) {
         <AddProduit fournisseur_id={fournisseurData.id}></AddProduit>
       </div>
       <div className="col-12 d-flex flex-row justify-content-center">
-        <FournisseurProduitsDisplay
-          fournisseurIngredientsData={fournisseurData.produits}
-          isEdit={true}
-        ></FournisseurProduitsDisplay>
+        {fournisseurData.produits ? (
+          <FournisseurProduitsDisplay
+            fournisseurIngredientsData={fournisseurData.produits}
+            isEdit={true}
+            fournisseur_id={fournisseurData.id}
+            fournisseur_name={fournisseurData.name}
+          ></FournisseurProduitsDisplay>
+        ) : (
+          <p>
+            Aucun ingrédient n'a encore été renseigné pour ce fournisseur.
+            Modifier la recette pour ajouter des ingrédients.
+          </p>
+        )}
       </div>
     </div>
   );

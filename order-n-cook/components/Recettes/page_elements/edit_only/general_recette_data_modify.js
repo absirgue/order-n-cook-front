@@ -203,10 +203,7 @@ const GeneralRecetteDataModify = ({ recette }) => {
       </div>
     );
   }
-  console.log("DATAS");
-  console.log(genreData);
-  console.log(tasteData);
-  console.log(categoryData);
+
   if (!(genreData && tasteData && categoryData))
     return <div>Chargement en cours ...</div>;
   generate_option_list();

@@ -38,3 +38,18 @@ export async function create_ingredient_request(data) {
   const response = await fetch(endpoint, options);
   return response;
 }
+
+export async function get_all_existing_labels() {
+  const response = await fetch(`http://127.0.0.1:8000/api/labels/`, {
+    method: "GET",
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+
+  // Awaiting response.json()
+  const resData = await response.json();
+
+  // Return response data
+  return resData;
+}

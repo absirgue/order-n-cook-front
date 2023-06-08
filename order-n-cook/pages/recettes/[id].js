@@ -114,6 +114,26 @@ export default function RecetteDetailsPage() {
           {/* Progression */}
           <ProgressionDisplay recette={recette}></ProgressionDisplay>
         </div>
+        <div className="d-flex flex-column align-items-start mt-5">
+          {recette.all_costs_are_known ? null : (
+            <p
+              className="col-12"
+              style={{ color: "grey", fontStyle: "italic" }}
+            >
+              *: certains ingrédients ne peuvent actuellement être commandés
+              chez aucun de vos fournisseurs. Les tarifications indiquées sont
+              donc à titre strictement informative. Vous pouvez vous rendre dans
+              la rubrique <i>Mes Fournisseurs</i> pour étoffer vos catalogues
+              fournisseurs.
+            </p>
+          )}
+          <p className="mt-2 col-12" style={{ fontSize: "14px" }}>
+            <span style={{ textDecoration: "underline" }}>IMPORTANT:</span> les
+            coûts matières et prix de vente indiqués sont calculés à base des
+            prix au kilogramme les plus faibles pour chaque produit à travers
+            l'ensemble de vos fournisseurs.
+          </p>
+        </div>
       </div>
     </div>
   );

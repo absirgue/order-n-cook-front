@@ -1,7 +1,7 @@
 import { useDispatch, ReactReduxContext } from "react-redux";
 import { addToCart } from "../../redux/cart.slice";
 // reactstrap components
-import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
+import { Button } from "reactstrap";
 import React from "react";
 import { useContext } from "react";
 //
@@ -11,7 +11,9 @@ export default function PlaceOrder({ produit }) {
   const [quantity, setQuantity] = React.useState(null);
   const { store } = useContext(ReactReduxContext);
 
-  function handleSubmit() {}
+  console.log("PRODUIT IN MODAL");
+  console.log(produit);
+
   return (
     <>
       <div className="d-flex flex-column">
@@ -52,13 +54,21 @@ export default function PlaceOrder({ produit }) {
                     ? produit.real_unit.unit + "s"
                     : produit.real_unit.unit}
                 </li>
+                {produit.real_unit.unit != "kilogramme" ? (
+                  <li>
+                    {produit.conversion_unit.quantity * quantity}{" "}
+                    {produit.conversion_unit.quantity * quantity > 1
+                      ? produit.conversion_unit.unit + "s"
+                      : produit.conversion_unit.unit}
+                  </li>
+                ) : null}
+
                 <li>
-                  {produit.conversion_unit.quantity * quantity}{" "}
-                  {produit.conversion_unit.quantity * quantity > 1
-                    ? produit.conversion_unit.unit + "s"
-                    : produit.conversion_unit.unit}
+                  Un coût total estimé de{" "}
+                  <span style={{ fontWeight: 600 }}>
+                    {produit.price * quantity}€
+                  </span>
                 </li>
-                <li>Un coût estimé de {produit.price * quantity}€</li>
               </ul>
             </>
           ) : null}

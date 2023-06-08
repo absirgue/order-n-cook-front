@@ -63,12 +63,20 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
               ) : null}
             </div>
             <div className="d-flex flex-column justify-content-start col-6 align-items-end">
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+              <p
+                style={
+                  { fontSize: "14px", marginBottom: "0px" } +
+                  recette.all_costs_are_known
+                    ? { color: "grey", fontStyle: "italic" }
+                    : null
+                }
+              >
                 Prix de revient:{" "}
                 <span style={{ fontSize: "16px" }}>
                   {recette.cost_ingredients
                     ? recette.cost_ingredients + "€"
                     : "-"}
+                  {recette.all_costs_are_known ? null : "*"}
                 </span>
               </p>
               <p style={{ fontSize: "14px", marginBottom: "0px" }}>
@@ -85,31 +93,60 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
               </p>
               {recette.ht_selling_price &&
               recette.ht_selling_price != "null" ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                  Prix de vente HT (pour {recette.quantity + " " + recette.unit}
-                  ):{" "}
+                <p
+                  style={
+                    { fontSize: "14px", marginBottom: "0px" } +
+                    recette.all_costs_are_known
+                      ? { color: "grey", fontStyle: "italic" }
+                      : null
+                  }
+                >
+                  Prix de vente HT
+                  {recette.quantity && recette.unit
+                    ? " (pour " + recette.quantity + " " + recette.unit + ")"
+                    : null}
+                  :{" "}
                   <span style={{ fontSize: "16px" }}>
                     {recette.ht_selling_price + "€"}
+                    {recette.all_costs_are_known ? null : "*"}
                   </span>
                 </p>
               ) : null}
               {recette.ttc_selling_price &&
               recette.ttc_selling_price != "null" ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                  Prix de vente TTC (pour{" "}
-                  {recette.quantity + " " + recette.unit}
-                  ):{" "}
+                <p
+                  style={
+                    { fontSize: "14px", marginBottom: "0px" } +
+                    recette.all_costs_are_known
+                      ? { color: "grey", fontStyle: "italic" }
+                      : null
+                  }
+                >
+                  Prix de vente TTC
+                  {recette.quantity && recette.unit
+                    ? "(pour " + recette.quantity + " " + recette.unit + ")"
+                    : null}
+                  :{" "}
                   <span style={{ fontSize: "16px", fontWeight: "500" }}>
                     {recette.ttc_selling_price + "€"}
+                    {recette.all_costs_are_known ? null : "*"}
                   </span>
                 </p>
               ) : null}
               {recette.ttc_unit_selling_price &&
               recette.ttc_unit_selling_price != "null" ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
+                <p
+                  style={
+                    { fontSize: "14px", marginBottom: "0px" } +
+                    recette.all_costs_are_known
+                      ? { color: "grey", fontStyle: "italic" }
+                      : null
+                  }
+                >
                   Prix de vente unitaire TTC:{" "}
                   <span style={{ fontSize: "16px", fontWeight: "500" }}>
                     {recette.ttc_unit_selling_price + "€"}
+                    {recette.all_costs_are_known ? null : "*"}
                   </span>
                 </p>
               ) : null}

@@ -2,159 +2,166 @@ import React from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useSWRConfig } from "swr";
 import Select from "react-select";
+import { get_all_existing_labels } from "../../../../utils/backend/ingredient_requests";
 
 /*
 A modal that shows all the Fournisseurs providing a given ingredient and gives the ability to order a selected
 quantity of said ingredient from a selected provider.
 */
 
-const EditProduit = ({ produit }) => {
+const EditProduit = ({ produit, fournisseur_id }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedUnit, setSelectedUnit] = React.useState("default");
-  const [untiError, setUnitError] = React.useState(null);
-  const [quantityError, setQuantityError] = React.useState(null);
-  const [noteError, setNoteError] = React.useState(null);
-  const [possibleUnit, setPossibleUnit] = React.useState(["kilo", "test"]);
+  const [error, setError] = React.useState({});
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [possibleUnit, setPossibleUnit] = React.useState(["kilo", "test"]);
   const [labels, setLabels] = React.useState(
-    produit.ingredient.labels?.map((label) => {
-      return { value: label.name, label: label.name };
+    produit.labels?.map((label) => {
+      return { value: label.id, label: label.name };
     })
   );
 
   const { mutate } = useSWRConfig();
 
-  function resetAllErrors() {
-    setUnitError(null);
-    setQuantityError(null);
-    setNoteError(null);
+  async function get_possible_units() {
+    console.log("ID OF INGREDIENT");
+    console.log(produit.ingredient.id);
+    const endpoint =
+      "http://127.0.0.1:8000/api/ingredient_units/" +
+      produit.ingredient.id +
+      "/";
+    console.log(endpoint);
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: "GET",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+    };
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options);
+
+    // Get the response data from server as JSON.
+    // If server returns the name submitted, that means the form works.
+    const result = await response.json();
+    return result;
   }
-
-  //   async function get_possible_units() {
-  //     const endpoint =
-  //       "http://127.0.0.1:8000/api/ingredient_units/" + produit.id + "/";
-  //     console.log(endpoint);
-  //     // Form the request for sending data to the server.
-  //     const options = {
-  //       // The method is POST because we are sending data.
-  //       method: "GET",
-  //       // Tell the server we're sending JSON.
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       // Body of the request is the JSON data we created above.
-  //     };
-
-  //     // Send the form data to our forms API on Vercel and get a response.
-  //     const response = await fetch(endpoint, options);
-
-  //     // Get the response data from server as JSON.
-  //     // If server returns the name submitted, that means the form works.
-  //     const result = await response.json();
-  //     return result;
-  //   }
-  //   const load_possible_units = async () => {
-  //     if (!is_sous_recette && !isLoaded) {
-  //       const data = await get_possible_units();
-  //       console.log("DATA of POSSIBLE UNITS");
-  //       console.log(data);
-  //       setPossibleUnit(data.units.map((unit) => unit.unit));
-  //       console.log("RESULTED IN");
-  //       console.log(possibleUnit);
-  //       setIsLoaded(true);
-  //     }
-  //   };
-
-  //   load_possible_units();
-
-  const handleSubmit = async (event) => {
-    // // Stop the form from submitting and refreshing the page.
-    // event.preventDefault();
-    // // Get data from the form.
-    // let data = {};
-    // if (!is_sous_recette) {
-    //   if (
-    //     event.target.unit.value &&
-    //     event.target.unit.value != produit.unit &&
-    //     event.target.unit.value != "default"
-    //   ) {
-    //     data["unit"] = event.target.unit.value;
-    //   }
-    // }
-    // if (
-    //   event.target.quantity.value &&
-    //   event.target.quantity.value != produit.quantity
-    // ) {
-    //   data["quantity"] = event.target.quantity.value;
-    // }
-    // if (
-    //   event.target.note.value != produit.note ||
-    //   (!event.target.note.value && produit.note != "")
-    // ) {
-    //   data["note"] = event.target.note.value;
-    // }
-    // const JSONdata = JSON.stringify(data);
-    // // API endpoint where we send form data.
-    // let endpoint = "http://127.0.0.1:8000/api/";
-    // if (!is_sous_recette) {
-    //   endpoint += "recette_ingredients/";
-    // } else {
-    //   endpoint += "sous_recette/";
-    // }
-    // endpoint += produit.id + "/";
-    // // Form the request for sending data to the server.
-    // const options = {
-    //   // The method is POST because we are sending data.
-    //   method: "PUT",
-    //   // Tell the server we're sending JSON.
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   // Body of the request is the JSON data we created above.
-    //   body: JSONdata,
-    // };
-    // // Send the form data to our forms API on Vercel and get a response.
-    // const response = await fetch(endpoint, options);
-    // // Get the response data from server as JSON.
-    // // If server returns the name submitted, that means the form works.
-    // const result = await response.json();
-    // if (response.status == 200) {
-    //   resetAllErrors();
-    //   setModalOpen(false);
-    //   mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);
-    // } else {
-    //   let error_found = false;
-    //   if (result.hasOwnProperty("quantity")) {
-    //     setQuantityError(result.quantity);
-    //     error_found = true;
-    //   }
-    //   if (result.hasOwnProperty("unit")) {
-    //     setUnitError(result.unit);
-    //     error_found = true;
-    //   }
-    //   if (result.hasOwnProperty("note")) {
-    //     setNoteError(result.note);
-    //     error_found = true;
-    //   }
-    //   if (!error_found) {
-    //     alert(
-    //       "Une erreur est survenue. Merci de vérifier les valeurs renseignées et de réessayer ultérieurement."
-    //     );
-    //   }
-    // }
+  const load_possible_units = async () => {
+    if (!isLoaded) {
+      const data = await get_possible_units();
+      console.log("DATA of POSSIBLE UNITS");
+      console.log(data);
+      setPossibleUnit(data.units.map((unit) => unit.unit));
+      console.log("RESULTED IN");
+      console.log(possibleUnit);
+      setIsLoaded(true);
+    }
   };
 
-  function get_all_existing_labels() {
-    return ["AOC", "AOP"];
-  }
+  load_possible_units();
 
-  const labelData = get_all_existing_labels();
+  const handleSubmit = async (event) => {
+    // Stop the form from submitting and refreshing the page.
+    event.preventDefault();
+    // Get data from the form.
+    let data = {};
+
+    if (
+      event.target.unit.value &&
+      event.target.unit.value != produit.unit &&
+      event.target.unit.value != "default"
+    ) {
+      data["unit"] = event.target.unit.value;
+    }
+
+    if (
+      event.target.quantity.value &&
+      event.target.quantity.value != produit.quantity
+    ) {
+      data["quantity"] = event.target.quantity.value;
+    }
+    if (
+      event.target.geographic_origin.value != produit.geographic_origin ||
+      (!event.target.geographic_origin.value && produit.geographic_origin != "")
+    ) {
+      data["geographic_origin"] = event.target.geographic_origin.value;
+    }
+    if (
+      event.target.price.value != produit.price ||
+      (!event.target.price.value && produit.price != "")
+    ) {
+      data["price"] = event.target.price.value;
+    }
+
+    if (
+      labels.map((label) => label.value) !=
+      produit.labels.map((label) => label.id)
+    ) {
+      data["labels"] = labels.map((label) => label.value);
+    }
+    const JSONdata = JSON.stringify(data);
+    // API endpoint where we send form data.
+    let endpoint = "http://127.0.0.1:8000/api/produits/" + produit.id + "/";
+
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: "PUT",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONdata,
+    };
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options);
+    // Get the response data from server as JSON.
+    // If server returns the name submitted, that means the form works.
+    console.log(produit);
+    console.log(response);
+    const result = await response.json();
+    if (response.status == 200) {
+      setModalOpen(false);
+      mutate(`http://127.0.0.1:8000/api/fournisseurs/${fournisseur_id}/`);
+    } else {
+      let error_found = false;
+      if (
+        result.hasOwnProperty("quantity") ||
+        result.hasOwnProperty("unit") ||
+        result.hasOwnProperty("price") ||
+        result.hasOwnProperty("geographic_origin") ||
+        result.hasOwnProperty("labels")
+      ) {
+        error_found = true;
+        setError(result);
+      }
+
+      if (!error_found) {
+        alert(
+          "Une erreur est survenue. Merci de vérifier les valeurs renseignées et de réessayer ultérieurement."
+        );
+      }
+    }
+  };
+
+  var labelData = get_all_existing_labels();
+  console.log("LABELS");
+  console.log(labelData);
 
   const label_options = [];
 
-  labelData.forEach((label) =>
-    label_options.push({ value: label, label: label })
-  );
+  const generate_option_list = async () => {
+    labelData = await get_all_existing_labels();
+    labelData.forEach((label) =>
+      label_options.push({ value: label.id, label: label.name })
+    );
+  };
+  generate_option_list();
 
   return (
     <>
@@ -198,11 +205,11 @@ const EditProduit = ({ produit }) => {
                       width: "100px",
                     }}
                     defaultValue={
-                      produit.real_data.quantity
-                        ? produit.real_data.quantity.toString()
+                      produit.real_unit.quantity
+                        ? produit.real_unit.quantity.toString()
                         : null
                     }
-                    placeholder={produit.real_data.quantity ? "" : "quantité?"}
+                    placeholder={produit.real_unit.quantity ? "" : "quantité?"}
                   ></input>
 
                   <select
@@ -216,8 +223,8 @@ const EditProduit = ({ produit }) => {
                     required
                   >
                     <option disabled value="default">
-                      {produit.real_data.unit
-                        ? produit.real_data.unit.toLowerCase()
+                      {produit.real_unit.unit
+                        ? produit.real_unit.unit.toLowerCase()
                         : "unité"}
                     </option>
                     x
@@ -285,10 +292,10 @@ const EditProduit = ({ produit }) => {
                   ></input>
                 </div>
               </div>
-              {quantityError ? (
-                <p className="form-error">{quantityError}</p>
+              {error.quantity ? (
+                <p className="form-error">{error.quantity}</p>
               ) : null}
-              {untiError ? <p className="form-error">{untiError}</p> : null}
+              {error.unit ? <p className="form-error">{error.unit}</p> : null}
             </div>
             <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
           </ModalBody>

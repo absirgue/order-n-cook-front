@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import PurchaseIngredientHelper from "../../../Ingredients/Ingredients/modals/purchase_ingredient_modal";
+import PurchaseIngredientHelper from "../../../general/purchase_ingredient_modal";
 import RecetteComponentModifier from "../edit_only/modification_buttons/recette_component_modifier";
 import DeleteButton from "../edit_only/modification_buttons/delete_button";
 import ChangeSectionButton from "../edit_only/modification_buttons/change_section_button";
@@ -108,7 +108,7 @@ const RecetteIngredientListItem = ({
                 fontSize: "12px",
               }}
             >
-              {ingredient.cost + "€"}
+              {ingredient.cost ? ingredient.cost + "€" : "-"}
             </p>
           </td>
         </>

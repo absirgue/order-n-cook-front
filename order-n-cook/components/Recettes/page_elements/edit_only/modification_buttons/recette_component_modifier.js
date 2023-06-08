@@ -28,8 +28,13 @@ const RecetteComponentModifier = ({
   }
 
   async function get_possible_units() {
+    console.log("component");
+
+    console.log(component);
     const endpoint =
-      "http://127.0.0.1:8000/api/ingredient_units/" + component.id + "/";
+      "http://127.0.0.1:8000/api/ingredient_units/" +
+      component.ingredient_id +
+      "/";
     console.log(endpoint);
     // Form the request for sending data to the server.
     const options = {
