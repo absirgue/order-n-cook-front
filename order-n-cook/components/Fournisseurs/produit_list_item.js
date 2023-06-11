@@ -60,7 +60,11 @@ export default function ProduitListItem({
         </Modal.Header>
         <Modal.Body>
           <PlaceOrder
-            produit={{ ...produit, fournisseur_name: fournisseur_name }}
+            produit={{
+              ...produit,
+              fournisseur_name: fournisseur_name,
+              id: produit.id,
+            }}
           ></PlaceOrder>
         </Modal.Body>
       </Modal>

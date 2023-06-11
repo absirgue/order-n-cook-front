@@ -160,7 +160,7 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
                       <Button
                         color="white"
                         type="button"
-                        id="see-labels"
+                        id="see-provenance"
                         style={{
                           textDecoration: "underline",
                           color: "#0D6EFD",
@@ -170,10 +170,10 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
                       </Button>
                       <UncontrolledPopover
                         placement="bottom"
-                        target="see-labels"
+                        target="see-provenance"
                         trigger="legacy"
                       >
-                        <PopoverHeader>Labels</PopoverHeader>
+                        <PopoverHeader>Origine Géographique</PopoverHeader>
                         <PopoverBody>{produit.geographic_location}</PopoverBody>
                       </UncontrolledPopover>
                     </div>

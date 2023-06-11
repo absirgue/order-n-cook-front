@@ -16,6 +16,24 @@ export async function get_all_existing_ingredients_options() {
   return resData;
 }
 
+export async function get_all_existing_ingredients_options_with_labels() {
+  const response = await fetch(
+    `http://127.0.0.1:8000/api/all_ingredient_units_and_labels/`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    }
+  );
+
+  // Awaiting response.json()
+  const resData = await response.json();
+
+  // Return response data
+  return resData;
+}
+
 export async function create_ingredient_request(data) {
   const JSONdata = JSON.stringify(data);
 

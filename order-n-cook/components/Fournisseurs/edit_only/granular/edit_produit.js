@@ -85,10 +85,11 @@ const EditProduit = ({ produit, fournisseur_id }) => {
       data["quantity"] = event.target.quantity.value;
     }
     if (
-      event.target.geographic_origin.value != produit.geographic_origin ||
-      (!event.target.geographic_origin.value && produit.geographic_origin != "")
+      event.target.geographic_location.value != produit.geographic_location ||
+      (!event.target.geographic_location.value &&
+        produit.geographic_location != "")
     ) {
-      data["geographic_origin"] = event.target.geographic_origin.value;
+      data["geographic_location"] = event.target.geographic_location.value;
     }
     if (
       event.target.price.value != produit.price ||
@@ -134,7 +135,7 @@ const EditProduit = ({ produit, fournisseur_id }) => {
         result.hasOwnProperty("quantity") ||
         result.hasOwnProperty("unit") ||
         result.hasOwnProperty("price") ||
-        result.hasOwnProperty("geographic_origin") ||
+        result.hasOwnProperty("geographic_location") ||
         result.hasOwnProperty("labels")
       ) {
         error_found = true;
@@ -268,13 +269,13 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                   isMulti
                 />
                 <div className="d-flex flex-row justify-content-start align-items-baseline mt-1 col-12">
-                  <label htmlFor="geographic_origin">
+                  <label htmlFor="geographic_location">
                     Origine géographique:
                   </label>
                   <input
                     type="text"
-                    id="geographic_origin"
-                    name="geographic_origin"
+                    id="geographic_location"
+                    name="geographic_location"
                     step="any"
                     style={{
                       backgroundColor: "transparent",
@@ -284,10 +285,14 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                       width: "60%",
                     }}
                     defaultValue={
-                      produit.provenance ? produit.provenance : null
+                      produit.geographic_location
+                        ? produit.geographic_location
+                        : null
                     }
                     placeholder={
-                      produit.provenance ? null : "ex: Roquefort, Aveyron"
+                      produit.geographic_location
+                        ? null
+                        : "ex: Roquefort, Aveyron"
                     }
                   ></input>
                 </div>

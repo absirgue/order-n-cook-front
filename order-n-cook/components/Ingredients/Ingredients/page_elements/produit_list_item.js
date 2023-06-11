@@ -95,17 +95,20 @@ const ProductListItem = ({ produit }) => {
           <Button
             color="white"
             type="button"
-            id="see-labels"
-            style={{ textDecoration: "underline", color: "#0D6EFD" }}
+            id="see-provenance"
+            style={{
+              textDecoration: "underline",
+              color: "#0D6EFD",
+            }}
           >
             Provenance
           </Button>
           <UncontrolledPopover
             placement="bottom"
-            target="see-labels"
+            target="see-provenance"
             trigger="legacy"
           >
-            <PopoverHeader>Labels</PopoverHeader>
+            <PopoverHeader>Origine Géographique</PopoverHeader>
             <PopoverBody>{produit.geographic_location}</PopoverBody>
           </UncontrolledPopover>
         </div>

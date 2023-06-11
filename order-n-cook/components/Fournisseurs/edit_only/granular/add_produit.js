@@ -6,7 +6,7 @@ import {
   get_all_existing_ingredient_sous_categories_request,
   get_all_existing_ingredient_categories_request,
 } from "../../../../utils/backend/ingredient_components_requests";
-import { get_all_existing_ingredients_options } from "../../../../utils/backend/ingredient_requests";
+import { get_all_existing_ingredients_options_with_labels } from "../../../../utils/backend/ingredient_requests";
 import { get_all_existing_labels } from "../../../../utils/backend/ingredient_requests";
 import { useSWRConfig } from "swr";
 import { create_new_unit_conversion } from "../../../../utils/backend/ingredient_components_requests";
@@ -49,12 +49,13 @@ export default function AddProduit({ fournisseur_id }) {
   // Expands on the lists of ingredient options, sous_categories options and categories options to generate
   // option list for the various Select components on the page.
   const generate_option_list = async () => {
-    const helper = await get_all_existing_ingredients_options();
+    const helper = await get_all_existing_ingredients_options_with_labels();
     helper.forEach((ingredient) =>
       ingredient_options.push({
         value: ingredient.id,
         label: ingredient.name,
         units: ingredient.units,
+        labels: ingredient.labels,
       })
     );
     const all_existing_categories = await get_all_existing_categories();
@@ -200,10 +201,10 @@ export default function AddProduit({ fournisseur_id }) {
       data["quantity"] = event_target.quantity.value;
     }
     if (
-      event_target.geographic_origin &&
-      event_target.geographic_origin.value
+      event_target.geographic_location &&
+      event_target.geographic_location.value
     ) {
-      data["geographic_origin"] = event_target.geographic_origin.value;
+      data["geographic_location"] = event_target.geographic_location.value;
     }
 
     if (event_target.price && event_target.price.value) {
@@ -250,7 +251,7 @@ export default function AddProduit({ fournisseur_id }) {
       result.hasOwnProperty("unit") ||
       result.hasOwnProperty("ingredient") ||
       result.hasOwnProperty("labels") ||
-      result.hasOwnProperty("geographic_origin")
+      result.hasOwnProperty("geographic_location")
     ) {
       setError(result);
     } else {
@@ -386,6 +387,14 @@ export default function AddProduit({ fournisseur_id }) {
                         value={selectedIngredient}
                         onChange={(data) => {
                           setSelectedIngredient(data);
+                          setLabels(
+                            data.labels.map((label) => {
+                              return {
+                                value: label.id,
+                                label: label.name,
+                              };
+                            })
+                          );
                           console.log("SELECTED");
                           console.log(selectedIngredient);
                         }}
@@ -577,13 +586,13 @@ export default function AddProduit({ fournisseur_id }) {
                   <p className="form-error">{error.labels}</p>
                 ) : null}
                 <div className="d-flex flex-row justify-content-start align-items-baseline mt-1 col-12">
-                  <label htmlFor="geographic_origin">
+                  <label htmlFor="geographic_location">
                     Origine géographique:
                   </label>
                   <input
                     type="text"
-                    id="geographic_origin"
-                    name="geographic_origin"
+                    id="geographic_location"
+                    name="geographic_location"
                     step="any"
                     style={{
                       backgroundColor: "transparent",
@@ -595,8 +604,8 @@ export default function AddProduit({ fournisseur_id }) {
                     placeholder={"Roquefort, Aveyron"}
                   ></input>
                 </div>
-                {error.geographic_origin ? (
-                  <p className="form-error">{error.geographic_origin}</p>
+                {error.geographic_location ? (
+                  <p className="form-error">{error.geographic_location}</p>
                 ) : null}
               </div>
             </div>
