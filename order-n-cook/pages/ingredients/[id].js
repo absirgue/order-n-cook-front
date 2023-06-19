@@ -64,7 +64,10 @@ export default function SingleIngredientPage({ ingredientData }) {
             Vos fournisseurs proposant cet ingrédient
           </h3>
           {ingredientData.associated_produits.map((produit) => (
-            <ProductListItem produit={produit}></ProductListItem>
+            <ProductListItem
+              produit={produit}
+              ingredient={ingredientData}
+            ></ProductListItem>
           ))}
         </div>
       ) : null}

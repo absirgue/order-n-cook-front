@@ -89,7 +89,10 @@ const PurchaseIngredientHelper = ({ ingredient }) => {
                 >
                   {"< Retour"}
                 </Button>
-                <PlaceOrder produit={selectedProduct}></PlaceOrder>
+                <PlaceOrder
+                  produit={selectedProduct}
+                  closeModal={setModalOpen}
+                ></PlaceOrder>
               </div>
             ) : produits_for_ingredient.length > 0 ? (
               produits_for_ingredient.map((produit) => (

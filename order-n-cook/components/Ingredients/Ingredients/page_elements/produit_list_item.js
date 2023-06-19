@@ -8,8 +8,9 @@ import {
 } from "reactstrap";
 import PlaceOrder from "@/components/general/place_order";
 import { useState } from "react";
+import { setOriginalNode } from "typescript";
 
-const ProductListItem = ({ produit }) => {
+const ProductListItem = ({ produit, ingredient }) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div
@@ -42,7 +43,10 @@ const ProductListItem = ({ produit }) => {
           </button>
         </div>
         <ModalBody>
-          <PlaceOrder produit={produit}></PlaceOrder>
+          <PlaceOrder
+            closeModal={setModalOpen}
+            produit={{ ...produit, ingredient: ingredient }}
+          ></PlaceOrder>
         </ModalBody>
       </Modal>
 

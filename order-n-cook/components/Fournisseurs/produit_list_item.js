@@ -60,6 +60,7 @@ export default function ProduitListItem({
         </Modal.Header>
         <Modal.Body>
           <PlaceOrder
+            closeModal={setOpenOrderModal}
             produit={{
               ...produit,
               fournisseur_name: fournisseur_name,

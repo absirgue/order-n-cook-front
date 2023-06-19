@@ -6,7 +6,7 @@ import React from "react";
 import { useContext } from "react";
 //
 
-export default function PlaceOrder({ produit }) {
+export default function PlaceOrder({ produit, closeModal = null }) {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = React.useState(null);
   const { store } = useContext(ReactReduxContext);
@@ -78,6 +78,9 @@ export default function PlaceOrder({ produit }) {
                 className="btn btn-primary"
                 onClick={() => {
                   dispatch(addToCart({ ...produit, quantity: quantity }));
+                  if (closeModal) {
+                    closeModal(false);
+                  }
                   console.log(store.getState());
                 }}
               >
