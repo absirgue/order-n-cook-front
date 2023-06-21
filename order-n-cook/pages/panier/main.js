@@ -6,7 +6,6 @@ import {
   incrementQuantity,
   decrementQuantity,
   removeFromCart,
-  cartReducer,
 } from "../../redux/cart.slice";
 
 function get_grouped_cart_elements(cart_items) {

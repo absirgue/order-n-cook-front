@@ -1,6 +1,4 @@
 export async function create_commande(data) {
-  console.log("data");
-  console.log(data);
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
