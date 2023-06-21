@@ -2,27 +2,83 @@ import { useState } from "react";
 import { Button } from "reactstrap";
 import Modal from "react-bootstrap/Modal";
 import DeliveryDaysDisplay from "../Fournisseurs/delivery_days_display";
+import useSWR from "swr";
+import { useRouter } from "next/router";
+import { create_commande } from "../../utils/backend/commandes_requests";
+import { useDispatch } from "react-redux";
+import { removeFromCart } from "../../redux/cart.slice";
+const fetcher = (url) => fetch(url).then((res) => res.json());
+/**
+ * Page to display RecetteDetails
+ */
+
 export default function RecordOrder({ items }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [orderMean, setOrderMean] = useState(null);
   const [emailNote, setEmailNote] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { id } = router.query;
 
-  const fournisseur_data = {
-    name: "Éric",
-    principal_email: "principal@emailtest.com",
-    ordering_email: "order@emailtest.com",
-    principal_phone_number: "07898765",
-    ordering_phone_number: "07898765111",
-    delivers_monday: false,
-    delivers_tuesday: true,
-    delivers_wednesday: true,
-    delivers_thursday: true,
-    delivers_friday: false,
-    delivers_saturday: true,
-    delivers_sunday: false,
-    last_order_time: "12h",
-  };
+  async function record_order() {
+    if (orderMean != null && items[0].fournisseur_id) {
+      let data = {};
+      data["items"] = items.map((produit) => {
+        return { produit: produit.id, quantity: produit.quantity };
+      });
+      let order_mean_text = "";
+      if (orderMean == "cash_out") {
+        order_mean_text = "Opérée en sortie de caisse";
+      } else if (orderMean == "in_person") {
+        order_mean_text = "Commandée en physique";
+      } else if (orderMean == "by_phone") {
+        order_mean_text = "Commandée au téléphone";
+      } else if (orderMean == "by_email") {
+        order_mean_text = "Commandée par mail";
+      }
+      data["ordering_mean"] = order_mean_text;
+      data["fournisseur"] = items[0].fournisseur_id;
+      data["estimated_ht_total_cost"] = items.reduce(
+        (total, item) => (total += item.quantity * item.price),
+        0
+      );
+      const response = await create_commande(data);
+      if (response.status == 201) {
+        alert(
+          'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!'
+        );
+        return true;
+      } else {
+        alert(
+          "Nous ne pouvons pas passer cette commande actuellement. Merci de réessayer ultérieurement ou de contacter le service technique."
+        );
+        return false;
+      }
+    } else {
+      alert(
+        "Nous ne pouvons pas passer cette commande actuellement. Merci de réessayer ultérieurement ou de contacter le service technique."
+      );
+      return false;
+    }
+  }
+  // Use a ternary operator to only fetch the data when the ID isn't undefined
+  console.log("ITEMS");
+  console.log(items);
+  const { data: fournisseur_data, error } = useSWR(
+    `http://127.0.0.1:8000/api/fournisseur/order_data/${items[0].fournisseur_id}/`,
+    fetcher
+  );
+
+  if (error) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
+  if (!fournisseur_data) return <div>Chargement en cours ...</div>;
   return (
     <>
       <Button
@@ -89,16 +145,20 @@ export default function RecordOrder({ items }) {
               className="ps-5 d-flex flex-column col-6"
               onChange={(event) => setOrderMean(event.target.value)}
             >
-              <div className="d-flex flex-row">
-                {" "}
-                <input
-                  type="radio"
-                  value="by_email"
-                  name="order_mean"
-                  className="me-2"
-                />{" "}
-                Commander par email
-              </div>
+              {fournisseur_data.ordering_email &&
+              fournisseur_data.ordering_email != "" ? (
+                <div className="d-flex flex-row">
+                  {" "}
+                  <input
+                    type="radio"
+                    value="by_email"
+                    name="order_mean"
+                    className="me-2"
+                  />{" "}
+                  Commander par email
+                </div>
+              ) : null}
+
               <div className="d-flex flex-row">
                 {" "}
                 <input
@@ -163,7 +223,12 @@ export default function RecordOrder({ items }) {
               <Button
                 className="btn btn-primary me-4"
                 onClick={() => {
-                  console.log("Penser a supprimer tous les items associés");
+                  const successful = record_order();
+                  if (successful) {
+                    for (var item in items) {
+                      dispatch(removeFromCart(item.id));
+                    }
+                  }
                 }}
               >
                 Commander

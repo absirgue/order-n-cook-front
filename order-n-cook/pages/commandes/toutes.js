@@ -7,49 +7,10 @@ import {
 } from "../../components/Commandes/helpers";
 
 export async function getServerSideProps() {
-  //   // Fetch data from external API
-  //   const res = await fetch(`http://127.0.0.1:8000/api/commandes/`);
-  //   let allFournisseursData = await res.json();
-  //   allFournisseursData = allFournisseursData.sort(function (a, b) {
-  //     if (a.name < b.name) {
-  //       return -1;
-  //     }
-  //     if (a.name > b.name) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-
-  //   // Pass data to the page via props
-  //   return { props: { allCommandesData } };
-  const allCommandesData = [
-    {
-      id: 1,
-      fournisseur: {
-        name: "Anton",
-        category: "crémier",
-        spécialité: "frommager",
-      },
-      status: "WAITING_DELIVERY",
-      status_text: "En attente de livraison",
-      nb_jours: 90,
-      month: "Juin 2023",
-      cde: { value: "AB12345", date: "06/07/2023" },
-      prix_estimé: 112,
-    },
-    {
-      id: 2,
-      fournisseur: {
-        name: "Olivier",
-        category: "crémier",
-        spécialité: "frommager",
-      },
-      status: "WAITING_AVOIR",
-      month: "Juin 2023",
-      date: "06/07/2023",
-      prix_estimé: 112,
-    },
-  ].sort(function (a, b) {
+  // Fetch data from external API
+  const res = await fetch(`http://127.0.0.1:8000/api/commandes/`);
+  let allCommandesData = await res.json();
+  allCommandesData = allCommandesData.sort(function (a, b) {
     if (a.name < b.name) {
       return -1;
     }
@@ -86,7 +47,6 @@ function get_initial_data_grouped_and_sorted(allCommandesData) {
 }
 
 export default function AllCommandesData({ allCommandesData }) {
-  const [modalOpen, setModalOpen] = useState(false);
   const [groupedData, setGroupedData] = useState(
     get_initial_data_grouped_and_sorted(allCommandesData)
   );
@@ -121,13 +81,18 @@ export default function AllCommandesData({ allCommandesData }) {
   console.log(filters);
 
   function group_list_based_on_field(list, groupField) {
+    console.log("IN HELPER");
+    console.log(list);
     return list.reduce((group, product) => {
       if (groupField == "month" || groupField == "default" || !groupField) {
+        console.log("IN THE RIGHT ");
         const { month } = product;
         group[month] = group[month] ?? [];
         group[month].push(product);
         return group;
       } else if (groupField) {
+        console.log("IN THE WRONG ");
+        console.log(groupField);
         if (groupField == "fournisseur") {
           const { fournisseur } = product;
           console.log(fournisseur.name);
@@ -143,14 +108,20 @@ export default function AllCommandesData({ allCommandesData }) {
     console.log("filter");
     console.log(filter);
     if (filter && filter != "all") {
+      console.log("IN");
       setFilteredData(
-        groupCommandesData(
-          allCommandesData.filter((commande) => commande.status == filter),
-          groupingField
-        )
+        allCommandesData.filter((commande) => commande.status == filter)
+      );
+
+      groupCommandesData(
+        allCommandesData.filter((commande) => commande.status == filter),
+        groupingField
       );
     } else {
-      setFilteredData(groupCommandesData(allCommandesData, groupingField));
+      setFilteredData(allCommandesData);
+      console.log("NO FILTER SETTING IT TO");
+      console.log(groupCommandesData(allCommandesData, groupingField));
+      groupCommandesData(filteredData, groupingField);
     }
   }
 
