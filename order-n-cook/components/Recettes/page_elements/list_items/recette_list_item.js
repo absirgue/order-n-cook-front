@@ -88,7 +88,7 @@ const RecetteListItem = ({ recette }) => {
                 ? "📈"
                 : recette.selling_price.evolution == "LOWER"
                 ? "📉"
-                : "="
+                : null
               : null}
           </h5>
         </div>

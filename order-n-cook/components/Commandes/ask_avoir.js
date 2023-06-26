@@ -31,7 +31,10 @@ function AskAvoir({ commande }) {
           </div>
         </Modal.Header>
         <Modal.Body>
-          <CreateAvoir commande={commande}></CreateAvoir>
+          <CreateAvoir
+            commande={commande}
+            closeModal={() => setModalOpen(false)}
+          ></CreateAvoir>
         </Modal.Body>
         <Modal.Footer>
           <div className="col-12 d-flex flex-row justify-content-end">

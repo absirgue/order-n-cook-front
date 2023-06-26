@@ -12,3 +12,13 @@ export const MONTHS = [
   "Novembre",
   "Décembre",
 ];
+
+export const DAYS_OF_THE_WEEK = [
+  "Dimanche",
+  "Lundi",
+  "Mardi",
+  "Mercredi",
+  "Jeudi",
+  "Vendredi",
+  "Samedi",
+];

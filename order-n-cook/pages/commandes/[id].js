@@ -8,102 +8,119 @@ import ReceiveDeliveryButton from "../../components/Commandes/receive_delivery";
 import AskAvoir from "../../components/Commandes/ask_avoir";
 import ReceiveAvoir from "../../components/Commandes/receive_avoir";
 import ReceiveInvoice from "../../components/Commandes/receive_invoice";
-function getCommandeData() {
-  return {
-    id: 1,
-    status: "WAITING_INVOICE",
-    concerned_with_avoir: true,
-    fournisseur: {
-      name: "Anthès",
-      specialty: "Frommager",
-      category: "Crémier",
-    },
-    order_details: {
-      identifier: "1030",
-      date: "12/06/2023",
-      means: "Commandée par mail",
-    },
-    delivery_details: {
-      identifier: "BL1435",
-      date: "14/06/2023",
-    },
-    scheduled_delivery_date: "14/06/2023",
-    total_price: 100,
-    items: [
-      {
-        id: 1,
-        name: "beurre",
-        conversion: {
-          unit: "g",
-          quantity: 250,
-        },
-        real: {
-          unit: "plaquette",
-          quantity: 1,
-        },
-        quantity: 3,
-        kilogramme_price: 8,
-        unit_price: 2,
-        total_price: 6,
-      },
-      {
-        id: 2,
-        name: "crème liquide",
-        conversion: {
-          unit: "kg",
-          quantity: 1,
-        },
-        real: {
-          unit: "littre",
-          quantity: 1.1,
-        },
-        quantity: 2,
-        kilogramme_price: 1.9,
-        unit_price: 5,
-        total_price: 10,
-        pending_avoir: true,
-        // received_avoir: true,
-      },
-    ],
-    avoir: {
-      status: "demandé",
-      date: "14/06/2023",
-      items: [
-        {
-          name: "crème liquide",
-          unit_price: 2,
-          unit: "littre",
-          quantity: 5,
-          reason: "Article manquant",
-        },
-      ],
-    },
-  };
-}
-
-export async function getServerSideProps() {
-  const commande = getCommandeData();
-  return {
-    props: { commande },
-  };
-}
+import SeeAvoir from "../../components/Commandes/see_avoir";
+import useSWR from "swr";
+import { useRouter } from "next/router";
+// function getCommandeData() {
+//   return {
+//     id: 1,
+//     status: "WAITING_INVOICE",
+//     concerned_with_avoir: true,
+//     fournisseur: {
+//       name: "Anthès",
+//       specialty: "Frommager",
+//       category: "Crémier",
+//     },
+//     order_details: {
+//       identifier: "1030",
+//       date: "12/06/2023",
+//       means: "Commandée par mail",
+//     },
+//     delivery_details: {
+//       identifier: "BL1435",
+//       date: "14/06/2023",
+//     },
+//     scheduled_delivery_date: "14/06/2023",
+//     total_price: 100,
+//     items: [
+//       {
+//         id: 1,
+//         name: "beurre",
+//         conversion: {
+//           unit: "g",
+//           quantity: 250,
+//         },
+//         real: {
+//           unit: "plaquette",
+//           quantity: 1,
+//         },
+//         quantity: 3,
+//         kilogramme_price: 8,
+//         unit_price: 2,
+//         total_price: 6,
+//       },
+//       {
+//         id: 2,
+//         name: "crème liquide",
+//         conversion: {
+//           unit: "kg",
+//           quantity: 1,
+//         },
+//         real: {
+//           unit: "littre",
+//           quantity: 1.1,
+//         },
+//         quantity: 2,
+//         kilogramme_price: 1.9,
+//         unit_price: 5,
+//         total_price: 10,
+//         pending_avoir: true,
+//         // received_avoir: true,
+//       },
+//     ],
+//     avoir: {
+//       items: [
+//         {
+//           name: "crème liquide",
+//           unit_price: 2,
+//           unit: "littre",
+//           quantity: 5,
+//           reason: "Article manquant",
+//         },
+//       ],
+//     },
+//   };
+// }
 
 function commandeHasBeenDelivered(commande) {
   return commande.status != "WAITING_DELIVERY";
 }
 
-function commandeReceivedAvoir(commande) {
-  return commande.status === "AVOIR_RECEIVED_WAITING_INVOICE";
+function commandeConcernedWithAvoir(commande) {
+  return (
+    commande.status === "AVOIR_RECEIVED_WAITING_INVOICE" ||
+    commande.status === "WAITING_AVOIR"
+  );
 }
 
 function commandeWasClosed(commande) {
   return commande.status === "CLOSED";
 }
 
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
 /**
  * Page to display Fournisseur details
  */
-export default function FournisseurDetailPage({ commande }) {
+export default function FournisseurDetailPage() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  // Use a ternary operator to only fetch the data when the ID isn't undefined
+  const { data: commande, error } = useSWR(
+    id ? `http://127.0.0.1:8000/api/commandes/${id}/` : null,
+    fetcher
+  );
+  if (error) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
+  if (!commande) return <div>Chargement en cours ...</div>;
+  console.log(commande);
   return (
     <div className="col-12 d-flex flex-column align-items-center">
       <div className="col-12 d-flex flex-row p-2 justify-content-between align-items-center">
@@ -127,6 +144,13 @@ export default function FournisseurDetailPage({ commande }) {
               }
             </h4>
           </div>
+          {commande.status === "WAITING_DELIVERY" &&
+          commande.expected_delivery_date ? (
+            <div className="col-12 d-flex flex-row pt-5 justify-content-center align-items-center">
+              Livraison prévue le: {commande.expected_delivery_date}
+            </div>
+          ) : null}
+
           <div className="col-12 d-flex flex-row pt-3 pb-3 justify-content-center align-items-center">
             {commande.status === "WAITING_DELIVERY" ? (
               <ReceiveDeliveryButton
@@ -149,7 +173,7 @@ export default function FournisseurDetailPage({ commande }) {
               <div className="col-12 d-flex flex-row justify-content-between">
                 <p>{commande.fournisseur.name}</p>
                 <p>
-                  {commande.fournisseur.category} |{" "}
+                  {commande.fournisseur.category}
                   {commande.fournisseur.specialty}
                 </p>
                 <p></p>
@@ -183,27 +207,47 @@ export default function FournisseurDetailPage({ commande }) {
                   </span>
                 </p>
               ) : null}
-              {commandeReceivedAvoir(commande) ? (
-                <p>
-                  Numéro de commande: {commande.order_details.identifier} |{" "}
-                  {commande.order_details.means
-                    ? commande.order_details.means
-                    : null}
-                  {commande.order_details.date
-                    ? " le " + commande.order_details.date
-                    : null}
+              {commandeConcernedWithAvoir(commande) &&
+              commande.avoir_details ? (
+                <p style={{ color: "grey" }}>
+                  Numéro d'avoir:{" "}
+                  <span style={{ color: "black", fontWeight: 500 }}>
+                    {" "}
+                    {commande.avoir_details.identifier}{" "}
+                  </span>
+                  |{" "}
+                  <span style={{ fontSize: "14px" }}>
+                    {" "}
+                    {commande.avoir_details.date
+                      ? " le " + commande.avoir_details.date
+                      : null}
+                    {commande.avoir_details.amount
+                      ? " de " + commande.avoir_details.amount + "€ HT"
+                      : null}
+                    {commande.avoir_details.was_received
+                      ? " (reçu)"
+                      : " (demandé, en attente)"}
+                  </span>
                 </p>
               ) : null}
               {commandeWasClosed(commande) ? (
                 <p>
-                  Numéro de commande: {commande.order_details.identifier} |{" "}
-                  {commande.order_details.means
-                    ? commande.order_details.means
-                    : null}
-                  {commande.order_details.date
-                    ? " le " + commande.order_details.date
-                    : null}
+                  Numéro de facture: {commande.order_details.identifier} |{" "}
+                  <span style={{ fontSize: "14px" }}>
+                    {" "}
+                    {commande.order_details.means
+                      ? commande.order_details.means
+                      : null}
+                    {commande.order_details.date
+                      ? " le " + commande.order_details.date
+                      : null}
+                  </span>
                 </p>
+              ) : null}
+            </div>
+            <div className="col-2 d-flex flex-column justify-content-center align-items-center">
+              {commande.concerned_with_avoir ? (
+                <SeeAvoir commande={commande}></SeeAvoir>
               ) : null}
             </div>
           </div>
@@ -224,7 +268,7 @@ export default function FournisseurDetailPage({ commande }) {
                       : null,
                 }}
               >
-                {commande.total_price}€ HT
+                {commande.estimated_ht_total_cost}€ HT
               </span>
             </p>
           </div>

@@ -57,45 +57,28 @@ export default function AllCommandesData({ allCommandesData }) {
 
   function create_filter() {
     const all_status = DEFAULT_STATUS.map((status) => {
-      console.log(status);
       const itemExists = allCommandesData.find(
         (commande) => commande.status === status[0]
       );
-      console.log(itemExists);
       if (itemExists && itemExists.status_text) {
-        console.log("ENTERED");
         return { status: itemExists.status, text: itemExists.status_text };
       } else {
-        console.log("RETURNED");
-        console.log({ status: status[0], text: status[1] });
-        console.log("WAS RETURNED");
         return { status: status[0], text: status[1] };
       }
     });
-    console.log("JE COMPRENDS PAS");
-    console.log(DEFAULT_STATUS);
     return all_status;
   }
 
-  console.log("HERERE");
-  console.log(filters);
-
   function group_list_based_on_field(list, groupField) {
-    console.log("IN HELPER");
-    console.log(list);
     return list.reduce((group, product) => {
       if (groupField == "month" || groupField == "default" || !groupField) {
-        console.log("IN THE RIGHT ");
         const { month } = product;
         group[month] = group[month] ?? [];
         group[month].push(product);
         return group;
       } else if (groupField) {
-        console.log("IN THE WRONG ");
-        console.log(groupField);
         if (groupField == "fournisseur") {
           const { fournisseur } = product;
-          console.log(fournisseur.name);
           group[fournisseur.name] = group[fournisseur.name] ?? [];
           group[fournisseur.name].push(product);
           return group;
@@ -105,10 +88,7 @@ export default function AllCommandesData({ allCommandesData }) {
   }
 
   function filterCommandes(filter) {
-    console.log("filter");
-    console.log(filter);
     if (filter && filter != "all") {
-      console.log("IN");
       setFilteredData(
         allCommandesData.filter((commande) => commande.status == filter)
       );
@@ -119,9 +99,7 @@ export default function AllCommandesData({ allCommandesData }) {
       );
     } else {
       setFilteredData(allCommandesData);
-      console.log("NO FILTER SETTING IT TO");
-      console.log(groupCommandesData(allCommandesData, groupingField));
-      groupCommandesData(filteredData, groupingField);
+      groupCommandesData(allCommandesData, groupingField);
     }
   }
 
@@ -147,18 +125,12 @@ export default function AllCommandesData({ allCommandesData }) {
 
   // Helper to combine the two grouping operations
   const groupCommandesData = (dataToFilter, groupField) => {
-    console.log("DATA TO FILTER");
-    console.log(dataToFilter);
     const groupedFournisseurs = group_list_based_on_field(
       dataToFilter,
       groupField
     );
-    console.log("SPRTED groupedFournisseurs CLEANED");
-    console.log(groupedFournisseurs);
     const sorted_and_cleaned_groups_data =
       get_sorted_and_cleaned_groups_data(groupedFournisseurs);
-    console.log("SPRTED AND CLEANED");
-    console.log(sorted_and_cleaned_groups_data);
     setGroupedData(sorted_and_cleaned_groups_data);
   };
 
@@ -175,7 +147,6 @@ export default function AllCommandesData({ allCommandesData }) {
             onChange={(e) => {
               setFilteringField(e.target.value);
               filterCommandes(e.target.value);
-              console.log(groupedData);
             }}
             value={filteringField}
             style={{
@@ -190,7 +161,6 @@ export default function AllCommandesData({ allCommandesData }) {
               Toutes
             </option>
             {filters.map((filter) => {
-              console.log(filter.status);
               return <option value={filter.status}>{filter.text}</option>;
             })}
           </select>
@@ -215,7 +185,6 @@ export default function AllCommandesData({ allCommandesData }) {
             onChange={(e) => {
               setGroupingField(e.target.value);
               groupCommandesData(filteredData, e.target.value);
-              console.log(groupedData);
             }}
             value={groupingField}
           >

@@ -66,7 +66,7 @@ export default function PlaceOrder({ produit, closeModal = null }) {
                 <li>
                   Un coût total estimé de{" "}
                   <span style={{ fontWeight: 600 }}>
-                    {produit.price * quantity}€
+                    {(produit.price * quantity).toFixed(2)}€
                   </span>
                 </li>
               </ul>
@@ -77,11 +77,16 @@ export default function PlaceOrder({ produit, closeModal = null }) {
               <Button
                 className="btn btn-primary"
                 onClick={() => {
-                  dispatch(addToCart({ ...produit, quantity: quantity }));
-                  if (closeModal) {
-                    closeModal(false);
+                  if (quantity >= 0) {
+                    dispatch(addToCart({ ...produit, quantity: quantity }));
+                    if (closeModal) {
+                      closeModal(false);
+                    }
+                  } else {
+                    alert(
+                      "Pour ajouter un élément à votre panier, sa quantité doit être strictement positive."
+                    );
                   }
-                  console.log(store.getState());
                 }}
               >
                 Ajouter au panier

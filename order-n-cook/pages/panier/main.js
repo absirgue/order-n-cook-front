@@ -101,7 +101,7 @@ export default function Cart() {
                       {item.kilogramme_price}€/kg
                     </div>
                     <div className="col-2" style={{ textAlign: "end" }}>
-                      Coût estimé: {item.quantity * item.price}€
+                      Coût estimé: {(item.quantity * item.price).toFixed(2)}€
                     </div>
                     <div className="col-1" style={{ textAlign: "end" }}>
                       <Button
@@ -121,10 +121,12 @@ export default function Cart() {
                 style={{ fontWeight: 500, backgroundColor: "#f3f0f0" }}
               >
                 Total HT estimé:{" "}
-                {group.items.reduce(
-                  (total, item) => (total += item.quantity * item.price),
-                  0
-                )}
+                {group.items
+                  .reduce(
+                    (total, item) => (total += item.quantity * item.price),
+                    0
+                  )
+                  .toFixed(2)}
                 €
               </p>
             </div>

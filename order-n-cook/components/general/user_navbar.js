@@ -20,7 +20,7 @@ const Header = ({ router: { pathname } }) => (
     <div id="wrapper-navbar">
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="/">Order n'Cook</Navbar.Brand>
+          <Navbar.Brand>Order n'Cook</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <div className="col-12 d-flex flez-row justify-content-between">

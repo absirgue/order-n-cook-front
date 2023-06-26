@@ -99,7 +99,7 @@ function InvoiceManualInput({ commande }) {
                     style={{ fontWeight: 500, textAlign: "end" }}
                     className="flex-grow-1"
                   >
-                    Quantité:{" "}
+                    Vendu par unités de:{" "}
                   </p>
                   <input
                     type="number"

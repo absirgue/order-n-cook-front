@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { create_commande } from "../../utils/backend/commandes_requests";
 import { useDispatch } from "react-redux";
 import { removeFromCart } from "../../redux/cart.slice";
+import { DAYS_OF_THE_WEEK } from "../../utils/general_constants";
 const fetcher = (url) => fetch(url).then((res) => res.json());
 /**
  * Page to display RecetteDetails
@@ -17,15 +18,29 @@ export default function RecordOrder({ items }) {
   const [orderMean, setOrderMean] = useState(null);
   const [emailNote, setEmailNote] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
+  const [dayError, setDayError] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = router.query;
 
   async function record_order() {
     if (orderMean != null && items[0].fournisseur_id) {
+      if (dayError != null) {
+        alert(
+          dayError + " Merci de sélectionner une autre date pour la livraison."
+        );
+        return;
+      }
       let data = {};
       data["items"] = items.map((produit) => {
-        return { produit: produit.id, quantity: produit.quantity };
+        return {
+          produit: produit.id,
+          quantity: produit.quantity,
+          unit_quantity: produit.real_unit.quantity,
+          unit: produit.real_unit.unit,
+          unit_price: produit.price,
+          kilogramme_price: produit.kilogramme_price,
+        };
       });
       let order_mean_text = "";
       if (orderMean == "cash_out") {
@@ -39,28 +54,28 @@ export default function RecordOrder({ items }) {
       }
       data["ordering_mean"] = order_mean_text;
       data["fournisseur"] = items[0].fournisseur_id;
-      data["estimated_ht_total_cost"] = items.reduce(
-        (total, item) => (total += item.quantity * item.price),
-        0
-      );
+      data["estimated_ht_total_cost"] = items
+        .reduce((total, item) => (total += item.quantity * item.price), 0)
+        .toFixed(2);
+      data["expected_delivery_date"] = deliveryDate;
+
       const response = await create_commande(data);
       if (response.status == 201) {
         alert(
           'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!'
         );
-        return true;
+        for (var item in items) {
+          dispatch(removeFromCart(item.id));
+        }
       } else {
         alert(
           "Nous ne pouvons pas passer cette commande actuellement. Merci de réessayer ultérieurement ou de contacter le service technique."
         );
-        return false;
       }
     } else {
-      alert(
-        "Nous ne pouvons pas passer cette commande actuellement. Merci de réessayer ultérieurement ou de contacter le service technique."
-      );
-      return false;
+      alert("Merci de sélectionner un moyen de commande.");
     }
+    setModalOpen(false);
   }
   // Use a ternary operator to only fetch the data when the ID isn't undefined
   console.log("ITEMS");
@@ -212,25 +227,39 @@ export default function RecordOrder({ items }) {
                 className="col-4 pt-2 pb-2"
                 type="date"
                 style={{ borderRadius: "15px" }}
-                onChange={(event) => setDeliveryDate(event.target.value)}
+                onChange={(event) => {
+                  const date = new Date(event.target.value);
+                  const dayOfTheWeek = date.getDay();
+                  console.log("DAY OF THE WEEK:" + dayOfTheWeek);
+                  if (
+                    (dayOfTheWeek == 1 && fournisseur_data.delivers_monday) ||
+                    (dayOfTheWeek == 2 && fournisseur_data.delivers_tuesday) ||
+                    (dayOfTheWeek == 3 &&
+                      fournisseur_data.delivers_wednesday) ||
+                    (dayOfTheWeek == 4 && fournisseur_data.delivers_thursday) ||
+                    (dayOfTheWeek == 5 && fournisseur_data.delivers_friday) ||
+                    (dayOfTheWeek == 6 && fournisseur_data.delivers_saturday) ||
+                    (dayOfTheWeek == 0 && fournisseur_data.delivers_sunday)
+                  ) {
+                    setDeliveryDate(event.target.value);
+                    setDayError(null);
+                  } else {
+                    setDayError(
+                      items[0].fournisseur_name +
+                        " ne livre pas le " +
+                        DAYS_OF_THE_WEEK[dayOfTheWeek]
+                    );
+                  }
+                }}
               />
+              {dayError ? <p style={{ color: "red" }}>{dayError}</p> : null}
             </div>
           ) : null}
         </Modal.Body>
         <Modal.Footer>
           <div className="col-12 d-flex flex-row justify-content-end">
             {orderMean != null ? (
-              <Button
-                className="btn btn-primary me-4"
-                onClick={() => {
-                  const successful = record_order();
-                  if (successful) {
-                    for (var item in items) {
-                      dispatch(removeFromCart(item.id));
-                    }
-                  }
-                }}
-              >
+              <Button className="btn btn-primary me-4" onClick={record_order}>
                 Commander
               </Button>
             ) : null}

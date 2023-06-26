@@ -6,6 +6,30 @@ import { Button } from "reactstrap";
 import Modal from "react-bootstrap/Modal";
 import CreateAvoir from "./create_avoir";
 
+async function send_receive_avoir(data, commande_id) {
+  const JSONdata = JSON.stringify(data);
+
+  // API endpoint where we send form data.
+  const endpoint =
+    `http://127.0.0.1:8000/api/receive_avoir/` + commande_id + "/";
+
+  // Form the request for sending data to the server.
+  const options = {
+    // The method is POST because we are sending data.
+    method: "PUT",
+    // Tell the server we're sending JSON.
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // Body of the request is the JSON data we created above.
+    body: JSONdata,
+  };
+
+  // Send the form data to our forms API on Vercel and get a response.
+  const response = await fetch(endpoint, options);
+  return response;
+}
+
 function ReceiveAvoir({ commande }) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [avoirItems, setAvoirItems] = React.useState(
@@ -15,8 +39,29 @@ function ReceiveAvoir({ commande }) {
   );
   const [ignored, forceUpdate] = React.useReducer((x) => x + 1, 0);
 
-  function get_adds_to_amount(item) {
-    return item.adds_to_amount;
+  async function receive_avoir() {
+    let data = {};
+    data["items"] = avoirItems.map((item) => {
+      return {
+        id: item.id,
+        quantity_received: item.quantity_received,
+        reason: item.reason,
+      };
+    });
+    if (
+      window.confirm(
+        "Assurez-vous d'avoir renseigné la bonne quantité pour chaque élément de l'avoir."
+      )
+    ) {
+      const response = await send_receive_avoir(data, commande.id);
+      if (response.status == 200) {
+        alert("L'avoir reçu a bien été enregistré.");
+      } else {
+        alert(
+          "Une erreur est survenue. Merci de réessayer utlérieurement ou de contacter le service technique."
+        );
+      }
+    }
   }
 
   return (
@@ -77,7 +122,7 @@ function ReceiveAvoir({ commande }) {
                 </div>
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center mt-1">
                   <div className="col-3">
-                    Quantité demandée: {item.quantity}
+                    Quantité demandée: {item.quantity_demanded}
                   </div>
                   <div
                     className="col-3 d-flex flex-row justify-content-center flex-grow-1 align-items-center"
@@ -88,7 +133,7 @@ function ReceiveAvoir({ commande }) {
                       type="number"
                       step="any"
                       value={item.quantity_received}
-                      placeholder={item.quantity}
+                      placeholder={item.quantity_demanded}
                       onChange={(event) => {
                         const new_state = avoirItems;
                         new_state[new_state.indexOf(item)].quantity_received =
@@ -101,7 +146,8 @@ function ReceiveAvoir({ commande }) {
                     />
                   </div>
                   <div className="col-2">
-                    Soit {item.quantity_received * item.unit_price}€
+                    Soit {(item.quantity_received * item.unit_price).toFixed(2)}
+                    € HT
                   </div>
                 </div>
               </div>
@@ -110,6 +156,9 @@ function ReceiveAvoir({ commande }) {
         </Modal.Body>
         <Modal.Footer>
           <div className="col-12 d-flex flex-row justify-content-end">
+            <Button className="me-4 btn btn-primary" onClick={receive_avoir}>
+              Enregistrer
+            </Button>
             <Button onClick={() => setModalOpen(false)}>Annuler</Button>
           </div>
         </Modal.Footer>
