@@ -51,7 +51,7 @@ const CommandeListItem = ({ commande }) => {
         )}
         {commande.avoir ? (
           <div className="col-2" style={{ color: "#95929c" }}>
-            <p>N Avoir: {commande.avoir.value}</p>
+            <p>Avoir: {commande.avoir.value}</p>
             <p>{commande.avoir.date}</p>
           </div>
         ) : (

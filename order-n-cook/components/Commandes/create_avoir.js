@@ -72,8 +72,6 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
 
   function addSelectedItem() {
     if (selectedItem) {
-      console.log("ON EST LA");
-      console.log(itemsOfAvoir);
       if (itemsOfAvoir != null && itemsOfAvoir != []) {
         if (
           itemsOfAvoir.filter((item) => item.name == selectedItem.value.name)
@@ -84,13 +82,11 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
             { ...selectedItem.value, quantity: 0, reason: "" },
           ]);
         }
-        console.log(itemsOfAvoir);
       } else {
         setItemsOfAvoir([
           ...itemsOfAvoir,
           { ...selectedItem.value, quantity: 0, reason: "" },
         ]);
-        console.log(itemsOfAvoir);
       }
     }
   }
@@ -113,8 +109,6 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
       </div>
       {itemsOfAvoir != null ? (
         <div className="col-12 d-flex flex-column">
-          {console.log("LA")}
-          {console.log(itemsOfAvoir)}
           {itemsOfAvoir.map((item) => (
             <>
               <div
@@ -126,7 +120,9 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
                 </div>
                 <div className="col-3" style={{ textAlign: "start" }}>
                   <p>
-                    {item.real.quantity +
+                    {item.number_of_units +
+                      " x " +
+                      item.real.quantity +
                       " " +
                       item.real.unit +
                       " (" +
@@ -139,7 +135,7 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
                 <div className="col-6 d-flex flex-column">
                   <div className="d-flex col-12 justify-content-between">
                     <p className="col-9" style={{ fontWeight: 500 }}>
-                      Quantité demandée:{" "}
+                      Quantité demandée (en {item.real.unit}):{" "}
                     </p>
                     <input
                       className="col-3"
@@ -148,14 +144,11 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
                       value={item.quantity}
                       onChange={(event) => {
                         if (item.number_of_units >= event.target.value) {
-                          console.log("HEREHERHE" + event.target.value);
                           const new_state = itemsOfAvoir;
                           new_state[new_state.indexOf(item)].quantity =
                             event.target.value;
-                          console.log(new_state);
                           setItemsOfAvoir(new_state);
                           forceUpdate();
-                          console.log(itemsOfAvoir);
                         } else {
                           alert(
                             "La quantité d'avoir demandée ne peut pas être supérieure à la quantité commandée."
@@ -174,14 +167,11 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
                       type="text"
                       value={item.reason}
                       onChange={(event) => {
-                        console.log("HEREHERHE" + event.target.value);
                         const new_state = itemsOfAvoir;
                         new_state[new_state.indexOf(item)].reason =
                           event.target.value;
-                        console.log(new_state);
                         setItemsOfAvoir(new_state);
                         forceUpdate();
-                        console.log(itemsOfAvoir);
                       }}
                     />
                   </div>

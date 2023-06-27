@@ -9,7 +9,7 @@ function InvoiceManualInput({ commande }) {
   const [showDetails, setShowDetails] = useState(false);
   const [itemsOfInvoice, setItemsOfInvoice] = useState(commande.items);
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
-
+  console.log(itemsOfInvoice);
   return (
     <div className="col-12 d-flex flex-column justify-content-center">
       {/* date montant HT numéro de facture montant avec taxes*/}
@@ -82,18 +82,8 @@ function InvoiceManualInput({ commande }) {
               <div className="col-3" style={{ fontWeight: 500 }}>
                 {item.name}
               </div>
-              <div className="col-3" style={{ textAlign: "start" }}>
-                <p>
-                  {item.real.quantity +
-                    " " +
-                    item.real.unit +
-                    " (" +
-                    item.conversion.quantity +
-                    item.conversion.unit +
-                    ")"}
-                </p>
-              </div>
-              <div className="col-6 d-flex flex-column">
+
+              <div className="col-9 d-flex flex-column">
                 <div className="d-flex col-12 justify-content-between align-items-center">
                   <p
                     style={{ fontWeight: 500, textAlign: "end" }}
@@ -137,6 +127,28 @@ function InvoiceManualInput({ commande }) {
                     }}
                   />
                   <p style={{ fontSize: "14px" }}>{"€/" + item.real.unit}</p>
+                </div>
+                <div className="d-flex col-12 justify-content-between align-items-center">
+                  <p
+                    style={{ fontWeight: 500, textAlign: "end" }}
+                    className="flex-grow-1"
+                  >
+                    Nombre d'unités facturées sur cette commande:{" "}
+                  </p>
+                  <input
+                    type="number"
+                    step="any"
+                    className="col-3 ms-2 me-1"
+                    value={item.quantity}
+                    onChange={(event) => {
+                      const new_state = itemsOfInvoice;
+                      new_state[new_state.indexOf(item)].quantity =
+                        event.target.value;
+                      setItemsOfInvoice(new_state);
+                      forceUpdate();
+                    }}
+                  />
+                  <p style={{ fontSize: "14px" }}>{item.real.unit}</p>
                 </div>
               </div>
             </div>

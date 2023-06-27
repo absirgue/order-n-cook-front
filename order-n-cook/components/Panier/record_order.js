@@ -21,7 +21,8 @@ export default function RecordOrder({ items }) {
   const [dayError, setDayError] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const { id } = router.query;
+  console.log("IN RECORD ORDER");
+  console.log(items);
 
   async function record_order() {
     if (orderMean != null && items[0].fournisseur_id) {
@@ -64,8 +65,10 @@ export default function RecordOrder({ items }) {
         alert(
           'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!'
         );
-        for (var item in items) {
-          dispatch(removeFromCart(item.id));
+        for (let i = 0; i < items.length; i++) {
+          console.log("DELETING ITEM");
+          console.log(items[i]);
+          dispatch(removeFromCart(items[i].id));
         }
       } else {
         alert(

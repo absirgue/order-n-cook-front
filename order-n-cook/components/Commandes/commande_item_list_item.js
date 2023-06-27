@@ -22,7 +22,9 @@ export default function CommandeItemListItem({ commandeItem }) {
       </div>
       <div className="col-3" style={{ textAlign: "start" }}>
         <p>
-          {commandeItem.real.quantity +
+          {commandeItem.quantity +
+            " x " +
+            commandeItem.real.quantity +
             " " +
             commandeItem.real.unit +
             " (" +

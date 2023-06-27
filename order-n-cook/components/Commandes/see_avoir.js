@@ -26,7 +26,7 @@ export default function SeeAvoir({ commande }) {
           <div className="col-12 d-flex flex-column justify-content-center">
             {commande.avoir.items.map((item) => (
               <div
-                className="col-12 d-flex flex-column justify-content-between align-items-center p-3"
+                className="col-12 d-flex flex-column justify-content-between align-items-center p-3 mt-3"
                 style={{ borderRadius: "15px", backgroundColor: "#f3f0f0" }}
               >
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">

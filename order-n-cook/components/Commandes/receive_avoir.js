@@ -128,7 +128,7 @@ function ReceiveAvoir({ commande }) {
                     className="col-3 d-flex flex-row justify-content-center flex-grow-1 align-items-center"
                     style={{ fontWeight: 500, color: "#f85959" }}
                   >
-                    <p className="me-1">Quantité reçue: </p>
+                    <p className="me-1">Quantité reçue : </p>
                     <input
                       type="number"
                       step="any"
