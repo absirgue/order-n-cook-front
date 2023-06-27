@@ -22,8 +22,6 @@ const ChangeSectionButton = ({
     setSelectedSection("");
   }
   const get_unused_sections_options = () => {
-    console.log("ALL SECTIONS");
-    console.log(all_sections);
     const sections = [];
     all_sections.map((section) => {
       if (section.number != element.section) {
@@ -39,8 +37,6 @@ const ChangeSectionButton = ({
   };
 
   const handleSubmit = async () => {
-    console.log("ELEMENT");
-    console.log(element);
     let endpoint = "http://127.0.0.1:8000/api/";
     if (is_ingredient) {
       endpoint += "recette_ingredients/";
@@ -48,8 +44,6 @@ const ChangeSectionButton = ({
       endpoint += "recette_progression/";
     }
     endpoint += element.id + "/";
-    console.log("ENDPOINT");
-    console.log(endpoint);
     // Form the request for sending data to the server.
     const data = { section: selectedSection.number };
     const JSONdata = JSON.stringify(data);

@@ -17,20 +17,13 @@ import {
 import { useState } from "react";
 
 async function getRecetteData(id) {
-  console.log("HERE");
-  console.log("HERE");
-  console.log(id);
   const endpoint = `http://127.0.0.1:8000/api/recettes/${id}/`;
   const data = await fetch(endpoint);
   return await data.json();
 }
 
 export const getServerSideProps = async (context) => {
-  //   const recetteId = context.params?.id;
-  console.log("PARAMS");
-  console.log(context.params);
   const page_data = await getRecetteData(context.params?.sous_recette_id);
-  console.log(page_data);
   page_data["recette_id"] = context.params?.recette_id;
 
   return {

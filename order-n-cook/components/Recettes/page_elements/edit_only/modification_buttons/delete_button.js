@@ -33,8 +33,6 @@ const DeleteButton = ({
   }
 
   const deleteItem = async () => {
-    console.log("ELEMENT");
-    console.log(element);
     let endpoint = "http://127.0.0.1:8000/api/";
     if (is_ingredient) {
       endpoint += "recette_ingredients/";
@@ -44,8 +42,6 @@ const DeleteButton = ({
       endpoint += "sous_recette/";
     }
     endpoint += element.id;
-    console.log("ENDPOINT");
-    console.log(endpoint);
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.

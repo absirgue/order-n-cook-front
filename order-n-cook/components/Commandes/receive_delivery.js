@@ -36,22 +36,16 @@ const ReceiveDeliveryButton = ({ commande }) => {
   function toggleModal() {
     setModalOpen(!modalOpen);
     setBLValue("");
-    console.log(BLValue);
   }
 
   async function recordBL() {
-    console.log("ENTERED");
     let data = {};
     if ((BLValue != null) & (BLValue != "")) {
       data["number"] = BLValue;
       if (BLAmount) {
         data["total_amount_ht"] = BLAmount;
       }
-      console.log("DATA");
-      console.log(data);
       const response = await createBonLivraison(data, commande.id);
-      console.log("RESPONSE");
-      console.log(response);
       if (response.status == 200) {
         alert("Le bon de livraison a bien été enregistré.");
       } else {
@@ -113,7 +107,6 @@ const ReceiveDeliveryButton = ({ commande }) => {
               <Button
                 className="btn btn-primary me-3"
                 onClick={() => {
-                  console.log("CLICKED");
                   recordBL();
                   setModalOpen(false);
                 }}

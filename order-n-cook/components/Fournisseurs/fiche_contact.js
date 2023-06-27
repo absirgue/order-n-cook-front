@@ -5,8 +5,6 @@ import { get_data_object_for_fournisseur_fiche_contact_update_event } from "./he
 import { useSWRConfig } from "swr";
 
 async function send_update_fiche_contact(data, fournisseur) {
-  console.log("DATA:");
-  console.log(data);
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.
@@ -29,7 +27,6 @@ async function send_update_fiche_contact(data, fournisseur) {
   return response;
 }
 export default function FicheContact({ fournisseurData }) {
-  console.log(fournisseurData);
   const [ficheContactShow, setFicheContactShow] = useState(false);
   const [isModify, setIsModify] = useState(false);
   const [errors, setErrors] = useState({});
@@ -102,7 +99,6 @@ export default function FicheContact({ fournisseurData }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("SUBMIT");
     // Stop the form from submitting and refreshing the page.
     const data = get_data_object_for_fournisseur_fiche_contact_update_event(
       event.target,
@@ -125,11 +121,6 @@ export default function FicheContact({ fournisseurData }) {
         PHONE_FIELDS,
         CLIENT_CODE_FIELD
       );
-
-      console.log("FIELDS");
-      console.log(all_fields);
-      console.log("\n\nRESULT");
-      console.log(result);
 
       all_fields.forEach((field) => {
         if (result.hasOwnProperty(field.name)) {
@@ -158,7 +149,6 @@ export default function FicheContact({ fournisseurData }) {
         className="btn btn-primary"
         onClick={() => {
           setFicheContactShow(true);
-          console.log("FICHE CONTACT SHOW");
         }}
       >
         Fiche Contact

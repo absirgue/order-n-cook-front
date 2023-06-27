@@ -24,13 +24,10 @@ const EditProduit = ({ produit, fournisseur_id }) => {
   const { mutate } = useSWRConfig();
 
   async function get_possible_units() {
-    console.log("ID OF INGREDIENT");
-    console.log(produit.ingredient.id);
     const endpoint =
       "http://127.0.0.1:8000/api/ingredient_units/" +
       produit.ingredient.id +
       "/";
-    console.log(endpoint);
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
@@ -53,11 +50,7 @@ const EditProduit = ({ produit, fournisseur_id }) => {
   const load_possible_units = async () => {
     if (!isLoaded) {
       const data = await get_possible_units();
-      console.log("DATA of POSSIBLE UNITS");
-      console.log(data);
       setPossibleUnit(data.units.map((unit) => unit.unit));
-      console.log("RESULTED IN");
-      console.log(possibleUnit);
       setIsLoaded(true);
     }
   };
@@ -123,8 +116,6 @@ const EditProduit = ({ produit, fournisseur_id }) => {
     const response = await fetch(endpoint, options);
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
-    console.log(produit);
-    console.log(response);
     const result = await response.json();
     if (response.status == 200) {
       setModalOpen(false);
@@ -151,8 +142,6 @@ const EditProduit = ({ produit, fournisseur_id }) => {
   };
 
   var labelData = get_all_existing_labels();
-  console.log("LABELS");
-  console.log(labelData);
 
   const label_options = [];
 
@@ -231,8 +220,6 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                     x
                     {possibleUnit
                       ? possibleUnit.map((unit) => {
-                          console.log("HERE UNIT");
-                          console.log(unit);
                           return <option value={unit}>{unit}</option>;
                         })
                       : null}

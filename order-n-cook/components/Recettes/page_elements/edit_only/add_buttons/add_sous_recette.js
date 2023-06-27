@@ -66,13 +66,8 @@ const AddSousRecette = ({ recette_id }) => {
       data["sous_recette"] = selectedRecette.value;
     }
     data["recette"] = recette_id;
-    console.log(data);
     const response = await create_sous_recette(data);
-    console.log("CREATED DATA");
-    console.log(response);
-
     if (response.status == 201) {
-      console.log("HERE");
       setModalOpen(false);
       reset_all_errors();
       mutate(`http://127.0.0.1:8000/api/recettes/${recette_id}/`);

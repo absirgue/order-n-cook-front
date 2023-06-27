@@ -109,11 +109,9 @@ function ReceiveAvoir({ commande }) {
                       type="text"
                       value={item.reason}
                       onChange={(event) => {
-                        console.log("HEREHERHE" + event.target.value);
                         const new_state = avoirItems;
                         new_state[new_state.indexOf(item)].reason =
                           event.target.value;
-                        console.log(new_state);
                         setAvoirItems(new_state);
                         forceUpdate();
                       }}
@@ -138,8 +136,6 @@ function ReceiveAvoir({ commande }) {
                         const new_state = avoirItems;
                         new_state[new_state.indexOf(item)].quantity_received =
                           event.target.value;
-
-                        console.log(new_state);
                         setAvoirItems(new_state);
                         forceUpdate();
                       }}

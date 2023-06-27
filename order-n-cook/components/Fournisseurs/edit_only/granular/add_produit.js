@@ -115,8 +115,6 @@ export default function AddProduit({ fournisseur_id }) {
 
       return null;
     }
-    console.log("CREATION DATA");
-    console.log(ingredient_creation_data);
     const response = await create_ingredient_request(ingredient_creation_data);
     if (response.status == 201) {
       const result = await response.json();
@@ -267,8 +265,6 @@ export default function AddProduit({ fournisseur_id }) {
     event.preventDefault();
 
     const assembledData = await assembleDataObject(event.target);
-    console.log("TOTAL DATA");
-    console.log(assembledData);
     if (assembledData) {
       const response = await create_new_produit(assembledData);
       if (response.status == 201) {
@@ -395,8 +391,6 @@ export default function AddProduit({ fournisseur_id }) {
                               };
                             })
                           );
-                          console.log("SELECTED");
-                          console.log(selectedIngredient);
                         }}
                         required
                       />

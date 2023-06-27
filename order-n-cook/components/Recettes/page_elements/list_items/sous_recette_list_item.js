@@ -12,9 +12,6 @@ import AllergenesPopover from "../granular_elements/allergenes_popover";
  *  @param recette_id -> id of the recette this SousRecette is linekd to
  */
 const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
-  console.log("SOUS RECETTE");
-  console.log(sous_recette);
-
   return (
     <tr>
       <td

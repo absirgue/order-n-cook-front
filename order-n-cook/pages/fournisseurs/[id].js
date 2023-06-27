@@ -199,7 +199,6 @@ export default function FournisseurDetailPage() {
     );
   }
   if (!fournisseurData) return <div>Chargement en cours ...</div>;
-  console.log(fournisseurData);
   return (
     <div className="col-12 d-flex flex-column justify-content-center align-items-center">
       <div className={"d-flex flex-row mb-2 justify-content-center col-11"}>

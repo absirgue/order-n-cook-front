@@ -28,14 +28,10 @@ const RecetteComponentModifier = ({
   }
 
   async function get_possible_units() {
-    console.log("component");
-
-    console.log(component);
     const endpoint =
       "http://127.0.0.1:8000/api/ingredient_units/" +
       component.ingredient_id +
       "/";
-    console.log(endpoint);
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
@@ -58,11 +54,7 @@ const RecetteComponentModifier = ({
   const load_possible_units = async () => {
     if (!is_sous_recette && !isLoaded) {
       const data = await get_possible_units();
-      console.log("DATA of POSSIBLE UNITS");
-      console.log(data);
       setPossibleUnit(data.units.map((unit) => unit.unit));
-      console.log("RESULTED IN");
-      console.log(possibleUnit);
       setIsLoaded(true);
     }
   };
@@ -219,8 +211,6 @@ const RecetteComponentModifier = ({
                       </option>
                       {possibleUnit
                         ? possibleUnit.map((unit) => {
-                            console.log("HERE UNIT");
-                            console.log(unit);
                             return <option value={unit}>{unit}</option>;
                           })
                         : null}

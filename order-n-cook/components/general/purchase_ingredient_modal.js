@@ -18,8 +18,6 @@ A modal that shows all the Fournisseurs providing a given ingredient and gives t
 quantity of said ingredient from a selected provider.
 */
 const PurchaseIngredientHelper = ({ ingredient }) => {
-  console.log("ingredient");
-  console.log(ingredient);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedProduct, setSelectedProduct] = React.useState(null);
   const [productIsSelected, setProductIsSelected] = React.useState(false);

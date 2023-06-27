@@ -21,9 +21,6 @@ function get_ingredient_data_grouped_and_sorted(recette) {
       },
       {}
     );
-
-    console.log("HERE GOUPED DATA");
-    console.log(grouped_default_data);
     var default_data = [];
 
     for (var key in grouped_default_data) {
@@ -70,10 +67,7 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
     }
   };
   const get_unused_sections_value = () => {
-    console.log("CHECKING UNUSED SECTION");
     if (recette.sections && recette.sections.length > 0) {
-      console.log("ENTERED THE CHECK HEHEHEHHEHH");
-      console.log(recette.sections);
       return recette.sections.filter(
         (section) =>
           recette.ingredients

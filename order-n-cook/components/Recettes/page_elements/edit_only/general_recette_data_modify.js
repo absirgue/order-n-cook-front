@@ -37,7 +37,6 @@ async function sendUpdateRecetteRequest(data, recette) {
 }
 
 const GeneralRecetteDataModify = ({ recette }) => {
-  console.log(recette);
   const [new_data_inputted, set_new_data_inputted] = useState(false);
   const [genres, setGenres] = useState(get_initial_genre_select_value(recette));
   const [tastes, setTastes] = useState(get_initial_taste_select_value(recette));

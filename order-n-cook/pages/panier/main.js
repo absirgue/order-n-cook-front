@@ -35,12 +35,7 @@ export default function Cart() {
   const cartItems = useSelector((state) => state.cart);
 
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
-  //   function incrementQuantity(item, increment) {
-  //     incrementQuantity;
-  //   }
 
-  console.log("CART ITEMS");
-  console.log(cartItems);
   if (cartItems && cartItems.length > 0) {
     return (
       <div className="col-12 d-flex flex-column justify-content-center align-items-center">

@@ -85,7 +85,6 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
   }
 
   const updateFournisseurGeneralInformation = async () => {
-    console.log("FOOOOORM");
     // Stop the form from submitting and refreshing the page.
     const data = get_data_object_for_fournisseur_general_info_update_event(
       lastOrderTime,

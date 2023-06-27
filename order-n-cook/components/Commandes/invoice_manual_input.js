@@ -9,7 +9,6 @@ function InvoiceManualInput({ commande }) {
   const [showDetails, setShowDetails] = useState(false);
   const [itemsOfInvoice, setItemsOfInvoice] = useState(commande.items);
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
-  console.log(itemsOfInvoice);
   return (
     <div className="col-12 d-flex flex-column justify-content-center">
       {/* date montant HT numéro de facture montant avec taxes*/}

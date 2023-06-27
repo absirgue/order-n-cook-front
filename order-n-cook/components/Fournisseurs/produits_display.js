@@ -82,7 +82,6 @@ export default function FournisseurProduitsDisplay({
         .map((produit) => produit.ingredient.labels)
         .flat()
         .map((label) => {
-          console.log("LABEL: " + label);
           return label.name;
         })
     )

@@ -18,8 +18,6 @@ const AddProgressionElement = ({
 
   function get_initial_rank_value(section) {
     if (section_max_number) {
-      console.log("SECTION MAX");
-      console.log(section_max_number);
       return section_max_number + 1;
     } else if (
       recette.progression_elements &&

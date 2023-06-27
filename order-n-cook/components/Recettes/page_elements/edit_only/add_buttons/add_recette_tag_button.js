@@ -17,8 +17,6 @@ const AddRecetteTagButton = ({
   const { mutate } = useSWRConfig();
   const handleTagCreation = async () => {
     let data = {};
-    console.log("NAME INPUT");
-    console.log(nameInput);
     if (nameInput) {
       data["name"] = nameInput;
       const JSONdata = JSON.stringify(data);

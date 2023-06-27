@@ -9,7 +9,6 @@ import FlecheBasButton from "./edit_only/modification_buttons/fleche_bas";
 import { useState } from "react";
 
 function get_progression_data_grouped_and_sorted(recette) {
-  console.log("CALLED GROUP DATA");
   if (recette.progression_elements && recette.progression_elements.length > 0) {
     const grouped_default_data = recette.progression_elements.reduce(
       (group, product) => {
@@ -20,8 +19,6 @@ function get_progression_data_grouped_and_sorted(recette) {
       },
       {}
     );
-    console.log("GROUPED DEFAULT DATA");
-    console.log(grouped_default_data);
     var default_data = [];
 
     for (var key in grouped_default_data) {
@@ -29,7 +26,6 @@ function get_progression_data_grouped_and_sorted(recette) {
         grouped_default_data.hasOwnProperty(key) &&
         recette.sections.length > 0
       ) {
-        console.log("ENTERED");
         const related_section = recette.sections.filter(
           (section) => section.number == key
         )[0];
@@ -57,7 +53,6 @@ function get_progression_data_grouped_and_sorted(recette) {
             }),
           });
         } else {
-          console.log("YA PAS DE SECTION");
           default_data.push({
             progression_elements: grouped_default_data[key].sort(function (
               a,
@@ -90,15 +85,12 @@ function get_progression_data_grouped_and_sorted(recette) {
                 return 0;
               }),
             });
-            console.log("LA");
-            console.log(default_data);
           }
         }
       }
     }
     return default_data;
   } else {
-    console.log("YA PAS DE LENGTH DES LE DEBUT");
     return [];
   }
 }
@@ -127,7 +119,6 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
       recette.progression_elements &&
       recette.progression_elements.length > 0
     ) {
-      console.log("CA PASSE EN 1");
       return recette.sections.filter(
         (section) =>
           recette.progression_elements
@@ -139,11 +130,8 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
       recette.sections.length > 0 &&
       recette.progression_elements
     ) {
-      console.log("CA PASSE EN 2");
-      console.log(recette.sections);
       return recette.sections;
     } else {
-      console.log("CA PASEE PAS DE STAETEMENT");
       return [];
     }
   };

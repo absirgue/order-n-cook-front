@@ -24,10 +24,7 @@ const AddSection = ({
 
   const get_unused_sections_options = () => {
     const section_options = [];
-    console.log("UNUSED SECTIONS IN HERE");
-    console.log(unused_sections);
     if (unused_sections) {
-      console.log("UNUSED SECTIONS IN HERE");
       unused_sections.forEach((section) =>
         section_options.push({
           value: section.id,

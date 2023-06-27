@@ -11,13 +11,8 @@ export function get_data_object_for_fournisseur_general_info_update_event(
   delivers_sunday,
   specialty
 ) {
-  console.log(lastOrderTime);
-
-  // Get data from the form.
-
   let data = {};
   if (lastOrderTime && lastOrderTime != fournisseur.last_order_time) {
-    console.log("HERE");
     data["last_order_time"] = lastOrderTime;
   }
   if (delivers_monday != fournisseur.delivers_monday) {
@@ -47,7 +42,6 @@ export function get_data_object_for_fournisseur_general_info_update_event(
   if (specialty.label != fournisseur.specialty) {
     data["specialty"] = specialty.label;
   }
-  console.log(data);
   return data;
 }
 

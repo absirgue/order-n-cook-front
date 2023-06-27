@@ -120,7 +120,6 @@ export default function FournisseurDetailPage() {
     );
   }
   if (!commande) return <div>Chargement en cours ...</div>;
-  console.log(commande);
   return (
     <div className="col-12 d-flex flex-column align-items-center">
       <div className="col-12 d-flex flex-row p-2 justify-content-between align-items-center">

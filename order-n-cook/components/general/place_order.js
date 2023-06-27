@@ -11,9 +11,6 @@ export default function PlaceOrder({ produit, closeModal = null }) {
   const [quantity, setQuantity] = React.useState(null);
   const { store } = useContext(ReactReduxContext);
 
-  console.log("PRODUIT IN MODAL");
-  console.log(produit);
-
   return (
     <>
       <div className="d-flex flex-column">

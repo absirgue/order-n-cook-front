@@ -103,7 +103,6 @@ export async function get_all_possible_sous_recette(recette_id) {
 }
 
 export async function create_sous_recette(data) {
-  console.log("IN THE DATA SENDING");
   const JSONdata = JSON.stringify(data);
 
   // API endpoint where we send form data.

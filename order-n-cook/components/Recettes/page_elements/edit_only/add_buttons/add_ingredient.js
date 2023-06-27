@@ -114,8 +114,7 @@ const AddIngredient = ({
       );
       return null;
     }
-    console.log("CREATION DATA");
-    console.log(ingredient_creation_data);
+
     const response = await create_ingredient_request(ingredient_creation_data);
     if (response.status == 201) {
       const result = await response.json();
@@ -257,8 +256,6 @@ const AddIngredient = ({
     event.preventDefault();
 
     const assembledData = await assembleDataObject(event.target);
-    console.log("TOTAL DATA");
-    console.log(assembledData);
     if (assembledData) {
       const response = await create_new_recette_ingredient(assembledData);
       if (response.status == 201) {
@@ -392,8 +389,6 @@ const AddIngredient = ({
                         value={selectedIngredient}
                         onChange={(data) => {
                           setSelectedIngredient(data);
-                          console.log("SELECTED");
-                          console.log(selectedIngredient);
                         }}
                         required
                       />

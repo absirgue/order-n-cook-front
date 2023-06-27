@@ -21,8 +21,6 @@ export default function RecordOrder({ items }) {
   const [dayError, setDayError] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  console.log("IN RECORD ORDER");
-  console.log(items);
 
   async function record_order() {
     if (orderMean != null && items[0].fournisseur_id) {
@@ -66,8 +64,6 @@ export default function RecordOrder({ items }) {
           'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!'
         );
         for (let i = 0; i < items.length; i++) {
-          console.log("DELETING ITEM");
-          console.log(items[i]);
           dispatch(removeFromCart(items[i].id));
         }
       } else {
@@ -81,8 +77,6 @@ export default function RecordOrder({ items }) {
     setModalOpen(false);
   }
   // Use a ternary operator to only fetch the data when the ID isn't undefined
-  console.log("ITEMS");
-  console.log(items);
   const { data: fournisseur_data, error } = useSWR(
     `http://127.0.0.1:8000/api/fournisseur/order_data/${items[0].fournisseur_id}/`,
     fetcher
@@ -102,7 +96,6 @@ export default function RecordOrder({ items }) {
       <Button
         className="btn btn-primary"
         onClick={() => {
-          console.log("CLICKED");
           setModalOpen(!modalOpen);
         }}
       >
@@ -233,7 +226,6 @@ export default function RecordOrder({ items }) {
                 onChange={(event) => {
                   const date = new Date(event.target.value);
                   const dayOfTheWeek = date.getDay();
-                  console.log("DAY OF THE WEEK:" + dayOfTheWeek);
                   if (
                     (dayOfTheWeek == 1 && fournisseur_data.delivers_monday) ||
                     (dayOfTheWeek == 2 && fournisseur_data.delivers_tuesday) ||
