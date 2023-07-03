@@ -35,6 +35,22 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
     return { value: item, label: item.name };
   });
 
+  async function downloadPDFFromAPIAnswer(response) {
+    const result = await response.blob();
+    const url = window.URL.createObjectURL(result);
+    const link = document.createElement("a");
+    link.href = url;
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = dd + "/" + mm + "/" + yyyy;
+    link.setAttribute("download", `[Avoir]${today}.pdf`);
+    document.body.append(link);
+    link.click();
+  }
+
   async function recordAvoir() {
     const unvalid_items = itemsOfAvoir.filter(
       (item) => item.quantity == 0 || item.reason == ""
@@ -56,6 +72,7 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
         const response = await createAvoir(data, commande.id);
         if (response.status == 201) {
           alert("L'avoir a bien été créé et envoyé à votre fournisseur.");
+          await downloadPDFFromAPIAnswer(response);
           closeModal();
         } else {
           alert(

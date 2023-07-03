@@ -4,16 +4,59 @@ import React from "react";
 // reactstrap components
 import { Button } from "reactstrap";
 import Modal from "react-bootstrap/Modal";
-import CreateAvoir from "./create_avoir";
+import axios from "axios";
 import InvoiceManualInput from "./invoice_manual_input";
+import AiAidedInput from "./invoice_ai_aided_input";
+
 function ReceiveInvoice({ commande }) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [aiData, setAiData] = React.useState(null);
   const [manualInput, setManualInput] = React.useState(false);
+  const [aiAidedInput, setAiAidedInput] = React.useState(false);
+
+  function closeModal() {
+    setManualInput(null);
+    setAiAidedInput(null);
+    setSelectedFile(null);
+    setModalOpen(false);
+  }
+
+  async function aiFileAnalysis(e) {
+    e.preventDefault();
+    if (selectedFile) {
+      console.log(this.state);
+      let form_data = new FormData();
+      form_data.append("file", selectedFile, selectedFile.name);
+      let url = `http://127.0.0.1:8000/api/receive_invoice/${commande.id}/`;
+      axios
+        .post(url, form_data, {
+          headers: {
+            "content-type": "multipart/form-data",
+            // "content-disposition": "attachment; filename=upload.jpg",
+          },
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            console.log(res.data);
+            setAiAidedInput(true);
+            setAiData(res.data);
+          } else {
+            alert(
+              "Une erreur est survenue lors de la lecture automatique de votre facture, merci de réessayer ou de renseigner les informations manuellement. Si ce problème persiste, merci de contacter le service technique."
+            );
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      alert(
+        "Aucun fichier n'a été sélectionné. Veuillez en sélectionner un pour débuter l'analyse ou renseigner les détails de la facture manuellement."
+      );
+    }
+  }
 
   // On file select (from the pop up)
   const onFileChange = (event) => {
-    // Update the state
     setSelectedFile(event.target.files[0]);
   };
 
@@ -28,7 +71,7 @@ function ReceiveInvoice({ commande }) {
       <Modal
         size="lg"
         show={modalOpen}
-        onHide={() => setModalOpen(false)}
+        onHide={closeModal}
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
@@ -40,8 +83,12 @@ function ReceiveInvoice({ commande }) {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {manualInput ? (
-            <InvoiceManualInput commande={commande}></InvoiceManualInput>
+          {manualInput || aiAidedInput ? (
+            aiAidedInput ? (
+              <AiAidedInput commande={commande} aiData={aiData}></AiAidedInput>
+            ) : (
+              <InvoiceManualInput commande={commande}></InvoiceManualInput>
+            )
           ) : (
             <div className="col-12 d-flex flex-column justify-content-center">
               <p
@@ -52,7 +99,10 @@ function ReceiveInvoice({ commande }) {
               </p>
               <div className="col-12 d-flex flex-row justify-content-center align-items-center">
                 <input type="file" onChange={onFileChange} />
-                <Button className="btn btn-primary mt-1">
+                <Button
+                  className="btn btn-primary mt-1"
+                  onClick={aiFileAnalysis}
+                >
                   Lancer l'Analyse
                 </Button>
               </div>
@@ -70,7 +120,7 @@ function ReceiveInvoice({ commande }) {
         </Modal.Body>
         <Modal.Footer>
           <div className="col-12 d-flex flex-row justify-content-end">
-            <Button onClick={() => setModalOpen(false)}>Annuler</Button>
+            <Button onClick={closeModal}>Annuler</Button>
           </div>
         </Modal.Footer>
       </Modal>

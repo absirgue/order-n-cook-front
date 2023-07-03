@@ -22,6 +22,25 @@ export default function RecordOrder({ items }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  async function downloadPDFFromAPIAnswer(response, fournisseur_name) {
+    const result = await response.blob();
+    const url = window.URL.createObjectURL(result);
+    const link = document.createElement("a");
+    link.href = url;
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = dd + "/" + mm + "/" + yyyy;
+    link.setAttribute(
+      "download",
+      `[Bon de Commande]${fournisseur_name}-${today}.pdf`
+    );
+    document.body.append(link);
+    link.click();
+  }
+
   async function record_order() {
     if (orderMean != null && items[0].fournisseur_id) {
       if (dayError != null) {
@@ -63,6 +82,7 @@ export default function RecordOrder({ items }) {
         alert(
           'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!'
         );
+        await downloadPDFFromAPIAnswer(response, items[0].fournisseur_name);
         for (let i = 0; i < items.length; i++) {
           dispatch(removeFromCart(items[i].id));
         }

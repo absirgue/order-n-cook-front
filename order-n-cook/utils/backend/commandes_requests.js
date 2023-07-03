@@ -6,6 +6,7 @@ export async function create_commande(data) {
 
   // Form the request for sending data to the server.
   const options = {
+    responseType: "arraybuffer",
     // The method is POST because we are sending data.
     method: "POST",
     // Tell the server we're sending JSON.
