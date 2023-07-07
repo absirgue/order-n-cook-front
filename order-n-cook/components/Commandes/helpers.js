@@ -92,5 +92,5 @@ export async function send_invoice_data(
   // Send the form data to our forms API on Vercel and get a response.
   const response = await fetch(endpoint, options);
 
-  return response;
+  return response.status === 200;
 }

@@ -3,7 +3,7 @@ import { Button } from "reactstrap";
 import InvoiceInputHeader from "./invoice_input_header";
 import { send_invoice_data } from "./helpers";
 
-function InvoiceManualInput({ commande }) {
+function InvoiceManualInput({ commande, closeModal }) {
   const [showDetails, setShowDetails] = useState(false);
   const [itemsOfInvoice, setItemsOfInvoice] = useState(
     commande.items.map((item) => {
@@ -28,6 +28,9 @@ function InvoiceManualInput({ commande }) {
       let items = itemsOfInvoice;
       items = items.map((item) => {
         console.log(item);
+        if (Array.isArray(item.unit_quantity)) {
+          item.unit_quantity = item.unit_quantity[0];
+        }
         return {
           id: item.id,
           unit_price: item.unit_price ? item.unit_price.answer : null,
@@ -36,7 +39,7 @@ function InvoiceManualInput({ commande }) {
           unit: item.unit,
         };
       });
-      send_invoice_data(
+      const sending_was_successful = send_invoice_data(
         commande.id,
         invoiceNbValue,
         invoiceDate,
@@ -44,6 +47,14 @@ function InvoiceManualInput({ commande }) {
         taxAmount,
         items
       );
+      if (sending_was_successful) {
+        alert("La facture a bien été enregistrée. Merci.");
+        closeModal();
+      } else {
+        alert(
+          "Une erreur est survenue. Merci de vérifier la validité des valeurs renseignées (notamment la date de la facture qui ne peut pas être dans le passé) et de réessayer. Sinon, contactez le service technique."
+        );
+      }
     } else {
       alert(
         "Merci de renseigner le numéro de la facture ainsi que sa date et que le montant total HT facturé pour cette commande."

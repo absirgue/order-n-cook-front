@@ -70,8 +70,12 @@ function CreateAvoir({ commande, closeModal = () => {} }) {
         )
       ) {
         const response = await createAvoir(data, commande.id);
-        if (response.status == 201) {
-          alert("L'avoir a bien été créé et envoyé à votre fournisseur.");
+        if (response.status == 201 || response.status == 202) {
+          const rest_of_sentence =
+            response.status == 201
+              ? "et envoyé à votre fournisseur."
+              : "mais n'a pas pu être envoyé à votre fournisseur. \n\nATTENTION: il vous faut communiquer cette demande d'avoir à votre fournisseur par vous-même!";
+          alert("L'avoir a bien été créé " + rest_of_sentence);
           await downloadPDFFromAPIAnswer(response);
           closeModal();
         } else {

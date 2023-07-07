@@ -76,6 +76,7 @@ export default function RecordOrder({ items }) {
         .reduce((total, item) => (total += item.quantity * item.price), 0)
         .toFixed(2);
       data["expected_delivery_date"] = deliveryDate;
+      data["email_note"] = emailNote;
 
       const response = await create_commande(data);
       if (response.status == 201) {

@@ -397,7 +397,7 @@ export default function FicheContact({ fournisseurData }) {
                   Annuler
                 </Button>
 
-                <button className="btn btn-primary" type="submit">
+                <button className="ms-3 btn btn-primary" type="submit">
                   Enregistrer
                 </button>
               </div>

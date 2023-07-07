@@ -85,9 +85,16 @@ function ReceiveInvoice({ commande }) {
         <Modal.Body>
           {manualInput || aiAidedInput ? (
             aiAidedInput ? (
-              <AiAidedInput commande={commande} aiData={aiData}></AiAidedInput>
+              <AiAidedInput
+                commande={commande}
+                aiData={aiData}
+                closeModal={() => setModalOpen(false)}
+              ></AiAidedInput>
             ) : (
-              <InvoiceManualInput commande={commande}></InvoiceManualInput>
+              <InvoiceManualInput
+                commande={commande}
+                closeModal={() => setModalOpen(false)}
+              ></InvoiceManualInput>
             )
           ) : (
             <div className="col-12 d-flex flex-column justify-content-center">

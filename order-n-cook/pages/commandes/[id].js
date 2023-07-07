@@ -230,15 +230,20 @@ export default function FournisseurDetailPage() {
                 </p>
               ) : null}
               {commandeWasClosed(commande) ? (
-                <p>
-                  Numéro de facture: {commande.order_details.identifier} |{" "}
+                <p style={{ color: "grey" }}>
+                  Numéro de facture:{" "}
+                  <span style={{ color: "black", fontWeight: 500 }}>
+                    {commande.invoice_details.number}
+                  </span>{" "}
+                  |{" "}
                   <span style={{ fontSize: "14px" }}>
-                    {" "}
-                    {commande.order_details.means
-                      ? commande.order_details.means
-                      : null}
-                    {commande.order_details.date
-                      ? " le " + commande.order_details.date
+                    {commande.invoice_details.date
+                      ? " le " + commande.invoice_details.date
+                      : null}{" "}
+                    {commande.invoice_details.total_taxes
+                      ? "avec " +
+                        commande.invoice_details.total_taxes +
+                        "€ de taxes"
                       : null}
                   </span>
                 </p>

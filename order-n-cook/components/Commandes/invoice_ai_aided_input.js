@@ -7,7 +7,7 @@ import {
 } from "./helpers";
 import InvoiceInputHeader from "./invoice_input_header";
 
-function AiAidedInput({ commande, aiData }) {
+function AiAidedInput({ commande, aiData, closeModal }) {
   const [showDetails, setShowDetails] = useState(aiData != null);
   const [AiGeneratedItems, setAiGeneratedItems] = useState(aiData.items);
   const [invoiceAmount, setInvoiceAmount] = useState(
@@ -55,7 +55,7 @@ function AiAidedInput({ commande, aiData }) {
           };
         }
       });
-      send_invoice_data(
+      const sending_was_successful = send_invoice_data(
         commande.id,
         invoiceNbValue,
         invoiceDate,
@@ -63,6 +63,14 @@ function AiAidedInput({ commande, aiData }) {
         taxAmount,
         items
       );
+      if (sending_was_successful) {
+        alert("La facture a bien été enregistrée. Merci.");
+        closeModal();
+      } else {
+        alert(
+          "Une erreur est survenue. Merci de vérifier la validité des valeurs renseignées (notamment la date de la facture qui ne peut pas être dans le passé) et de réessayer. Sinon, contactez le service technique."
+        );
+      }
     } else {
       alert(
         "Merci de renseigner le numéro de la facture ainsi que sa date et que le montant total HT facturé pour cette commande."
