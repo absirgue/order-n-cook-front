@@ -2,6 +2,8 @@ import Link from "next/link";
 import { withRouter } from "next/router";
 import classNames from "classnames";
 import { Container, Navbar, Nav } from "react-bootstrap";
+import Image from "next/image";
+import logo from "../../images/logo.png";
 
 export const NavLink = (props) => {
   let className = classNames({
@@ -20,7 +22,14 @@ const Header = ({ router: { pathname } }) => (
     <div id="wrapper-navbar">
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand>Order n'Cook</Navbar.Brand>
+          <Navbar.Brand>
+            <Image
+              src={logo}
+              alt="Logo d'Order n'Cook"
+              height={50}
+              width={134}
+            />
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <div className="col-12 d-flex flez-row justify-content-between">

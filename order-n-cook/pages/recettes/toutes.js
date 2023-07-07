@@ -245,12 +245,6 @@ export default function AllRecettesDisplay({ allRecettesData }) {
     <div className="col-12 col-lg-10">
       <div className={"d-flex flex-column m-1 mb-2"}>
         <div className={"col-12 d-flex flex-row justify-content-end mb-1"}>
-          <Link
-            href="google.com"
-            style={{ textDecoration: "none", fontSize: "24px" }}
-          >
-            ⚙️
-          </Link>
           <CreateNewRecetteButton></CreateNewRecetteButton>
         </div>
         <div className={"d-flex flex-row"}>

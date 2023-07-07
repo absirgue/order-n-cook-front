@@ -163,10 +163,10 @@ const RecetteTools = ({ recette }) => {
             <DropdownMenu>
               <DropdownItem
                 onClick={() => {
-                  alert("imprimer");
+                  alert("Cette fonctionnalité n'est pas encore implémentée.");
                 }}
               >
-                Imprimer
+                Télécharger
               </DropdownItem>
               <DropdownItem
                 onClick={() => {
