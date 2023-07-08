@@ -30,11 +30,11 @@ export const getStaticPaths = async () => {
 
 export default function SingleIngredientPage({ ingredientData }) {
   return (
-    <div className="col-12">
+    <div className="col-12 pt-2">
       <div className={"d-flex flex-row m-1 mb-2 justify-content-center"}>
         <div className={"d-flex flex-row justify-content-center col-12"}>
           <div className={"col-3 d-flex flex-row justify-content-center"}>
-            THIS DIV WILL CONTAIN A PICTURE
+            {/* THIS DIV WILL CONTAIN A PICTURE */}
           </div>
           <div
             className={

@@ -3,6 +3,7 @@ import RecetteIngredientListItem from "./list_items/recette_ingredient_list_item
 import AddIngredient from "./edit_only/add_buttons/add_ingredient";
 import AddSection from "./edit_only/add_buttons/add_section";
 import { useState } from "react";
+import { strUcFirst } from "./helper_functions/helpers";
 
 /**
  * Shows all the ingredients of the Recette on display.
@@ -99,16 +100,28 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
       >
         Ingrédients
       </p>
+      {is_edit ? (
+        <AddSection
+          unused_sections={allUnusedSections}
+          sectionrecette={recette}
+          set_section_options={setAllSections}
+          all_sections={allSections}
+          newly_imported_sections={newlyImportedSections}
+          set_newly_imported_sections={setNewlyImportedSections}
+          recette={recette}
+          setAllUnusedSections={setAllUnusedSections}
+        ></AddSection>
+      ) : null}
       {grouped_ingredient_data.length > 0 ? (
         <div className="col-12">
           {grouped_ingredient_data.map((group) => (
             <div
-              className="d-flex flex-column"
+              className="d-flex flex-column mb-3"
               key={group.section_id ? group.section_id : "sans_section"}
             >
               {group.section_name ? (
                 <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
-                  {group.section_name}
+                  {strUcFirst(group.section_name)}
                 </h5>
               ) : null}
 
@@ -132,6 +145,7 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                   section_id={group.section_id}
                   sans_section={group.section_id ? false : true}
                   recette={recette}
+                  section_name={group.section_name}
                 ></AddIngredient>
               ) : null}
             </div>
@@ -168,33 +182,17 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                 className="d-flex flex-column col-12"
                 key={section.id ? section.id : "sans_section"}
               >
-                <p
-                  style={{
-                    background: "#CDCCCD",
-                    paddingLeft: "10px",
-                  }}
-                >
+                <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
                   {section.name}
-                </p>
+                </h5>
                 <AddIngredient
                   section_id={section.number}
+                  section_name={section.name}
                   recette={recette}
                 ></AddIngredient>
               </div>
             ))
         : null}
-      {is_edit ? (
-        <AddSection
-          unused_sections={allUnusedSections}
-          sectionrecette={recette}
-          set_section_options={setAllSections}
-          all_sections={allSections}
-          newly_imported_sections={newlyImportedSections}
-          set_newly_imported_sections={setNewlyImportedSections}
-          recette={recette}
-          setAllUnusedSections={setAllUnusedSections}
-        ></AddSection>
-      ) : null}
     </div>
   );
 };

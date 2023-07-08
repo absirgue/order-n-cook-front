@@ -60,8 +60,11 @@ const CreateNewFournisseurButton = () => {
 
   return (
     <>
-      <Button className="emoji_button" onClick={() => setModalOpen(!modalOpen)}>
-        ➕
+      <Button
+        className="btn btn-secondary"
+        onClick={() => setModalOpen(!modalOpen)}
+      >
+        + Créer
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">

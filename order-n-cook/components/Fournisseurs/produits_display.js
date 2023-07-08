@@ -74,6 +74,12 @@ export default function FournisseurProduitsDisplay({
     )
   );
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      filteredSearch();
+    }
+  };
+
   // Retrieve all the different labels to display in the filtered search.
   const all_different_labels = Array.from(
     new Set(
@@ -264,8 +270,9 @@ export default function FournisseurProduitsDisplay({
               height: "38px",
               marginBottom: "0px",
             }}
-            placeholder="Par nom de produit"
+            placeholder="Rechercher par nom de produit"
             onChange={(e) => setSearchString(e.target.value)}
+            onKeyDown={handleKeyDown}
             value={searchString}
             type="search"
           />
@@ -275,7 +282,7 @@ export default function FournisseurProduitsDisplay({
             className="col-2"
             onClick={() => filteredSearch()}
           >
-            🔎
+            Valider
           </Button>
         </div>
 

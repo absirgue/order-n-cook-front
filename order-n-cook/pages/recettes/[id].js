@@ -90,6 +90,7 @@ export default function RecetteDetailsPage() {
               </div>
             ) : null}
           </div>
+
           <div className="col-1 d-flex flex-row justify-content-end align-items-start">
             <Link
               className="emoji_button"
@@ -100,6 +101,14 @@ export default function RecetteDetailsPage() {
             </Link>
           </div>
         </div>
+        <div
+          className="col-11 mb-3"
+          style={{
+            borderBottom: "solid",
+            borderColor: "#c2c1d1",
+            borderBottomWidth: "1px",
+          }}
+        ></div>
 
         <GeneralRecetteDataDisplay
           recette={recette}
@@ -127,12 +136,6 @@ export default function RecetteDetailsPage() {
               fournisseurs.
             </p>
           )}
-          <p className="mt-2 col-12" style={{ fontSize: "14px" }}>
-            <span style={{ textDecoration: "underline" }}>IMPORTANT:</span> les
-            coûts matières et prix de vente indiqués sont calculés à base des
-            prix au kilogramme les plus faibles pour chaque produit à travers
-            l'ensemble de vos fournisseurs.
-          </p>
         </div>
       </div>
     </div>

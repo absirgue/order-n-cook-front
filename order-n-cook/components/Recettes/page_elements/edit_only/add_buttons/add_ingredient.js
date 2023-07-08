@@ -20,6 +20,7 @@ This includes the eventuality of creating a new Ingredient and a new conversion_
 const AddIngredient = ({
   recette,
   section_id,
+  section_name,
   sans_section = false,
   all_ingredients_with_units,
 }) => {
@@ -281,16 +282,18 @@ const AddIngredient = ({
   return (
     <>
       <Button
-        className="btn btn-primary mb-2"
+        className="btn btn-primary col-12"
         onClick={() => setModalOpen(!modalOpen)}
       >
-        Ajouter un ingrédient{sans_section ? null : " à cette section"}
+        + Ajouter un ingrédient
+        {sans_section ? null : ` à "` + section_name + `"`}
       </Button>
+
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
           <h5 className="modal-title">
             {createNewIngredient
-              ? "Créer un nouvel ingrédient et l'ajouter à la section"
+              ? "Créer un nouvel ingrédient et l'ajouter"
               : "Ajouter un ingrédient"}
             {!createNewIngredient && sans_section ? null : " à cette section"}
           </h5>
@@ -448,7 +451,7 @@ const AddIngredient = ({
                             Unité
                           </option>
                         ) : createNewIngredient ? (
-                          <option disabled value="kilogramme">
+                          <option disabled selected value="kilogramme">
                             Kilogramme
                           </option>
                         ) : (

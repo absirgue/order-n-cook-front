@@ -4,6 +4,7 @@ import Select from "react-select";
 import { sendCreateNewRecette } from "../../../utils/backend/recette_requests";
 import { get_all_existing_recette_categories } from "../../../utils/backend/recette_components_requests";
 import AddRecetteTagButton from "./edit_only/add_buttons/add_recette_tag_button";
+
 function redirectToNewlyCreatedRecette(new_recette_id) {
   window.location.href = "/recettes/" + new_recette_id;
 }
@@ -59,8 +60,11 @@ const CreateNewRecetteButton = () => {
 
   return (
     <>
-      <Button className="emoji_button" onClick={() => setModalOpen(!modalOpen)}>
-        ➕
+      <Button
+        className="btn btn-secondary"
+        onClick={() => setModalOpen(!modalOpen)}
+      >
+        + Créer
       </Button>
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
@@ -99,12 +103,9 @@ const CreateNewRecetteButton = () => {
                   required
                 />
                 <div className="col-12 d-flex flew-row justify-content-between align-items-baseline mb-2">
-                  <label style={{ marginRight: "7px" }} htmlFor="categories">
-                    Catégorie:
-                  </label>
                   <Select
                     id="categories"
-                    className="flex-grow-1"
+                    className="flex-grow-1 col-10 me-2"
                     options={category_options}
                     placeholder="Sélectionner une catégorie"
                     isSearchable={true}

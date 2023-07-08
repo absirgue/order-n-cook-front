@@ -1,6 +1,8 @@
 import RecetteListItem from "../../components/Recettes/page_elements/list_items/recette_list_item";
 import React, { useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter, Table } from "reactstrap";
+import { Button } from "reactstrap";
+import Modal from "react-bootstrap/Modal";
+
 import Link from "next/link";
 import CreateNewRecetteButton from "../../components/Recettes/page_elements/create_new_recette_modal";
 
@@ -258,39 +260,79 @@ export default function AllRecettesDisplay({ allRecettesData }) {
             >
               🔎 Recherche avancée
             </Button>
-            <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
+            <Modal
+              size="lg"
+              show={modalOpen}
+              onHide={() => setModalOpen(!modalOpen)}
+              aria-labelledby="example-modal-sizes-title-lg"
+            >
               <div className=" modal-header d-flex flex-row justify-content-end">
                 <Button type="button" onClick={() => setModalOpen(!modalOpen)}>
                   Fermer
                 </Button>
               </div>
-              <ModalBody>
+              <Modal.Body>
                 <form className={"d-flex flex-column"}>
-                  <div className={"d-flex flex-row"}>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline  col-12 jusitfy-content-center mb-1"
+                    }
+                  >
+                    <p
+                      style={{ fontSize: 15, textAlign: "end" }}
+                      className="col-4"
+                    >
+                      Par nom:
+                    </p>
                     <input
-                      className={"col-9 ps-2 mb-4"}
+                      className={"btn col-7 ps-2 ms-2"}
                       style={{
-                        borderRadius: 10,
-                        borderColor: "#6C757D",
-                        height: "38px",
+                        color: "black",
+                        textAlign: "start",
+                        borderTopWidth: 0,
+                        borderRightWidth: 0,
+                        borderLeftWidth: 0,
+                        borderRadius: 0,
+                        borderBottom: "solid",
+                        borderColor: "#c2c1d1",
+                        borderBottomWidth: "1px",
                       }}
-                      placeholder="Par nom de recette"
+                      id="search_bar_recettes"
+                      placeholder="Nom de la recette"
                       onChange={(e) => setSearchString(e.target.value)}
                       value={searchString}
                       type="search"
                     />
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    <p style={{ fontSize: 15 }}>Par catégorie:</p>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline  col-12 jusitfy-content-center mb-1"
+                    }
+                  >
+                    <p
+                      style={{ fontSize: 15, textAlign: "end" }}
+                      className="col-4"
+                    >
+                      Par catégorie:
+                    </p>
                     <select
-                      className={"btn col-6 ps-1 ms-2"}
-                      style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                      className={"btn col-7 ps-1 ms-2"}
+                      style={{
+                        textAlign: "start",
+                        borderTopWidth: 0,
+                        borderRightWidth: 0,
+                        borderLeftWidth: 0,
+                        borderRadius: 0,
+                        borderBottom: "solid",
+                        borderColor: "#c2c1d1",
+                        borderBottomWidth: "1px",
+                      }}
                       onChange={(e) => {
                         setCategoryFilter(e.target.value);
                       }}
                       value={categoryFilter}
                     >
-                      <option disabled value="default">
+                      <option disabled value="default" color="grey">
                         Nom de la catégorie
                       </option>
                       {all_different_categories.map((category) => (
@@ -300,11 +342,29 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       ))}
                     </select>
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    <p style={{ fontSize: 15 }}>Par goût:</p>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline  col-12 jusitfy-content-center mb-1"
+                    }
+                  >
+                    <p
+                      style={{ fontSize: 15, textAlign: "end" }}
+                      className="col-4"
+                    >
+                      Par goût:
+                    </p>
                     <select
-                      className={"btn col-6 ps-1 ms-2"}
-                      style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                      className={"btn col-7 ps-1 ms-2"}
+                      style={{
+                        textAlign: "start",
+                        borderTopWidth: 0,
+                        borderRightWidth: 0,
+                        borderLeftWidth: 0,
+                        borderRadius: 0,
+                        borderBottom: "solid",
+                        borderColor: "#c2c1d1",
+                        borderBottomWidth: "1px",
+                      }}
                       onChange={(e) => {
                         setTasteFilter(e.target.value);
                       }}
@@ -318,11 +378,29 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       ))}
                     </select>
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    <p style={{ fontSize: 15 }}>Par mois de saisonnalité:</p>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline col-12 mb-1"
+                    }
+                  >
+                    <p
+                      style={{ fontSize: 15, textAlign: "end" }}
+                      className="col-4"
+                    >
+                      Par mois de saisonnalité:
+                    </p>
                     <select
-                      className={"btn col-6 ps-1 ms-2"}
-                      style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                      className={"btn col-7 ps-1 ms-2"}
+                      style={{
+                        textAlign: "start",
+                        borderTopWidth: 0,
+                        borderRightWidth: 0,
+                        borderLeftWidth: 0,
+                        borderRadius: 0,
+                        borderBottom: "solid",
+                        borderColor: "#c2c1d1",
+                        borderBottomWidth: "1px",
+                      }}
                       onChange={(e) => {
                         setMonthFilter(e.target.value);
                       }}
@@ -336,11 +414,29 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       ))}
                     </select>
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    <p style={{ fontSize: 15 }}>Par genre:</p>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline col-12 mb-1"
+                    }
+                  >
+                    <p
+                      style={{ fontSize: 15, textAlign: "end" }}
+                      className="col-4"
+                    >
+                      Par genre:
+                    </p>
                     <select
-                      className={"btn col-6 ps-1 ms-2"}
-                      style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                      className={"btn col-7 ps-1 ms-2"}
+                      style={{
+                        textAlign: "start",
+                        borderTopWidth: 0,
+                        borderRightWidth: 0,
+                        borderLeftWidth: 0,
+                        borderRadius: 0,
+                        borderBottom: "solid",
+                        borderColor: "#c2c1d1",
+                        borderBottomWidth: "1px",
+                      }}
                       onChange={(e) => {
                         setGenreFilter(e.target.value);
                       }}
@@ -354,60 +450,87 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       ))}
                     </select>
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    {onTheMenuFilter ? (
-                      <input
-                        type="checkbox"
-                        id="example_checkbox"
-                        onChange={(event) => setOnTheMenuFilter(false)}
-                        checked
-                      />
-                    ) : (
-                      <input
-                        type="checkbox"
-                        id="example_checkbox"
-                        onChange={(event) => setOnTheMenuFilter(true)}
-                      />
-                    )}
-                    <p style={{ fontSize: 16, marginLeft: "10px" }}>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline col-12 mt-2 mb-1"
+                    }
+                  >
+                    <div className="col-4 justify-content-end d-flex flex-row">
+                      {onTheMenuFilter ? (
+                        <input
+                          type="checkbox"
+                          id="example_checkbox"
+                          onChange={(event) => setOnTheMenuFilter(false)}
+                          checked
+                        />
+                      ) : (
+                        <input
+                          type="checkbox"
+                          id="example_checkbox"
+                          onChange={(event) => setOnTheMenuFilter(true)}
+                        />
+                      )}
+                    </div>
+                    <p
+                      style={{ fontSize: 16, marginLeft: "10px" }}
+                      className="col-7"
+                    >
                       Recettes à la carte
                     </p>
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    {onNextMenuFilter ? (
-                      <input
-                        type="checkbox"
-                        id="example_checkbox"
-                        onChange={(event) => setOnNextMenuFilter(false)}
-                        checked
-                      />
-                    ) : (
-                      <input
-                        type="checkbox"
-                        id="example_checkbox"
-                        onChange={(event) => setOnNextMenuFilter(true)}
-                      />
-                    )}
-                    <p style={{ fontSize: 16, marginLeft: "10px" }}>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline col-12 mt-2 mb-1"
+                    }
+                  >
+                    <div className="col-4 justify-content-end d-flex flex-row">
+                      {onNextMenuFilter ? (
+                        <input
+                          type="checkbox"
+                          id="example_checkbox"
+                          onChange={(event) => setOnNextMenuFilter(false)}
+                          checked
+                        />
+                      ) : (
+                        <input
+                          type="checkbox"
+                          id="example_checkbox"
+                          onChange={(event) => setOnNextMenuFilter(true)}
+                        />
+                      )}
+                    </div>
+                    <p
+                      style={{ fontSize: 16, marginLeft: "10px" }}
+                      className="col-7"
+                    >
                       Recettes à la prochaine carte
                     </p>
                   </div>
-                  <div className={"d-flex flex-row align-items-baseline"}>
-                    {onNextMenuFilter ? (
-                      <input
-                        type="checkbox"
-                        id="example_checkbox"
-                        onChange={(event) => setToModifyFilter(false)}
-                        checked
-                      />
-                    ) : (
-                      <input
-                        type="checkbox"
-                        id="example_checkbox"
-                        onChange={(event) => setToModifyFilter(true)}
-                      />
-                    )}
-                    <p style={{ fontSize: 16, marginLeft: "10px" }}>
+                  <div
+                    className={
+                      "d-flex flex-row align-items-baseline col-12 mt-2 mb-1"
+                    }
+                  >
+                    <div className="col-4 justify-content-end d-flex flex-row">
+                      {toModifyFilter ? (
+                        <input
+                          type="checkbox"
+                          id="example_checkbox"
+                          onChange={(event) => setToModifyFilter(false)}
+                          checked
+                        />
+                      ) : (
+                        <input
+                          type="checkbox"
+                          id="example_checkbox"
+                          onChange={(event) => setToModifyFilter(true)}
+                        />
+                      )}
+                    </div>
+                    <p
+                      style={{ fontSize: 16, marginLeft: "10px" }}
+                      className="col-7"
+                    >
                       Recettes à modifier
                     </p>
                   </div>
@@ -424,8 +547,8 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                     </button>
                   </div>
                 </form>
-              </ModalBody>
-              <ModalFooter>
+              </Modal.Body>
+              <Modal.Footer>
                 <Button
                   color="primary"
                   type="button"
@@ -434,15 +557,15 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                 >
                   Rechercher
                 </Button>
-              </ModalFooter>
+              </Modal.Footer>
             </Modal>
-            <button
+            {/* <button
               className={"btn"}
               style={{ textDecorationLine: "underline", color: "#6C757D" }}
               onClick={() => showMenu()}
             >
               Afficher la carte
-            </button>
+            </button> */}
           </div>
           <div className={"col-7 d-flex flex-row justify-content-end"}>
             <button

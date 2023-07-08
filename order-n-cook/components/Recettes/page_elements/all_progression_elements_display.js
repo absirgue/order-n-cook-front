@@ -7,6 +7,7 @@ import ChangeSectionButton from "./edit_only/modification_buttons/change_section
 import FlecheHautButton from "./edit_only/modification_buttons/fleche_haut";
 import FlecheBasButton from "./edit_only/modification_buttons/fleche_bas";
 import { useState } from "react";
+import { strUcFirst } from "./helper_functions/helpers";
 
 function get_progression_data_grouped_and_sorted(recette) {
   if (recette.progression_elements && recette.progression_elements.length > 0) {
@@ -168,7 +169,7 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                 >
                   {group.section_name ? (
                     <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
-                      {group.section_name}
+                      {strUcFirst(group.section_name)}
                     </h5>
                   ) : null}
 
@@ -252,7 +253,8 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
           <>
             <div className={"d-flex flex-row justify-content-center col-12"}>
               <i>
-                Aucun ingrédient n'a encore été renseigné pour cette recette.
+                Aucun élément de progression n'a encore été renseigné pour cette
+                recette.
                 {is_edit
                   ? ""
                   : " Modifier la recette pour ajouter des éléments de progression."}

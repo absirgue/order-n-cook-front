@@ -2,7 +2,7 @@ import { useDispatch, ReactReduxContext } from "react-redux";
 import { addToCart } from "../../redux/cart.slice";
 // reactstrap components
 import { Button } from "reactstrap";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useContext } from "react";
 //
 
@@ -10,6 +10,12 @@ export default function PlaceOrder({ produit, closeModal = null }) {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = React.useState(null);
   const { store } = useContext(ReactReduxContext);
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   return (
     <>
@@ -35,9 +41,9 @@ export default function PlaceOrder({ produit, closeModal = null }) {
                   textAlign: "end",
                   width: "100px",
                 }}
-                placeholder={"3"}
                 required
                 onChange={(event) => setQuantity(parseInt(event.target.value))}
+                ref={inputRef}
               ></input>
             </div>
           </div>

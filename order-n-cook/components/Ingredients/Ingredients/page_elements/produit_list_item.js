@@ -15,7 +15,13 @@ const ProductListItem = ({ produit, ingredient }) => {
   return (
     <div
       className="d-flex flex-row justify-content-between align-items-center col-10 mb-2"
-      style={{ overflow: "scroll", marginBottom: "1px" }}
+      style={{
+        overflow: "scroll",
+        marginBottom: "1px",
+        borderBottom: "solid",
+        borderColor: "#c2c1d1",
+        borderWidth: "1px",
+      }}
     >
       <Button
         className="emoji_button"

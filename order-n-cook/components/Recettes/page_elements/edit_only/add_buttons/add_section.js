@@ -104,18 +104,21 @@ const AddSection = ({
 
   return (
     <>
-      <Button
-        className="btn btn-secondary mb-2 col-12"
-        onClick={() => setModalOpen(!modalOpen)}
-      >
-        Ajouter une section
-      </Button>
+      <div className="col-12 d-flex flex-row justify-content-end">
+        <Button
+          className="btn btn-secondary col-3 mt-2"
+          onClick={() => setModalOpen(!modalOpen)}
+        >
+          + Ajouter une section
+        </Button>
+      </div>
+
       <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
         <div className="modal-header">
           <h5 className="modal-title">Ajouter une section</h5>
           <button
             aria-label="Close"
-            className=" close"
+            className="close"
             type="button"
             style={{ backgroundColor: "transparent", border: 0 }}
             onClick={() => {

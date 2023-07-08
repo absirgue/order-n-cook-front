@@ -214,21 +214,35 @@ const GeneralRecetteDataModify = ({ recette }) => {
         onSubmit={updateRecetteGeneralInformation}
       >
         <div className="d-flex flex-row justify-content-between ">
-          <div className="d-flex flex-column justify-content-start col-6 align-items-start">
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="quantity">Quantité:</label>
+          <div className="d-flex flex-column justify-content-start col-6 align-items-start mb-2">
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="quantity"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Quantité:
+              </label>
               <input
                 type="number"
                 id="quantity"
                 name="quantity"
+                className="me-2"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
-                placeholder={recette.quantity ? recette.quantity : 1}
+                placeholder={recette.quantity ? recette.quantity : null}
                 onChange={() => set_new_data_inputted(true)}
                 defaultValue={recette.quantity ? recette.quantity : null}
               ></input>
@@ -236,13 +250,22 @@ const GeneralRecetteDataModify = ({ recette }) => {
                 type="text"
                 id="unit"
                 name="unit"
-                placeholder={recette.unit ? recette.unit : "kilogramme"}
+                placeholder={recette.unit ? recette.unit : null}
                 defaultValue={recette.unit ? recette.unit : null}
                 onChange={() => set_new_data_inputted(true)}
                 style={{
                   backgroundColor: "transparent",
-                  border: 1,
-                  width: "100%",
+                  border: 0,
+                  borderBottom: "5px",
+                  textAlign: "start",
+                  width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
               ></input>
             </div>
@@ -255,50 +278,84 @@ const GeneralRecetteDataModify = ({ recette }) => {
               </div>
             ) : null}
 
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="duration">Temps de cuisson (en minutes):</label>
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="duration"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Temps de cuisson (en minutes):
+              </label>
               <input
                 type="number"
                 id="duration"
                 name="duration"
                 defaultValue={recette.duration ? recette.duration : null}
                 onChange={() => set_new_data_inputted(true)}
+                className="col-5"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
-                placeholder={recette.duration ? recette.duration : 35}
+                placeholder={recette.duration ? recette.duration : null}
               ></input>
             </div>
             {durationError ? (
               <p className="form-error">{durationError}</p>
             ) : null}
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="temperature">Température:</label>
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="temperature"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Température:
+              </label>
               <input
                 type="number"
                 id="temperature"
                 name="temperature"
                 defaultValue={recette.temperature ? recette.temperature : null}
                 onChange={() => set_new_data_inputted(true)}
+                className="col-5"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
-                placeholder={recette.temperature ? recette.temperature : 180}
+                placeholder={recette.temperature ? recette.temperature : null}
               ></input>
             </div>
             {temperatureError ? (
               <p className="form-error">{temperatureError}</p>
             ) : null}
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="sous_vide_pression">Sous vide - pression:</label>
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="sous_vide_pression"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Sous vide - pression:
+              </label>
               <input
                 type="number"
                 id="sous_vide_pression"
@@ -307,15 +364,23 @@ const GeneralRecetteDataModify = ({ recette }) => {
                   recette.sous_vide_pression ? recette.sous_vide_pression : null
                 }
                 onChange={() => set_new_data_inputted(true)}
+                className="col-5"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
                 placeholder={
-                  recette.sous_vide_pression ? recette.sous_vide_pression : 2
+                  recette.sous_vide_pression ? recette.sous_vide_pression : null
                 }
               ></input>
             </div>
@@ -323,8 +388,14 @@ const GeneralRecetteDataModify = ({ recette }) => {
             {sousVidePressionError ? (
               <p className="form-error">{sousVidePressionError}</p>
             ) : null}
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="sous_vide_soudure">Sous vide - soudure:</label>
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="sous_vide_soudure"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Sous vide - soudure:
+              </label>
               <input
                 type="number"
                 id="sous_vide_soudure"
@@ -333,15 +404,23 @@ const GeneralRecetteDataModify = ({ recette }) => {
                   recette.sous_vide_soudure ? recette.sous_vide_soudure : null
                 }
                 onChange={() => set_new_data_inputted(true)}
+                className="col-5"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
                 placeholder={
-                  recette.sous_vide_soudure ? recette.sous_vide_soudure : 1
+                  recette.sous_vide_soudure ? recette.sous_vide_soudure : null
                 }
               ></input>
             </div>
@@ -350,54 +429,97 @@ const GeneralRecetteDataModify = ({ recette }) => {
             ) : null}
           </div>
           <div className="d-flex flex-column justify-content-start col-6 align-items-end">
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="tva">Taux de TVA:</label>
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="tva"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Taux de TVA:
+              </label>
               <input
                 type="number"
                 id="tva"
                 name="tva"
                 onChange={() => set_new_data_inputted(true)}
+                className="col-5"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
-                placeholder={recette.tva ? recette.tva : "10"}
+                placeholder={recette.tva ? recette.tva : null}
                 defaultValue={recette.tva ? recette.tva : null}
               ></input>
             </div>
             {tvaError ? <p className="form-error">{tvaError}</p> : null}
-            <div className="d-flex flex-row justify-content-start">
-              <label htmlFor="coefficient">Coefficient:</label>
+            <div className="d-flex flex-row justify-content-start col-12">
+              <label
+                htmlFor="coefficient"
+                className="col-6 me-2"
+                style={{ textAlign: "end" }}
+              >
+                Coefficient:
+              </label>
               <input
                 type="number"
                 id="coefficient"
                 step="any"
                 name="coefficient"
                 onChange={() => set_new_data_inputted(true)}
+                className="col-5"
                 style={{
                   backgroundColor: "transparent",
                   border: 0,
                   borderBottom: "5px",
-                  textAlign: "end",
+                  textAlign: "start",
                   width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
                 }}
-                placeholder={recette.coefficient ? recette.coefficient : 3.2}
+                placeholder={recette.coefficient ? recette.coefficient : null}
                 defaultValue={recette.coefficient ? recette.coefficient : null}
               ></input>
             </div>
             {coeffError ? <p className="form-error">{coeffError}</p> : null}
             <div
               className={
-                "d-flex flex-row align-items-baseline justify-content-end col-12"
+                "d-flex flex-row align-items-baseline justify-content-start col-12 mt-1"
               }
             >
-              <p>Début de saison:</p>
+              <p className="col-6 me-2" style={{ textAlign: "end" }}>
+                Début de saison:
+              </p>
               <select
-                className={"btn col-6 ps-1 ms-2"}
-                style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                className="col-5 ps-1"
+                style={{
+                  backgroundColor: "transparent",
+                  border: 0,
+                  borderBottom: "5px",
+                  textAlign: "start",
+                  width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
+                }}
                 name="season_start"
                 defaultValue={
                   recette_season_start_month ? recette_season_start_month : null
@@ -407,7 +529,9 @@ const GeneralRecetteDataModify = ({ recette }) => {
                 }}
                 required
               >
-                <option disabled>Choisir un mois</option>
+                {recette_season_start_month ? null : (
+                  <option selected disabled></option>
+                )}
                 {MONTHS.map((month) => (
                   <option value={month}>{month}</option>
                 ))}
@@ -418,13 +542,28 @@ const GeneralRecetteDataModify = ({ recette }) => {
             ) : null}
             <div
               className={
-                "d-flex flex-row align-items-baseline justify-content-end col-12"
+                "d-flex flex-row align-items-baseline justify-content-start col-12"
               }
             >
-              <p>Fin de saison:</p>
+              <p className="col-6 me-2" style={{ textAlign: "end" }}>
+                Fin de saison:
+              </p>
               <select
-                className={"btn col-6 ps-1 ms-2"}
-                style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                className="col-5 ps-1"
+                style={{
+                  backgroundColor: "transparent",
+                  border: 0,
+                  borderBottom: "5px",
+                  textAlign: "start",
+                  width: "100px",
+                  borderTopWidth: 0,
+                  borderRightWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRadius: 0,
+                  borderBottom: "solid",
+                  borderColor: "#c2c1d1",
+                  borderBottomWidth: "1px",
+                }}
                 name="season_end"
                 defaultValue={
                   recette_season_end_month ? recette_season_end_month : null
@@ -434,9 +573,11 @@ const GeneralRecetteDataModify = ({ recette }) => {
                 }}
                 required
               >
-                <option disabled>Choisir un mois</option>
-                {MONTHS.map((taste) => (
-                  <option value={taste}>{taste}</option>
+                {recette_season_end_month ? null : (
+                  <option selected disabled></option>
+                )}
+                {MONTHS.map((month) => (
+                  <option value={month}>{month}</option>
                 ))}
               </select>
             </div>
@@ -446,13 +587,17 @@ const GeneralRecetteDataModify = ({ recette }) => {
           </div>
         </div>
         <div className="col-12 d-flex flew-row justify-content-between align-items-baseline mb-2">
-          <div className="col-12 d-flex flew-row justify-content-between align-items-baseline">
-            <label style={{ marginRight: "7px" }} htmlFor="categories">
+          <div className="col-11 d-flex flew-row justify-content-start align-items-baseline">
+            <label
+              style={{ marginRight: "7px", textAlign: "end" }}
+              className="col-2"
+              htmlFor="categories"
+            >
               Catégorie:
             </label>
             <Select
               id="categories"
-              className="flex-grow-1"
+              className="col-9 flex-grow-1"
               options={category_options}
               placeholder="Sélectionner une catégorie pour cette recette"
               isSearchable={true}
@@ -463,19 +608,23 @@ const GeneralRecetteDataModify = ({ recette }) => {
               }}
             />
           </div>
-          <div className="col-1 d-flex flex-row justify-content-center">
+          <div className="col-1 ms-2 d-flex flex-row justify-content-end">
             <AddRecetteTagButton is_category={true}></AddRecetteTagButton>
           </div>
         </div>
 
         {categoryError ? <p className="form-error">{categoryError}</p> : null}
         <div className="col-12 d-flex flew-row justify-content-between align-items-baseline mb-2">
-          <div className="col-12 d-flex flew-row justify-content-between align-items-baseline">
-            <label style={{ marginRight: "7px" }} htmlFor="tastes">
+          <div className="col-11 d-flex flew-row justify-content-start align-items-baseline">
+            <label
+              style={{ marginRight: "7px", textAlign: "end" }}
+              className="col-2"
+              htmlFor="tastes"
+            >
               Goûts:
             </label>
             <Select
-              className="flex-grow-1"
+              className="col-9 flex-grow-1"
               options={taste_options}
               placeholder="Ajouter des goûts à la recette"
               isSearchable={true}
@@ -487,18 +636,22 @@ const GeneralRecetteDataModify = ({ recette }) => {
               isMulti
             />
           </div>
-          <div className="col-1 d-flex flex-row justify-content-center">
+          <div className="col-1 ms-2  d-flex flex-row justify-content-end">
             <AddRecetteTagButton is_taste={true}></AddRecetteTagButton>
           </div>
         </div>
         {tasteError ? <p className="form-error">{tasteError}</p> : null}
-        <div className="col-12 d-flex flew-row justify-content-between align-items-baseline mb-2">
-          <div className="col-12 d-flex flew-row justify-content-between align-items-baseline">
-            <label style={{ marginRight: "7px" }} htmlFor="tastes">
+        <div className="col-12 d-flex flew-row justify-content-start align-items-baseline mb-2">
+          <div className="col-11 d-flex flew-row justify-content-start align-items-baseline">
+            <label
+              style={{ marginRight: "7px", textAlign: "end" }}
+              className="col-2"
+              htmlFor="tastes"
+            >
               Genres:
             </label>
             <Select
-              className="flex-grow-1"
+              className="col-9 flex-grow-1"
               options={genre_options}
               placeholder="Ajouter des genres à la recette"
               isSearchable={true}
@@ -510,7 +663,7 @@ const GeneralRecetteDataModify = ({ recette }) => {
               isMulti
             />
           </div>
-          <div className="col-1 d-flex flex-row justify-content-center">
+          <div className="col-1 ms-2 d-flex flex-row justify-content-end">
             <AddRecetteTagButton is_genre={true}></AddRecetteTagButton>
           </div>
         </div>
