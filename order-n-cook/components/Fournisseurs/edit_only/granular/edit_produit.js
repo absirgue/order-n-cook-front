@@ -180,20 +180,20 @@ const EditProduit = ({ produit, fournisseur_id }) => {
           <ModalBody>
             <div className="d-flex flex-column">
               <div className="d-flex flex-column justify-content-start col-12 align-items-start">
-                <div className="d-flex flex-row justify-content-start align-items-baseline">
-                  <label htmlFor="quantity">Quantité:</label>
+                <div className="d-flex flex-row justify-content-start align-items-center col-12">
+                  <label
+                    className="col-3 me-2"
+                    style={{ textAlign: "end" }}
+                    htmlFor="quantity"
+                  >
+                    Quantité:
+                  </label>
                   <input
+                    className="col-3 me-2"
                     type="number"
                     id="quantity"
                     name="quantity"
                     step="any"
-                    style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "end",
-                      width: "100px",
-                    }}
                     defaultValue={
                       produit.real_unit.quantity
                         ? produit.real_unit.quantity.toString()
@@ -203,9 +203,9 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                   ></input>
 
                   <select
-                    className={"btn col-6 ps-1 ms-2"}
+                    className={"col-5"}
                     name="unit"
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                    style={{ paddingBottom: 0 }}
                     value={selectedUnit}
                     onChange={(e) => {
                       setSelectedUnit(e.target.value);
@@ -225,27 +225,47 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                       : null}
                   </select>
                 </div>
-                <div className="d-flex flex-row justify-content-start align-items-baseline mt-1">
-                  <label htmlFor="price">Prix unitaire:</label>
+                <div className="d-flex flex-row justify-content-start align-items-center mt-2 col-12">
+                  <label
+                    className="col-3 me-2"
+                    style={{ textAlign: "end" }}
+                    htmlFor="price"
+                  >
+                    Prix unitaire:
+                  </label>
                   <input
+                    className="col-3 me-2"
                     type="number"
                     id="price"
                     name="price"
                     step="any"
-                    style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "end",
-                      width: "100px",
-                    }}
                     defaultValue={produit.price ? produit.price : null}
-                    placeholder={produit.price ? null : 2.21}
                   ></input>
                   <label htmlFor="price">€</label>
                 </div>
+                <div className="d-flex flex-row justify-content-start align-items-center mt-1 col-12">
+                  <label
+                    className="col-3 me-2"
+                    style={{ textAlign: "end" }}
+                    htmlFor="geographic_location"
+                  >
+                    Origine géographique:
+                  </label>
+                  <input
+                    type="text"
+                    className="col-6"
+                    id="geographic_location"
+                    name="geographic_location"
+                    step="any"
+                    defaultValue={
+                      produit.geographic_location
+                        ? produit.geographic_location
+                        : null
+                    }
+                  ></input>
+                </div>
                 <Select
-                  className="flex-grow-1 col-12"
+                  className="flex-grow-1 col-12 mt-2"
                   options={label_options}
                   placeholder="Ajouter des labels"
                   isSearchable={true}
@@ -255,34 +275,6 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                   }}
                   isMulti
                 />
-                <div className="d-flex flex-row justify-content-start align-items-baseline mt-1 col-12">
-                  <label htmlFor="geographic_location">
-                    Origine géographique:
-                  </label>
-                  <input
-                    type="text"
-                    id="geographic_location"
-                    name="geographic_location"
-                    step="any"
-                    style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "start",
-                      width: "60%",
-                    }}
-                    defaultValue={
-                      produit.geographic_location
-                        ? produit.geographic_location
-                        : null
-                    }
-                    placeholder={
-                      produit.geographic_location
-                        ? null
-                        : "ex: Roquefort, Aveyron"
-                    }
-                  ></input>
-                </div>
               </div>
               {error.quantity ? (
                 <p className="form-error">{error.quantity}</p>

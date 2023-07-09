@@ -122,6 +122,7 @@ const AddRecetteTagButton = ({
               />
             </div>
           </div>
+          {nameError ? <p style={{ color: "red" }}>{nameError}</p> : null}
           <div className="col-12 d-flex flex-row justify-content-end mt-2"></div>
         </ModalBody>
         <ModalFooter>

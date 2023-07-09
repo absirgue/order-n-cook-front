@@ -179,10 +179,24 @@ export default function EditFournisseurDetailPage() {
           <div className={"col-3 d-flex flex-row justify-content-end"}>
             {" "}
             <Button
-              className="btn"
-              color="white"
-              style={{ color: "#0D6EFD", textDecoration: "underline" }}
-              onClick={deleteFournisseur}
+              className="btn btn-danger"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Voulez-vous supprimer le fournisseur " +
+                      fournisseurData.name +
+                      " ?"
+                  )
+                )
+                  if (
+                    window.confirm(
+                      "La suppression sera définitive. Confirmez-vous vouloir supprimer le fournisseur " +
+                        fournisseurData.name +
+                        " ?"
+                    )
+                  )
+                    deleteFournisseur;
+              }}
             >
               Supprimer
             </Button>

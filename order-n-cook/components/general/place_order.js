@@ -34,13 +34,6 @@ export default function PlaceOrder({ produit, closeModal = null }) {
                 id="quantity"
                 name="quantity"
                 step="any"
-                style={{
-                  backgroundColor: "transparent",
-                  border: 0,
-                  borderBottom: "5px",
-                  textAlign: "end",
-                  width: "100px",
-                }}
                 required
                 onChange={(event) => setQuantity(parseInt(event.target.value))}
                 ref={inputRef}

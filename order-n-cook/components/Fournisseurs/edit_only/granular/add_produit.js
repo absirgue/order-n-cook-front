@@ -1,4 +1,6 @@
-import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
+import { Button } from "reactstrap";
+import Modal from "react-bootstrap/Modal";
+
 import { useState } from "react";
 import Select from "react-select";
 import { create_new_produit } from "../../../../utils/backend/fournisseur_components_requests";
@@ -281,7 +283,12 @@ export default function AddProduit({ fournisseur_id }) {
       <Button className="btn-primary" onClick={() => setModalOpen(true)}>
         Ajouter un produit
       </Button>
-      <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
+      <Modal
+        size="lg"
+        show={modalOpen}
+        onHide={() => setModalOpen(!modalOpen)}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
         <div className="modal-header">
           <h5 className="modal-title">
             {createNewIngredient
@@ -305,7 +312,7 @@ export default function AddProduit({ fournisseur_id }) {
           style={{ fontSize: "14px", marginBottom: "0px" }}
           onSubmit={handleSubmit}
         >
-          <ModalBody>
+          <Modal.Body>
             <div className="d-flex flex-column">
               <div className="d-flex flex-column justify-content-start col-12 align-items-start">
                 <div className="d-flex flex-row justify-content-between col-12">
@@ -313,14 +320,13 @@ export default function AddProduit({ fournisseur_id }) {
                     <div className="d-flex flex-column justify-content-center col-12 mb-3">
                       <div className="d-flex flex-row justify-content-between col-12 mb-1">
                         <input
-                          className="col-11 mb-2"
+                          className="col-10 me-2"
                           type="text"
                           id="ingredient_name"
                           name="ingredient_name"
                           style={{
                             backgroundColor: "transparent",
                             borderWidth: "1px",
-                            borderRadius: 5,
                             textAlign: "start",
                             height: "40px",
                             paddingLeft: "5px",
@@ -331,21 +337,20 @@ export default function AddProduit({ fournisseur_id }) {
                         <Button
                           type="button"
                           className="btn btn-primary"
-                          style={{ aspectRatio: "1/1" }}
                           title="Revenir à la liste d'ingrédients"
                           onClick={() => {
                             resetSelections();
                             setCreateNewIngredient(false);
                           }}
                         >
-                          {"<"}
+                          {"< Retour"}
                         </Button>
                       </div>
                       <div className="d-flex flex-row justify-content-between col-12">
                         {" "}
                         <Select
                           id="categories"
-                          className="flex-grow-1 me-1"
+                          className="flex-grow-1 me-1 mt-2"
                           options={category_options}
                           placeholder="Catégorie"
                           isSearchable={true}
@@ -356,7 +361,7 @@ export default function AddProduit({ fournisseur_id }) {
                         />
                         <Select
                           id="sous_categories"
-                          className="flex-grow-1 ms-1"
+                          className="flex-grow-1 ms-1 mt-2"
                           options={sous_category_options}
                           placeholder="Sous catégorie"
                           isSearchable={true}
@@ -374,9 +379,9 @@ export default function AddProduit({ fournisseur_id }) {
                       ) : null}
                     </div>
                   ) : (
-                    <>
+                    <div className="col-12 d-flex flex-row justify-content-between">
                       <Select
-                        className="col-11 mb-2"
+                        className="col-10 me-2"
                         options={ingredient_options}
                         placeholder="Choisir un ingrédient"
                         isSearchable={true}
@@ -398,47 +403,45 @@ export default function AddProduit({ fournisseur_id }) {
                       <Button
                         type="button"
                         className="btn btn-primary"
-                        style={{ aspectRatio: "1/1" }}
                         title="Créer un nouvel ingrédient"
                         onClick={() => {
                           resetSelections();
                           setCreateNewIngredient(true);
                         }}
                       >
-                        {"+"}
+                        {"+ Créer"}
                       </Button>
-                    </>
+                    </div>
                   )}
                 </div>
                 {error.ingredient ? (
                   <p className="form-error">{error.ingredient}</p>
                 ) : null}
-                <div className="d-flex flex-row justify-content-start align-items-baseline">
-                  <label htmlFor="quantity">Quantité:</label>
+                <div className="d-flex flex-row justify-content-start align-items-baseline col-12 mt-2 mb-2">
+                  <label
+                    className="col-2 me-2"
+                    style={{ textAlign: "end" }}
+                    htmlFor="quantity"
+                  >
+                    Quantité:
+                  </label>
                   <input
+                    className="col-2"
                     type="number"
                     id="quantity"
                     name="quantity"
                     step="any"
                     style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "end",
-                      width: "100px",
+                      textAlign: "start",
                     }}
-                    placeholder={"3"}
                     required
                   />
                   {createNewUnit ? null : (
-                    <div class="d-flex flex-row col-8 ps-1 ms-2 mt-1">
+                    <div class="d-flex flex-row col-7 ms-2">
                       <select
-                        className={"btn col-10 me-1 flex-grow-1"}
+                        className={"col-8 flex-grow-1"}
                         name="unit"
-                        style={{
-                          backgroundColor: "#CDCCCD",
-                          textAlign: "start",
-                        }}
+                        style={{ paddingBottom: 0 }}
                         defaultValue="default"
                         onChange={(e) => {
                           setSelectedUnit(e.target.value);
@@ -466,14 +469,13 @@ export default function AddProduit({ fournisseur_id }) {
                       </select>
                       <Button
                         type="button"
-                        className="btn btn-primary col-2 flex-grow-1"
-                        style={{ aspectRatio: "1/1", maxHeight: "50px" }}
+                        className="btn btn-primary ms-2"
                         title="Créer une unité"
                         onClick={() => {
                           setCreateNewUnit(!createNewUnit);
                         }}
                       >
-                        {"+"}
+                        {"+ Créer"}
                       </Button>
                     </div>
                   )}
@@ -483,10 +485,24 @@ export default function AddProduit({ fournisseur_id }) {
                 ) : null}
                 {error.unit ? <p className="form-error">{error.unit}</p> : null}
                 {createNewUnit ? (
-                  <div className="d-flex flex-row col-10 justify-content-between mt-3 align-items-center">
-                    <div className="d-flex flex-column col-11 justify-content-start ">
-                      <div className="d-flex flex-row col-12  align-items-baseline">
-                        <label htmlFor="new_unit_conversion">
+                  <div
+                    className="d-flex flex-row col-12 justify-content-between align-items-center pt-3 pb-3"
+                    style={{
+                      border: "solid",
+                      borderTopWidth: "1px",
+                      borderBottomWidth: "1px",
+                      borderRight: 0,
+                      borderLeft: 0,
+                      borderColor: "#c2c1d1",
+                    }}
+                  >
+                    <div className="d-flex flex-column col-10 justify-content-start ">
+                      <div className="d-flex flex-row col-7  align-items-baseline">
+                        <label
+                          className="col-4 me-2"
+                          style={{ textAlign: "end" }}
+                          htmlFor="new_unit_conversion"
+                        >
                           Nom de l'unité:
                         </label>
                         <input
@@ -496,18 +512,18 @@ export default function AddProduit({ fournisseur_id }) {
                           className="ms-1 flex-grow-1"
                           style={{
                             backgroundColor: "transparent",
-                            border: 0,
-                            borderBottom: "5px",
-                            textAlign: "start",
-                            width: "100px",
                           }}
                           placeholder={"ex: cuillère à soupe"}
                           required
                         />
                       </div>
-                      <div className="d-flex flex-row col-12 align-items-baseline">
-                        <label htmlFor="new_unit_conversion">
-                          conversion_unit en kg:
+                      <div className="d-flex flex-row col-7 align-items-baseline mt-2">
+                        <label
+                          className="col-4 me-2"
+                          style={{ textAlign: "end" }}
+                          htmlFor="new_unit_conversion"
+                        >
+                          Conversion en kg:
                         </label>
                         <input
                           type="number"
@@ -515,13 +531,6 @@ export default function AddProduit({ fournisseur_id }) {
                           name="new_unit_conversion"
                           className="ms-1 flex-grow-1"
                           step="any"
-                          style={{
-                            backgroundColor: "transparent",
-                            border: 0,
-                            borderBottom: "5px",
-                            textAlign: "start",
-                            width: "100px",
-                          }}
                           placeholder={'ex: pour "gramme", 0.001'}
                           required
                         />
@@ -529,27 +538,30 @@ export default function AddProduit({ fournisseur_id }) {
                     </div>
                     <Button
                       type="button"
-                      className="btn btn-primary col-2"
-                      style={{ aspectRatio: "1/1", maxHeight: "50px" }}
+                      className="btn btn-primary"
                       title="Retourner à la liste d'unités"
                       onClick={() => {
                         setCreateNewUnit(!createNewUnit);
                       }}
                     >
-                      {"<"}
+                      {"< Retour"}
                     </Button>
                   </div>
                 ) : null}
                 <div className="d-flex flex-row justify-content-start mt-2 col-12 flex-grow-1 align-items-center">
-                  <label htmlFor="price">Prix unitaire:</label>
+                  <label
+                    htmlFor="price"
+                    className="col-2 me-2"
+                    style={{ textAlign: "end" }}
+                  >
+                    Prix unitaire:
+                  </label>
                   <input
+                    className="col-2"
                     id="price"
                     type="number"
                     step="any"
                     name="price"
-                    className="ms-1"
-                    style={{ maxWidth: "100px", textAlign: "end", border: 0 }}
-                    placeholder={2.2}
                     required
                   />
                   <label htmlFor="price">€</label>
@@ -564,7 +576,9 @@ export default function AddProduit({ fournisseur_id }) {
                   marginTop: "25px",
                 }}
               >
-                <p style={{ color: "grey" }}>Optionnel:</p>
+                <i style={{ color: "grey" }} className="pb-1">
+                  Optionnel:
+                </i>
                 <Select
                   className="flex-grow-1"
                   options={label_options}
@@ -579,8 +593,8 @@ export default function AddProduit({ fournisseur_id }) {
                 {error.labels ? (
                   <p className="form-error">{error.labels}</p>
                 ) : null}
-                <div className="d-flex flex-row justify-content-start align-items-baseline mt-1 col-12">
-                  <label htmlFor="geographic_location">
+                <div className="d-flex flex-row justify-content-start align-items-center mt-2 col-12">
+                  <label className="me-2" htmlFor="geographic_location">
                     Origine géographique:
                   </label>
                   <input
@@ -589,10 +603,6 @@ export default function AddProduit({ fournisseur_id }) {
                     name="geographic_location"
                     step="any"
                     style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "start",
                       width: "60%",
                     }}
                     placeholder={"Roquefort, Aveyron"}
@@ -603,8 +613,8 @@ export default function AddProduit({ fournisseur_id }) {
                 ) : null}
               </div>
             </div>
-          </ModalBody>
-          <ModalFooter>
+          </Modal.Body>
+          <Modal.Footer>
             <button className="btn btn-primary" type="submit">
               Enregistrer
             </button>
@@ -618,7 +628,7 @@ export default function AddProduit({ fournisseur_id }) {
             >
               Fermer
             </Button>
-          </ModalFooter>
+          </Modal.Footer>
         </form>
       </Modal>
     </>

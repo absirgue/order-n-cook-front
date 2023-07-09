@@ -78,7 +78,7 @@ const ProgressionElementEditHelper = ({ progression_element, recette_id }) => {
         isOpen={openEditModal}
       >
         <div className="modal-header">
-          <h5 className="modal-title">Modifier la progression</h5>
+          <h5 className="modal-title">Modifier l'élément de progression</h5>
           <button
             aria-label="Close"
             className=" close"
@@ -105,6 +105,7 @@ const ProgressionElementEditHelper = ({ progression_element, recette_id }) => {
                   rows="5"
                   cols="150"
                   className="col-9"
+                  style={{ borderColor: "#c2c1d1" }}
                 >
                   {progression_element.text}
                 </textarea>

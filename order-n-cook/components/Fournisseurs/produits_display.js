@@ -1,6 +1,8 @@
 import IngredientListItem from "../Ingredients/Ingredients/page_elements/ingredients_list_item";
 import React, { useState, useEffect } from "react";
-import { Button, Modal, ModalBody, ModalFooter, Table } from "reactstrap";
+import { Button, Table } from "reactstrap";
+import Modal from "react-bootstrap/Modal";
+
 import ProduitListItem from "./produit_list_item";
 const MONTHS = [
   "Janvier",
@@ -263,10 +265,8 @@ export default function FournisseurProduitsDisplay({
           }
         >
           <input
-            className={"col-9 ps-2 me-2 flex-grow-1"}
+            className={"col-9 ps-2 me-2 flex-grow-1 search_bar"}
             style={{
-              borderRadius: 10,
-              borderColor: "#6C757D",
               height: "38px",
               marginBottom: "0px",
             }}
@@ -311,19 +311,32 @@ export default function FournisseurProduitsDisplay({
           >
             Filtrer
           </Button>
-          <Modal toggle={() => setModalOpen(!modalOpen)} isOpen={modalOpen}>
+          <Modal
+            size="lg"
+            show={modalOpen}
+            onHide={() => setModalOpen(!modalOpen)}
+            aria-labelledby="example-modal-sizes-title-lg"
+          >
             <div className=" modal-header d-flex flex-row justify-content-end">
               <Button type="button" onClick={() => setModalOpen(!modalOpen)}>
                 Fermer
               </Button>
             </div>
-            <ModalBody>
+            <Modal.Body>
               <form className={"d-flex flex-column"}>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par catégorie:</p>
+                <div
+                  className={
+                    "d-flex flex-row align-items-center col-12 justify-content-center mb-1"
+                  }
+                >
+                  <p
+                    style={{ fontSize: 15, textAlign: "end" }}
+                    className="col-4"
+                  >
+                    Par catégorie:
+                  </p>
                   <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                    className={"col-7 ps-1 ms-2"}
                     onChange={(e) => {
                       setCategoryFilter(e.target.value);
                     }}
@@ -337,11 +350,19 @@ export default function FournisseurProduitsDisplay({
                     ))}
                   </select>
                 </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par allergène:</p>
+                <div
+                  className={
+                    "d-flex flex-row align-items-center col-12 justify-content-center mb-1"
+                  }
+                >
+                  <p
+                    style={{ fontSize: 15, textAlign: "end" }}
+                    className="col-4"
+                  >
+                    Par allergène:
+                  </p>
                   <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                    className={"col-7 ps-1 ms-2"}
                     onChange={(e) => {
                       setAllergeneFilter(e.target.value);
                     }}
@@ -355,11 +376,19 @@ export default function FournisseurProduitsDisplay({
                     ))}
                   </select>
                 </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par label:</p>
+                <div
+                  className={
+                    "d-flex flex-row align-items-center col-12 justify-content-center mb-1"
+                  }
+                >
+                  <p
+                    style={{ fontSize: 15, textAlign: "end" }}
+                    className="col-4"
+                  >
+                    Par label:
+                  </p>
                   <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                    className={"col-7 ps-1 ms-2"}
                     onChange={(e) => {
                       setLabelFilter(e.target.value);
                     }}
@@ -373,11 +402,19 @@ export default function FournisseurProduitsDisplay({
                     ))}
                   </select>
                 </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par sous catégorie:</p>
+                <div
+                  className={
+                    "d-flex flex-row align-items-center col-12 justify-content-center mb-1"
+                  }
+                >
+                  <p
+                    style={{ fontSize: 15, textAlign: "end" }}
+                    className="col-4"
+                  >
+                    Par sous catégorie:
+                  </p>
                   <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                    className={"col-7 ps-1 ms-2"}
                     onChange={(e) => {
                       setsousCategoryFilter(e.target.value);
                     }}
@@ -391,11 +428,19 @@ export default function FournisseurProduitsDisplay({
                     ))}
                   </select>
                 </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  <p style={{ fontSize: 15 }}>Par mois de saisonnalité:</p>
+                <div
+                  className={
+                    "d-flex flex-row align-items-center col-12 justify-content-center mb-1"
+                  }
+                >
+                  <p
+                    style={{ fontSize: 15, textAlign: "end" }}
+                    className="col-4"
+                  >
+                    Par mois de saisonnalité:
+                  </p>
                   <select
-                    className={"btn col-6 ps-1 ms-2"}
-                    style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
+                    className={"col-7 ps-1 ms-2"}
                     onChange={(e) => {
                       setMonthFilter(e.target.value);
                     }}
@@ -409,22 +454,31 @@ export default function FournisseurProduitsDisplay({
                     ))}
                   </select>
                 </div>
-                <div className={"d-flex flex-row align-items-baseline"}>
-                  {onlySeasonFilter ? (
-                    <input
-                      type="checkbox"
-                      id="example_checkbox"
-                      onChange={(event) => setOnlySeasonFilter(false)}
-                      checked
-                    />
-                  ) : (
-                    <input
-                      type="checkbox"
-                      id="example_checkbox"
-                      onChange={(event) => setOnlySeasonFilter(true)}
-                    />
-                  )}
-                  <p style={{ fontSize: 16, marginLeft: "10px" }}>
+                <div
+                  className={
+                    "d-flex flex-row align-items-center col-12 justify-content-center mb-1"
+                  }
+                >
+                  <div className="col-4 justify-content-end d-flex flex-row">
+                    {onlySeasonFilter ? (
+                      <input
+                        type="checkbox"
+                        id="example_checkbox"
+                        onChange={(event) => setOnlySeasonFilter(false)}
+                        checked
+                      />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        id="example_checkbox"
+                        onChange={(event) => setOnlySeasonFilter(true)}
+                      />
+                    )}
+                  </div>
+                  <p
+                    style={{ fontSize: 15, textAlign: "start" }}
+                    className="col-7 ms-2"
+                  >
                     Seulement les produits actuellement de saison
                   </p>
                 </div>
@@ -442,8 +496,8 @@ export default function FournisseurProduitsDisplay({
                   </button>
                 </div>
               </form>
-            </ModalBody>
-            <ModalFooter>
+            </Modal.Body>
+            <Modal.Footer>
               <Button
                 color="primary"
                 type="button"
@@ -452,7 +506,7 @@ export default function FournisseurProduitsDisplay({
               >
                 Rechercher
               </Button>
-            </ModalFooter>
+            </Modal.Footer>
           </Modal>
 
           <select

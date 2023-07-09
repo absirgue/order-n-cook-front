@@ -285,7 +285,7 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                       Par nom:
                     </p>
                     <input
-                      className={"btn col-7 ps-2 ms-2"}
+                      className={"btn col-7 ps-2 ms-2 black_placeholder"}
                       style={{
                         color: "black",
                         textAlign: "start",
@@ -297,7 +297,6 @@ export default function AllRecettesDisplay({ allRecettesData }) {
                         borderColor: "#c2c1d1",
                         borderBottomWidth: "1px",
                       }}
-                      id="search_bar_recettes"
                       placeholder="Nom de la recette"
                       onChange={(e) => setSearchString(e.target.value)}
                       value={searchString}

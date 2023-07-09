@@ -86,11 +86,38 @@ p {
 .input-fiche-contact {
     margin-left: 10px;
     padding-left: 7px;
-    border: 0;
-    background-color: #f3f0f0;
-    border-radius: 5px;
 }
 
-#search_bar_recettes::placeholder {
+.black_placeholder::placeholder {
     color: black;
   }
+
+input {
+    border-bottom: solid;
+    border-color: #c2c1d1;
+    border-bottom-width: 1px;
+    border-top:0;
+    border-left:0;
+    border-right: 0;
+    border-radius:0px;
+}
+
+select {
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    border-bottom: solid;
+    border-color: #c2c1d1;
+    border-bottom-width: 1px;
+    background-color: transparent;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+}
+
+.search_bar {
+    border-width: 1px;
+    border-color: #c2c1d1;
+    border-radius: 10px;
+    border:solid
+}

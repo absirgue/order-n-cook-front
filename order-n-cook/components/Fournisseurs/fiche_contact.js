@@ -55,15 +55,16 @@ export default function FicheContact({ fournisseurData }) {
 
   const PHONE_FIELDS = [
     {
-      name: "principal_phone_number",
-      tag: "Téléphone principal",
-      default_value: fournisseurData.principal_phone_number,
-    },
-    {
       name: "ordering_phone_number",
       tag: "Téléphone de commande",
       default_value: fournisseurData.ordering_phone_number,
     },
+    {
+      name: "principal_phone_number",
+      tag: "Téléphone principal",
+      default_value: fournisseurData.principal_phone_number,
+    },
+
     {
       name: "accounting_phone_number",
       tag: "Téléphone comptabilité",
@@ -73,14 +74,14 @@ export default function FicheContact({ fournisseurData }) {
 
   const EMAIL_FIELDS = [
     {
-      name: "principal_email",
-      tag: "Email principal",
-      default_value: fournisseurData.principal_email,
-    },
-    {
       name: "ordering_email",
       tag: "Email de commande",
       default_value: fournisseurData.ordering_email,
+    },
+    {
+      name: "principal_email",
+      tag: "Email principal",
+      default_value: fournisseurData.principal_email,
     },
     {
       name: "cc_sales_email",
@@ -178,16 +179,22 @@ export default function FicheContact({ fournisseurData }) {
                   <div className="col-6 ps-1 d-flex flex-column">
                     {EMAIL_FIELDS.map((field) => (
                       <>
-                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1">
-                          <label htmlFor={field.name}>{field.tag}:</label>
+                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1 align-items-center">
+                          <label
+                            className="col-5"
+                            style={{ textAlign: "end" }}
+                            htmlFor={field.name}
+                          >
+                            {field.tag}:
+                          </label>
                           <input
                             type="text"
+                            className="ms-1 col-7 input-fiche-contact"
                             id={field.name}
                             name={field.name}
                             defaultValue={
                               field.default_value ? field.default_value : null
                             }
-                            className="input-fiche-contact"
                             placeholder={
                               field.default_value
                                 ? field.default_value
@@ -203,8 +210,14 @@ export default function FicheContact({ fournisseurData }) {
                     <div className="mb-3"></div>
                     {PHONE_FIELDS.map((field) => (
                       <>
-                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1">
-                          <label htmlFor={field.name}>{field.tag}:</label>
+                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1 align-items-center">
+                          <label
+                            className="col-5"
+                            style={{ textAlign: "end" }}
+                            htmlFor={field.name}
+                          >
+                            {field.tag}:
+                          </label>
                           <input
                             type="text"
                             id={field.name}
@@ -212,7 +225,7 @@ export default function FicheContact({ fournisseurData }) {
                             defaultValue={
                               field.default_value ? field.default_value : null
                             }
-                            className="input-fiche-contact"
+                            className="ms-1 col-7 input-fiche-contact"
                             placeholder={
                               field.default_value
                                 ? field.default_value
@@ -229,8 +242,14 @@ export default function FicheContact({ fournisseurData }) {
                   <div className="col-6 pe-1 d-flex flex-column">
                     {ADRESSE_FIELDS.map((field) => (
                       <>
-                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1">
-                          <label htmlFor={field.name}>{field.tag}:</label>
+                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1 align-items-center">
+                          <label
+                            className="col-5"
+                            style={{ textAlign: "end" }}
+                            htmlFor={field.name}
+                          >
+                            {field.tag}:
+                          </label>
                           <input
                             type="text"
                             id={field.name}
@@ -238,7 +257,7 @@ export default function FicheContact({ fournisseurData }) {
                             defaultValue={
                               field.default_value ? field.default_value : null
                             }
-                            className="input-fiche-contact"
+                            className="ms-1 col-7 input-fiche-contact"
                             placeholder={
                               field.default_value
                                 ? field.default_value
@@ -254,8 +273,14 @@ export default function FicheContact({ fournisseurData }) {
                     <div className="mb-3"></div>
                     {CLIENT_CODE_FIELD.map((field) => (
                       <>
-                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1">
-                          <label htmlFor={field.name}>{field.tag}:</label>
+                        <div className="d-flex flex-row justify-content-start flex-wrap-1 col-12 mb-1 align-items-center">
+                          <label
+                            className="col-5"
+                            style={{ textAlign: "end" }}
+                            htmlFor={field.name}
+                          >
+                            {field.tag}:
+                          </label>
                           <input
                             type="text"
                             id={field.name}
@@ -263,7 +288,7 @@ export default function FicheContact({ fournisseurData }) {
                             defaultValue={
                               field.default_value ? field.default_value : null
                             }
-                            className="input-fiche-contact"
+                            className="ms-1 col-7 input-fiche-contact"
                             placeholder={
                               field.default_value
                                 ? field.default_value
@@ -280,12 +305,24 @@ export default function FicheContact({ fournisseurData }) {
                 </>
               ) : (
                 <>
-                  <div className="col-6 ps-1 d-flex flex-column">
+                  <div className="col-7 ps-1 d-flex flex-column">
                     {fournisseurData.ordering_email ? (
-                      <p style={{ fontWeight: 600 }}>
-                        <span className="greyed-label">Email commande: </span>
-                        {fournisseurData.ordering_email}
-                      </p>
+                      <div
+                        className="col-12 d-flex flex-row justify-content-center"
+                        style={{ fontWeight: 600 }}
+                      >
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          {" "}
+                          Email commande:
+                        </p>
+                        <p className="greyed-label col-7 ms-1">
+                          {" "}
+                          {fournisseurData.ordering_email}
+                        </p>
+                      </div>
                     ) : fournisseurData.ordering_phone_number ? (
                       <p className="red-label">
                         Email de commande non su, les commandes ne pourront pas
@@ -298,88 +335,180 @@ export default function FicheContact({ fournisseurData }) {
                       </p>
                     )}
                     {fournisseurData.principal_email ? (
-                      <p>
-                        <span className="greyed-label">Email principal: </span>
-                        {fournisseurData.principal_email}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          {" "}
+                          Email principal:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.principal_email}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.cc_sales_email ? (
-                      <p>
-                        <span className="greyed-label">
-                          En copie commercial:{" "}
-                        </span>
-                        {fournisseurData.cc_sales_email}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          En copie commercial:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.cc_sales_email}
+                        </p>
+                      </div>
                     ) : null}
                     <div className="mb-3"></div>
                     {fournisseurData.ordering_phone_number ? (
-                      <p style={{ fontWeight: 600 }}>
-                        <span className="greyed-label">
-                          Téléphone commande:{" "}
-                        </span>
-                        {fournisseurData.ordering_phone_number}
-                      </p>
+                      <div
+                        className="col-12 d-flex flex-row justify-content-center align-items-center"
+                        style={{ fontWeight: 600 }}
+                      >
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Téléphone commande:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.ordering_phone_number}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.principal_phone_number ? (
-                      <p>
-                        <span className="greyed-label">
-                          Téléphone principal:{" "}
-                        </span>
-                        {fournisseurData.principal_phone_number}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Téléphone principal:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.principal_phone_number}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.accounting_phone_number ? (
-                      <p>
-                        <span className="greyed-label">
-                          Téléphone comptabilité:{" "}
-                        </span>
-                        {fournisseurData.accounting_phone_number}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Téléphone comptabilité:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.accounting_phone_number}
+                        </p>
+                      </div>
                     ) : null}
                   </div>
-                  <div className="col-6 pe-1 d-flex flex-column">
+                  <div className="col-5 pe-1 d-flex flex-column">
                     {fournisseurData.address ? (
-                      <p>
-                        <span className="greyed-label">Adresse: </span>
-                        {fournisseurData.address}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Adresse:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.address}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.address_line_2 ? (
-                      <p>
-                        <span className="greyed-label">Adresse (suite): </span>
-                        {fournisseurData.address_line_2}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Adresse (suite):
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.address_line_2}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.postal_code ? (
-                      <p>
-                        <span className="greyed-label">Code postal: </span>
-                        {fournisseurData.postal_code}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Code postal:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.postal_code}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.city ? (
-                      <p>
-                        <span className="greyed-label">Ville: </span>
-                        {fournisseurData.city}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Ville:
+                        </p>
+                        <p className=" col-7 ms-1"> {fournisseurData.city}</p>
+                      </div>
                     ) : null}
                     {fournisseurData.department ? (
-                      <p>
-                        <span className="greyed-label">Département: </span>
-                        {fournisseurData.department}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Département:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.department}
+                        </p>
+                      </div>
                     ) : null}
                     {fournisseurData.country ? (
-                      <p>
-                        <span className="greyed-label">Pays: </span>
-                        {fournisseurData.country}
-                      </p>
+                      <div className="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Pays:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.country}
+                        </p>
+                      </div>
                     ) : null}
-                    <div className="mb-3"></div>
+
                     {fournisseurData.client_code ? (
-                      <p style={{ fontWeight: 600 }}>
-                        <span className="greyed-label">Code client: </span>
-                        {fournisseurData.client_code}
-                      </p>
+                      <div
+                        className="mt-3 col-12 d-flex flex-row justify-content-center align-items-center"
+                        style={{ fontWeight: 600 }}
+                      >
+                        <p
+                          className="greyed-label col-5"
+                          style={{ textAlign: "end" }}
+                        >
+                          Code client:
+                        </p>
+                        <p className=" col-7 ms-1">
+                          {" "}
+                          {fournisseurData.client_code}
+                        </p>
+                      </div>
                     ) : null}
                   </div>
                 </>

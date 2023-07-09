@@ -144,21 +144,19 @@ const AddSousRecette = ({ recette_id }) => {
                 {sousRecetteError ? (
                   <p className="form-error">{sousRecetteError}</p>
                 ) : null}
-                <div className="d-flex flex-row justify-content-start align-items-baseline">
-                  <label htmlFor="quantity">Quantité:</label>
+                <div className="d-flex flex-row justify-content-start align-items-baseline col-12">
+                  <label
+                    className="col-3 me-2"
+                    htmlFor="quantity"
+                    style={{ textAlign: "end" }}
+                  >
+                    Quantité:
+                  </label>
                   <input
                     type="number"
                     id="quantity"
                     name="quantity"
                     step="any"
-                    style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "end",
-                      width: "100px",
-                    }}
-                    placeholder={"3"}
                     required
                   />
                   {selectedRecette ? (
@@ -171,7 +169,11 @@ const AddSousRecette = ({ recette_id }) => {
                   <p className="form-error">{quantityError}</p>
                 ) : null}
                 <div className="d-flex flex-row justify-content-start mt-2">
-                  <label htmlFor="note" className="col-3">
+                  <label
+                    className="col-3 me-2"
+                    style={{ textAlign: "end" }}
+                    htmlFor="note"
+                  >
                     Note (optionnel):
                   </label>
                   <textarea
@@ -180,7 +182,7 @@ const AddSousRecette = ({ recette_id }) => {
                     rows="2"
                     cols="50"
                     className="col-9"
-                    placeholder="émondées"
+                    style={{ borderColor: "#c2c1d1" }}
                   />
                 </div>
               </div>

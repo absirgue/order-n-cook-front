@@ -92,10 +92,10 @@ const CreateNewFournisseurButton = () => {
                   id="name"
                   name="name"
                   style={{
-                    backgroundColor: "transparent",
-                    borderWidth: "1px",
-                    borderRadius: 5,
-                    textAlign: "start",
+                    //   backgroundColor: "transparent",
+                    //   borderWidth: "1px",
+                    //   borderRadius: 5,
+                    //   textAlign: "start",
                     height: "40px",
                     paddingLeft: "5px",
                   }}

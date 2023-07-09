@@ -107,7 +107,7 @@ function ReceiveInvoice({ commande }) {
               <div className="col-12 d-flex flex-row justify-content-center align-items-center">
                 <input type="file" onChange={onFileChange} />
                 <Button
-                  className="btn btn-primary mt-1"
+                  className="btn btn-primary mt-1 ms-2"
                   onClick={aiFileAnalysis}
                 >
                   Lancer l'Analyse

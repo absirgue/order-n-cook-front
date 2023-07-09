@@ -136,27 +136,72 @@ export default function RecordOrder({ items }) {
           </div>
         </Modal.Header>
         <Modal.Body>
-          <div className="col-12 d-flex flex-row justify-content-center align-items-start mb-3">
+          <div
+            className="col-12 d-flex flex-row justify-content-center align-items-start mb-2 pb-3"
+            style={{
+              border: "solid",
+              borderBottomWidth: "1px",
+              borderTop: 0,
+              borderLeft: 0,
+              borderRight: 0,
+              borderColor: "#c2c1d1",
+            }}
+          >
             <div className="col-6 d-flex flex-column">
-              <p>
-                <span className="greyed-label">Email de commande:</span>{" "}
-                {fournisseur_data.ordering_email}
-              </p>
-              <p>
-                {" "}
-                <span className="greyed-label">Email principal:</span>{" "}
-                {fournisseur_data.principal_email}
-              </p>
+              <div className="col-12 d-flex flex-row justify-content-start">
+                <p
+                  className="col-5 greyed-label me-2"
+                  style={{ textAlign: "end" }}
+                >
+                  Email de commande:
+                </p>
+                <p>
+                  {fournisseur_data.ordering_email
+                    ? fournisseur_data.ordering_email
+                    : "-"}
+                </p>
+              </div>
+              <div className="col-12 d-flex flex-row justify-content-start">
+                <p
+                  className="col-5 greyed-label me-2"
+                  style={{ textAlign: "end" }}
+                >
+                  Email principal:
+                </p>
+                <p>
+                  {fournisseur_data.principal_email
+                    ? fournisseur_data.principal_email
+                    : "-"}
+                </p>
+              </div>
             </div>
-            <div className="col-6 d-flex flex-column align-items-end">
-              <p>
-                <span className="greyed-label">Téléphone de commande:</span>{" "}
-                {fournisseur_data.ordering_phone_number}
-              </p>
-              <p>
-                <span className="greyed-label">Téléphone principal:</span>{" "}
-                {fournisseur_data.principal_phone_number}
-              </p>
+            <div className="col-6 d-flex flex-column align-items-start">
+              <div className="col-12 d-flex flex-row justify-content-start">
+                <p
+                  className="col-7 greyed-label me-2"
+                  style={{ textAlign: "end" }}
+                >
+                  Téléphone de commande:
+                </p>
+                <p>
+                  {fournisseur_data.ordering_phone_number
+                    ? fournisseur_data.ordering_phone_number
+                    : "-"}
+                </p>
+              </div>
+              <div className="col-12 d-flex flex-row justify-content-start">
+                <p
+                  className="col-7 greyed-label me-2"
+                  style={{ textAlign: "end" }}
+                >
+                  Téléphone principal:
+                </p>
+                <p>
+                  {fournisseur_data.principal_phone_number
+                    ? fournisseur_data.principal_phone_number
+                    : "-"}
+                </p>
+              </div>
             </div>
           </div>
           <div className="col-12 d-flex flex-column justify-content-center align-items-start mb-4">
@@ -231,6 +276,7 @@ export default function RecordOrder({ items }) {
                   cols="50"
                   className="col-9"
                   placeholder="Note à inclure dans l'email"
+                  style={{ borderColor: "#c2c1d1" }}
                   onChange={(event) => setEmailNote(event.target.value)}
                 />
               ) : null}
@@ -243,7 +289,6 @@ export default function RecordOrder({ items }) {
               <input
                 className="col-4 pt-2 pb-2"
                 type="date"
-                style={{ borderRadius: "15px" }}
                 onChange={(event) => {
                   const date = new Date(event.target.value);
                   const dayOfTheWeek = date.getDay();

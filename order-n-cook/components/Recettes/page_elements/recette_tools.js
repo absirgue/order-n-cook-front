@@ -127,7 +127,7 @@ const RecetteTools = ({ recette }) => {
             }}
             onClick={() => setShowTools(false)}
           >
-            {"Ranger les outils >"}
+            {"Ranger >"}
           </Button>
           <Button
             className="btn-danger me-4 mb-1"
@@ -228,7 +228,7 @@ const RecetteTools = ({ recette }) => {
               : "Marquer à modifier"}
           </Button>
 
-          <Button className="btn-primary me-4 mb-1">🛒 Commander</Button>
+          {/* <Button className="btn-primary me-4 mb-1">🛒 Commander</Button> */}
         </>
       ) : (
         <Button

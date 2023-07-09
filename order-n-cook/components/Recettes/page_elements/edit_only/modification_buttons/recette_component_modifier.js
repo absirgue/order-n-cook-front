@@ -172,20 +172,20 @@ const RecetteComponentModifier = ({
           <ModalBody>
             <div className="d-flex flex-column">
               <div className="d-flex flex-column justify-content-start col-12 align-items-start">
-                <div className="d-flex flex-row justify-content-start align-items-baseline">
-                  <label htmlFor="quantity">Quantité:</label>
+                <div className="d-flex flex-row justify-content-start align-items-center col-12 mb-2">
+                  <label
+                    className="col-3 me-2"
+                    htmlFor="quantity"
+                    style={{ textAlign: "end" }}
+                  >
+                    Quantité:
+                  </label>
                   <input
+                    className="col-3 me-2"
                     type="number"
                     id="quantity"
                     name="quantity"
                     step="any"
-                    style={{
-                      backgroundColor: "transparent",
-                      border: 0,
-                      borderBottom: "5px",
-                      textAlign: "end",
-                      width: "100px",
-                    }}
                     defaultValue={
                       component.quantity ? component.quantity.toString() : null
                     }
@@ -195,9 +195,9 @@ const RecetteComponentModifier = ({
                     <p style={{ marginBottom: "0px" }}>{component.unit}</p>
                   ) : (
                     <select
-                      className={"btn col-6 ps-1 ms-2"}
+                      style={{ paddingBottom: 0 }}
+                      className={"col-5 ps-1"}
                       name="unit"
-                      style={{ backgroundColor: "#CDCCCD", textAlign: "start" }}
                       value={selectedUnit}
                       onChange={(e) => {
                         setSelectedUnit(e.target.value);
@@ -223,7 +223,11 @@ const RecetteComponentModifier = ({
               ) : null}
               {untiError ? <p className="form-error">{untiError}</p> : null}
               <div className="d-flex flex-row justify-content-start mt-2">
-                <label htmlFor="note" className="col-3">
+                <label
+                  htmlFor="note"
+                  className="col-3 me-2"
+                  style={{ textAlign: "end" }}
+                >
                   Note (optionnel):
                 </label>
                 <textarea
@@ -231,7 +235,8 @@ const RecetteComponentModifier = ({
                   name="note"
                   rows="2"
                   cols="50"
-                  className="col-9"
+                  className="flex-grow-1"
+                  style={{ borderColor: "#c2c1d1" }}
                 >
                   {component.note}
                 </textarea>

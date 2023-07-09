@@ -159,6 +159,18 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
         >
           Progression
         </p>
+        {is_edit ? (
+          <AddSection
+            recette={recette}
+            unused_sections={allUnusedSections}
+            sectionrecette={recette}
+            set_section_options={setAllSections}
+            all_sections={allSections}
+            newly_imported_sections={newlyImporterdSections}
+            set_newly_imported_sections={setNewlyImporterdSections}
+            setAllUnusedSections={setAllUnusedSections}
+          ></AddSection>
+        ) : null}
         {grouped_progression_data.length > 0 ? (
           <div className="col-12">
             {grouped_progression_data.map((group) => (
@@ -297,18 +309,6 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
               </div>
             ))
         : null}
-      {is_edit ? (
-        <AddSection
-          recette={recette}
-          unused_sections={allUnusedSections}
-          sectionrecette={recette}
-          set_section_options={setAllSections}
-          all_sections={allSections}
-          newly_imported_sections={newlyImporterdSections}
-          set_newly_imported_sections={setNewlyImporterdSections}
-          setAllUnusedSections={setAllUnusedSections}
-        ></AddSection>
-      ) : null}
     </div>
   );
 };

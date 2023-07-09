@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useSWRConfig } from "swr";
 import { create_progression_element_request } from "../../../../../utils/backend/recette_components_requests";
@@ -15,6 +15,12 @@ const AddProgressionElement = ({
   const [modalOpen, setModalOpen] = React.useState(false);
   const [noteError, setNoteError] = React.useState(null);
   const { mutate } = useSWRConfig();
+
+  // const inputRef = useRef(null);
+
+  // useEffect(() => {
+  //   inputRef.current.focus();
+  // }, []);
 
   function get_initial_rank_value(section) {
     if (section_max_number) {
@@ -122,13 +128,15 @@ const AddProgressionElement = ({
               <div className="d-flex flex-column justify-content-start col-12 align-items-start">
                 <div className="d-flex flex-row justify-content-start align-items-baseline col-12">
                   <textarea
+                    // ref={inputRef}
+                    style={{ borderColor: "#c2c1d1" }}
                     className="col-12"
                     name="progression_element"
                     rows="8"
                     cols="200"
                     placeholder="Entrer l'élément de progression"
                     required
-                  ></textarea>
+                  />
                 </div>
               </div>
               {noteError ? <p className="form-error">{noteError}</p> : null}

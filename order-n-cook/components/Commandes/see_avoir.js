@@ -43,7 +43,7 @@ export default function SeeAvoir({ commande }) {
                   </div>
                 </div>
                 <div className="col-12 d-flex flex-row justify-content-between align-items-center">
-                  <div className="col-6">Raison:{item.reason}</div>
+                  <div className="col-6">Raison: {item.reason}</div>
                   <div className="col-6 d-flex flex-row justify-content-end">
                     {item.quantity_received ? (
                       <p>

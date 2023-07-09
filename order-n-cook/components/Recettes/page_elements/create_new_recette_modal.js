@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import Select from "react-select";
 import { sendCreateNewRecette } from "../../../utils/backend/recette_requests";
 import { get_all_existing_recette_categories } from "../../../utils/backend/recette_components_requests";
 import AddRecetteTagButton from "./edit_only/add_buttons/add_recette_tag_button";
+import useSWR from "swr";
 
 function redirectToNewlyCreatedRecette(new_recette_id) {
   window.location.href = "/recettes/" + new_recette_id;
 }
 
+const fetcher = (url) => fetch(url).then((res) => res.json());
 /**
  * A button and model to create a new recipe.
  */
@@ -18,15 +20,16 @@ const CreateNewRecetteButton = () => {
 
   const category_options = [];
 
+  const { data: categoryData, error: categoryDataError } = useSWR(
+    `http://127.0.0.1:8000/api/recette_categories/`,
+    fetcher
+  );
+
   const generate_option_list = async () => {
-    const all_existing_recette_categories =
-      await get_all_existing_recette_categories();
-    all_existing_recette_categories.forEach((category) =>
-      category_options.push({ value: category, label: category })
+    categoryData.forEach((category) =>
+      category_options.push({ value: category.name, label: category.name })
     );
   };
-
-  generate_option_list();
 
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
@@ -57,7 +60,18 @@ const CreateNewRecetteButton = () => {
       );
     }
   };
+  if (categoryDataError) {
+    return (
+      <div>
+        Une erreur est survenue lors du chargement de la page. Si cette erreur
+        persiste, contactez le service technique.
+      </div>
+    );
+  }
 
+  if (!categoryDataError && !categoryData)
+    return <div>Chargement en cours ...</div>;
+  generate_option_list();
   return (
     <>
       <Button
@@ -91,14 +105,6 @@ const CreateNewRecetteButton = () => {
                   type="text"
                   id="name"
                   name="name"
-                  style={{
-                    backgroundColor: "transparent",
-                    borderWidth: "1px",
-                    borderRadius: 5,
-                    textAlign: "start",
-                    height: "40px",
-                    paddingLeft: "5px",
-                  }}
                   placeholder="Nom de la nouvelle recette"
                   required
                 />
