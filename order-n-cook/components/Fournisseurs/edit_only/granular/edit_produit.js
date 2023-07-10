@@ -199,7 +199,7 @@ const EditProduit = ({ produit, fournisseur_id }) => {
                         ? produit.real_unit.quantity.toString()
                         : null
                     }
-                    placeholder={produit.real_unit.quantity ? "" : "quantité?"}
+                    placeholder={produit.real_unit.quantity ? "" : null}
                   ></input>
 
                   <select

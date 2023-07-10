@@ -99,62 +99,38 @@ export function get_data_object_for_recette_general_info_update_event(
   // Get data from the form.
 
   let data = {};
-  if (event.target.unit.value && event.target.unit.value != recette.unit) {
+  if (event.target.unit.value != recette.unit) {
     data["unit"] = event.target.unit.value;
   }
-  if (
-    event.target.quantity.value &&
-    event.target.quantity.value != recette.quantity
-  ) {
+  if (event.target.quantity.value != recette.quantity) {
     data["quantity"] = parseInt(event.target.quantity.value);
   }
-  if (event.target.tva.value && event.target.tva.value != recette.tva) {
+  if (event.target.tva.value != recette.tva) {
     data["tva"] = parseInt(event.target.tva.value);
   }
-  if (
-    event.target.temperature.value &&
-    event.target.temperature.value != recette.temperature
-  ) {
+  if (event.target.temperature.value != recette.temperature) {
     data["temperature"] = parseInt(event.target.temperature.value);
   }
-  if (
-    event.target.sous_vide_pression.value &&
-    event.target.sous_vide_pression.value != recette.sous_vide_pression
-  ) {
+  if (event.target.sous_vide_pression.value != recette.sous_vide_pression) {
     data["sous_vide_pression"] = parseInt(
       event.target.sous_vide_pression.value
     );
   }
-  if (
-    event.target.sous_vide_soudure.value &&
-    event.target.sous_vide_soudure.value != recette.sous_vide_soudure
-  ) {
+  if (event.target.sous_vide_soudure.value != recette.sous_vide_soudure) {
     data["sous_vide_soudure"] = parseInt(event.target.sous_vide_soudure.value);
   }
-  if (
-    event.target.coefficient.value &&
-    event.target.coefficient.value != recette.coefficient
-  ) {
+  if (event.target.coefficient.value != recette.coefficient) {
     data["coefficient"] = event.target.coefficient.value;
   }
-  if (
-    event.target.season_start.value &&
-    event.target.season_start.value != recette.season_start
-  ) {
+  if (event.target.season_start.value != recette.season_start) {
     data["season_start"] = event.target.season_start.value;
   }
 
-  if (
-    event.target.season_end.value &&
-    event.target.season_end.value != recette.season_end
-  ) {
+  if (event.target.season_end.value != recette.season_end) {
     data["season_end"] = event.target.season_end.value;
   }
 
-  if (
-    event.target.duration.value &&
-    event.target.duration.value != recette.duration
-  ) {
+  if (event.target.duration.value != recette.duration) {
     data["duration"] = event.target.duration.value;
   }
 

@@ -191,8 +191,6 @@ const GeneralRecetteDataModify = ({ recette }) => {
     }
     set_new_data_inputted(false);
   };
-  const recette_season_start_month = get_recette_season_start_month(recette);
-  const recette_season_end_month = get_recette_season_end_month(recette);
 
   if (genreDataError || tasteDataError || categoryDataError) {
     return (
@@ -522,14 +520,13 @@ const GeneralRecetteDataModify = ({ recette }) => {
                 }}
                 name="season_start"
                 defaultValue={
-                  recette_season_start_month ? recette_season_start_month : null
+                  recette.season_start ? recette.season_start : null
                 }
                 onChange={(e) => {
                   set_new_data_inputted(true);
                 }}
-                required
               >
-                {recette_season_start_month ? null : (
+                {recette.season_start ? null : (
                   <option selected disabled></option>
                 )}
                 {MONTHS.map((month) => (
@@ -565,15 +562,12 @@ const GeneralRecetteDataModify = ({ recette }) => {
                   borderBottomWidth: "1px",
                 }}
                 name="season_end"
-                defaultValue={
-                  recette_season_end_month ? recette_season_end_month : null
-                }
+                defaultValue={recette.season_end ? recette.season_end : null}
                 onChange={(e) => {
                   set_new_data_inputted(true);
                 }}
-                required
               >
-                {recette_season_end_month ? null : (
+                {recette.season_end ? null : (
                   <option selected disabled></option>
                 )}
                 {MONTHS.map((month) => (

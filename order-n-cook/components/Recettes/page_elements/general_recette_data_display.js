@@ -19,78 +19,122 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
         <GeneralRecetteDataModify recette={recette}></GeneralRecetteDataModify>
       ) : (
         <>
-          <div className="d-flex flex-row justify-content-between col-8">
-            <div className="d-flex flex-column justify-content-start col-4 align-items-start">
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Quantité:{" "}
-                <span style={{ fontSize: "16px" }}>
+          <div className="d-flex flex-row justify-content-between col-lg-10 col-12">
+            <div className="d-flex flex-column justify-content-start col-6 align-items-start">
+              <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                <p
+                  className="col-5 me-2"
+                  style={{ fontSize: "14px", textAlign: "end" }}
+                >
+                  Quantité:
+                </p>
+                <p style={{ fontSize: "16px" }}>
                   {(recette.quantity ? recette.quantity : "?") +
                     " " +
                     (recette.unit ? recette.unit : "")}
-                </span>
-              </p>
-              {recette.duration ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                  Temps de cuisson:{" "}
-                  <span style={{ fontSize: "16px" }}>
-                    {get_formatted_duration(recette)}
-                  </span>
                 </p>
+              </div>
+
+              {recette.duration ? (
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                  <p
+                    className="col-5 me-2"
+                    style={{ fontSize: "14px", textAlign: "end" }}
+                  >
+                    Temps de cuisson:
+                  </p>
+                  <p style={{ fontSize: "16px" }}>
+                    {get_formatted_duration(recette)}
+                  </p>
+                </div>
               ) : null}
               {recette.temperature ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                  Température de cuisson:{" "}
-                  <span style={{ fontSize: "16px" }}>
-                    {recette.temperature}
-                  </span>
-                </p>
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                  <p
+                    className="col-5 me-2"
+                    style={{ fontSize: "14px", textAlign: "end" }}
+                  >
+                    Température de cuisson:
+                  </p>
+                  <p style={{ fontSize: "16px" }}>{recette.temperature}</p>
+                </div>
               ) : null}
               {recette.sous_vide_pression ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                  Sous vide - pression:{" "}
-                  <span style={{ fontSize: "16px" }}>
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                  <p
+                    className="col-5 me-2"
+                    style={{ fontSize: "14px", textAlign: "end" }}
+                  >
+                    Sous vide - pression:
+                  </p>
+                  <p style={{ fontSize: "16px" }}>
+                    {" "}
                     {recette.sous_vide_pression}
-                  </span>
-                </p>
+                  </p>
+                </div>
               ) : null}
               {recette.sous_vide_soudure ? (
-                <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                  Sous vide - soudure:{" "}
-                  <span style={{ fontSize: "16px" }}>
+                <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                  <p
+                    className="col-5 me-2"
+                    style={{ fontSize: "14px", textAlign: "end" }}
+                  >
+                    Sous vide - soudure:
+                  </p>
+                  <p style={{ fontSize: "16px" }}>
+                    {" "}
                     {recette.sous_vide_soudure}
-                  </span>
-                </p>
+                  </p>
+                </div>
               ) : null}
             </div>
             <div className="d-flex flex-column justify-content-start col-6 align-items-end">
-              <p
+              <div
+                className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap"
                 style={
-                  { fontSize: "14px", marginBottom: "0px" } +
                   recette.all_costs_are_known
-                    ? { color: "grey", fontStyle: "italic" }
-                    : null
+                    ? null
+                    : { color: "grey", fontStyle: "italic" }
                 }
               >
-                Prix de revient:{" "}
-                <span style={{ fontSize: "16px" }}>
+                <p
+                  className="col-8 me-2"
+                  style={{
+                    fontSize: "14px",
+                    textAlign: "end",
+                  }}
+                >
+                  Prix de revient:
+                </p>
+                <p style={{ fontSize: "16px" }}>
                   {recette.cost_ingredients
                     ? recette.cost_ingredients + "€"
                     : "-"}
                   {recette.all_costs_are_known ? null : "*"}
-                </span>
-              </p>
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Taux de TVA:{" "}
-                <span style={{ fontSize: "16px" }}>
+                </p>
+              </div>
+              <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                <p
+                  className="col-8 me-2"
+                  style={{ fontSize: "14px", textAlign: "end" }}
+                >
+                  Taux de TVA:
+                </p>
+                <p style={{ fontSize: "16px" }}>
                   {recette.tva ? recette.tva + "%" : "?"}
-                </span>
-              </p>
-              <p style={{ fontSize: "14px", marginBottom: "0px" }}>
-                Coefficient:{" "}
-                <span style={{ fontSize: "16px" }}>
+                </p>
+              </div>
+              <div className="col-12 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                <p
+                  className="col-8 me-2"
+                  style={{ fontSize: "14px", textAlign: "end" }}
+                >
+                  Coefficient:
+                </p>
+                <p style={{ fontSize: "16px" }}>
                   {recette.coefficient ? recette.coefficient : "?"}
-                </span>
-              </p>
+                </p>
+              </div>
               {recette.ht_selling_price &&
               recette.ht_selling_price != "null" ? (
                 <p
@@ -155,10 +199,10 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
           <div className="col-11 d-flex flex-column justify-content-start mt-3 mb-3">
             {recette.allergenes.length > 0 ? (
               <div className="col-12 d-flex flex-row justify-content-start align-items-baseline">
-                <i className="me-2" style={{ marginBottom: "0px" }}>
+                <i className="col-2 me-2" style={{ textAlign: "end" }}>
                   Allergènes:
                 </i>
-                <p style={{ marginBottom: "0px" }}>
+                <p>
                   {recette.allergenes
                     .reduce(
                       (accumultor, allergene) =>
@@ -169,25 +213,27 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
                 </p>
               </div>
             ) : (
-              <i style={{ marginBottom: "0px" }}>Aucun allergène</i>
+              <i className="col-2" style={{ textAlign: "end" }}>
+                Aucun allergène
+              </i>
             )}
-            {recette.season && recette.season.length > 0 ? (
-              <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                <i className="me-2" style={{ marginBottom: "0px" }}>
+            {recette.season_start && recette.season_end ? (
+              <div className="col-12 d-flex flex-row justify-content-start align-items-basline">
+                <i className="col-2 me-2" style={{ textAlign: "end" }}>
                   Saisonnalité:
                 </i>
-                <div className="col-5">
-                  <SeasonnalityDisplay
-                    ingredient_data={recette}
-                  ></SeasonnalityDisplay>
-                </div>
+                <p>
+                  de {recette.season_start} à {recette.season_end}
+                </p>
               </div>
             ) : (
-              <i style={{ marginBottom: "0px" }}>Saisonnalité non renseignée</i>
+              <i className="col-2" style={{ textAlign: "end" }}>
+                Saisonnalité non renseignée
+              </i>
             )}
             {recette.genres ? (
-              <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                <i className="me-2" style={{ marginBottom: "0px" }}>
+              <div className="col-12 d-flex flex-row justify-content-start align-items-baseline">
+                <i className="col-2 me-2" style={{ textAlign: "end" }}>
                   Genres:
                 </i>
                 <div className="col-5">
@@ -197,11 +243,13 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
                 </div>
               </div>
             ) : (
-              <i style={{ marginBottom: "0px" }}>Aucun genre renseigné</i>
+              <i className="col-2" style={{ textAlign: "end" }}>
+                Aucun genre renseigné
+              </i>
             )}
             {recette.genres ? (
               <div className="col-12 d-flex flex-row justify-content-start align-items-center">
-                <i className="me-2" style={{ marginBottom: "0px" }}>
+                <i className="col-2 me-2" style={{ textAlign: "end" }}>
                   Goûts:
                 </i>
                 <div className="col-5">
@@ -211,7 +259,9 @@ const GeneralRecetteDataDisplay = ({ recette, is_edit = false }) => {
                 </div>
               </div>
             ) : (
-              <i style={{ marginBottom: "0px" }}>Aucun goût renseigné</i>
+              <i className="col-2" style={{ textAlign: "end" }}>
+                Aucun goût renseigné
+              </i>
             )}
           </div>
         </>

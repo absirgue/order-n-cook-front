@@ -26,7 +26,6 @@ export function get_ai_style(obj) {
       if (confidence < 30) {
         color_code = "#e72131";
       } else if (confidence < 50) {
-        console.log("IN THE RIGHT");
         color_code = "#e0801b";
       } else if (confidence < 70) {
         color_code = "#cddc39";

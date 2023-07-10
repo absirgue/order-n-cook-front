@@ -38,7 +38,6 @@ function AiAidedInput({ commande, aiData, closeModal }) {
     if ((invoiceNbValue, invoiceDate, invoiceAmount)) {
       let items = AiGeneratedItems;
       items = items.map((item) => {
-        console.log(item);
         if (item.unit_is_same) {
           return {
             id: item.id,
@@ -219,7 +218,7 @@ function AiAidedInput({ commande, aiData, closeModal }) {
                     />
                     <p style={{ fontSize: "14px" }}>{"€/" + item.unit}</p>
                   </div>
-                  <div className="d-flex col-12 justify-content-between align-items-center">
+                  <div className="d-flex col-12 justify-content-between align-items-center mt-2">
                     <p
                       style={{ fontWeight: 500, textAlign: "end" }}
                       className="flex-grow-1"

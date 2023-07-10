@@ -11,7 +11,6 @@ export const NavLink = (props) => {
     "is-active": props.pathname,
   });
   const pathname = window.location.pathname;
-  console.log(pathname.split("/")[1]);
   return (
     <Link href={props.path} style={{ textDecoration: "none", color: "black" }}>
       <p

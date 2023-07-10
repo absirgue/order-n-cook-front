@@ -17,9 +17,6 @@ function InvoiceManualInput({ commande, closeModal }) {
   const [taxAmount, setTaxAmount] = useState(null);
 
   async function recordInvoice() {
-    console.log(invoiceNbValue);
-    console.log(invoiceDate);
-    console.log(invoiceAmount);
     if (
       invoiceNbValue != null &&
       invoiceDate != null &&
@@ -27,7 +24,6 @@ function InvoiceManualInput({ commande, closeModal }) {
     ) {
       let items = itemsOfInvoice;
       items = items.map((item) => {
-        console.log(item);
         if (Array.isArray(item.unit_quantity)) {
           item.unit_quantity = item.unit_quantity[0];
         }

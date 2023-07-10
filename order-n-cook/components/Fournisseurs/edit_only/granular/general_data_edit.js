@@ -408,11 +408,6 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
               marginLeft: "5px",
               width: "100px",
             }}
-            placeholder={
-              fournisseur.last_time_order
-                ? fournisseur.last_time_order
-                : "16h30"
-            }
           ></input>
         </div>
       </div>

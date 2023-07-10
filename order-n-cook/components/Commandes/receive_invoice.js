@@ -25,7 +25,6 @@ function ReceiveInvoice({ commande }) {
   async function aiFileAnalysis(e) {
     e.preventDefault();
     if (selectedFile) {
-      console.log(this.state);
       let form_data = new FormData();
       form_data.append("file", selectedFile, selectedFile.name);
       let url = `http://127.0.0.1:8000/api/receive_invoice/${commande.id}/`;
@@ -38,7 +37,6 @@ function ReceiveInvoice({ commande }) {
         })
         .then((res) => {
           if (res.status == 200) {
-            console.log(res.data);
             setAiAidedInput(true);
             setAiData(res.data);
           } else {

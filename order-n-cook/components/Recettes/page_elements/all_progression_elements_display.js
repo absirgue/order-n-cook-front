@@ -294,14 +294,9 @@ const ProgressionDisplay = ({ recette, is_edit = false }) => {
                 className="d-flex flex-column col-12"
                 key={section.id ? section.id : "sans_section"}
               >
-                <p
-                  style={{
-                    background: "#CDCCCD",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  {section.name}
-                </p>
+                <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
+                  {strUcFirst(section.name)}
+                </h5>
                 <AddProgressionElement
                   section_number={section.number}
                   recette={recette}
