@@ -92,6 +92,12 @@ p {
     color: black;
   }
 
+
+table {
+    background-color: transparent;
+}
+
+
 input {
     border-bottom: solid;
     border-color: #c2c1d1;
