@@ -41,7 +41,7 @@ export default function ProduitListItem({
 
   return (
     <div
-      style={{ paddingTop: "0px" }}
+      style={{ paddingTop: "0px", backgroundColor: "transparent" }}
       className="d-flex flex-row justify-content-start col-12"
     >
       <Button
@@ -194,14 +194,20 @@ export default function ProduitListItem({
           {produit.labels ? (
             <p
               className="col-1 d-flex flew-row justify-content-end align-items-center"
-              style={{ marginBottom: "0px", paddingTop: "0px" }}
+              style={{
+                marginBottom: "0px",
+                paddingTop: "0px",
+                backgroundColor: "transparent",
+              }}
             >
               {produit.labels.map((label) => (
                 <span className="me-1">{label.name}</span>
               ))}
             </p>
           ) : (
-            <div className="col-1">{/* Purposefully empty*/}</div>
+            <div className="col-1" style={{ backgroundColor: "transparent" }}>
+              {/* Purposefully empty*/}
+            </div>
           )}
         </>
       )}
