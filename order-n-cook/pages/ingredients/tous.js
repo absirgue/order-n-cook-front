@@ -509,7 +509,7 @@ export default function AllIngredientsDisplay({ allIngredientsData }) {
               <p style={{ background: "#CDCCCD", paddingLeft: "10px" }}>
                 {group.group_name}
               </p>
-              <Table hover>
+              <Table hover style={{ backgroundColor: "transparent" }}>
                 <tbody>
                   {group.ingredients.map((ingredient) => (
                     <IngredientListItem

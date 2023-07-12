@@ -537,7 +537,11 @@ export default function FournisseurProduitsDisplay({
               >
                 {group.group_name}
               </p>
-              <Table hover className="mb-2">
+              <Table
+                hover
+                className="mb-2"
+                style={{ backgroundColor: "transparent" }}
+              >
                 <tbody>
                   {group.produits.map((produit) => (
                     <ProduitListItem

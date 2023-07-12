@@ -25,7 +25,7 @@ const AllSousRecettesDisplay = ({ recette, is_edit = false }) => {
             Sous Recettes
           </p>
           <div className="col-12">
-            <Table hover>
+            <Table hover style={{ backgroundColor: "transparent" }}>
               <tbody>
                 {recette.sous_recette.map((sous_recette) => (
                   <SousRecetteListItem

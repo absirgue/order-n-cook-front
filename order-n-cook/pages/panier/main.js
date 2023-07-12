@@ -51,7 +51,10 @@ export default function Cart() {
             >
               {group.group_name}
             </h5>
-            <Table hover style={{ marginBottom: "5px" }}>
+            <Table
+              hover
+              style={{ marginBottom: "5px", backgroundColor: "transparent" }}
+            >
               <tbody>
                 {group.items.map((item) => (
                   <div className="col-12 d-flex flex-row justify-content-between align-items-center">

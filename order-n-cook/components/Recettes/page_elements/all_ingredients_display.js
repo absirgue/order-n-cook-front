@@ -125,7 +125,7 @@ const AllRecetteIngredientsDisplay = ({ recette, is_edit = false }) => {
                 </h5>
               ) : null}
 
-              <Table hover>
+              <Table hover style={{ backgroundColor: "transparent" }}>
                 <tbody>
                   {group.ingredients.map((ingredient) => {
                     return (

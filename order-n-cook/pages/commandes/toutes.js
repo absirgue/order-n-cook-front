@@ -209,7 +209,7 @@ export default function AllCommandesData({ allCommandesData }) {
               >
                 {group.group_name}
               </p>
-              <Table hover>
+              <Table hover style={{ backgroundColor: "transparent" }}>
                 <tbody>
                   {group.commandes.map((commande) => (
                     <CommandeListItem commande={commande}></CommandeListItem>
