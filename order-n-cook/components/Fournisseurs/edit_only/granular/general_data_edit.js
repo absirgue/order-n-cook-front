@@ -3,6 +3,7 @@ import { useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { get_data_object_for_fournisseur_general_info_update_event } from "../../helpers/general_fournisseur";
 import { Button } from "reactstrap";
+import AddFournisseurTagButton from "./add_fournisseur_tag";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -29,7 +30,7 @@ async function sendUpdateFournisseurData(data, fournisseur) {
   return response;
 }
 
-export default function EditFournisseurGeneralData({ fournisseur }) {
+export default function EditFournisseurGeneralData({ fournisseur, mutate }) {
   const [category, setCategory] = useState([
     { value: 0, label: fournisseur.category },
   ]);
@@ -58,7 +59,6 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
   const [deliversSunday, setDeliversSunday] = useState(
     fournisseur.delivers_sunday
   );
-  const { mutate } = useSWRConfig();
 
   const [lastOrderTime, setLastOrderTime] = useState(
     fournisseur.last_order_time
@@ -105,7 +105,7 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
     // If server returns the name submitted, that means the form works.
 
     if (response.status == 200) {
-      mutate(`http://127.0.0.1:8000/api/fournisseurs/${fournisseur.id}/`);
+      mutate();
       reset_all_errors();
     } else {
       const result = await response.json();
@@ -138,7 +138,7 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
         alert(
           "Une erreur est survenue. Merci de vérifier les valeurs renseignées ou de réessayer utlérieurement."
         );
-        mutate(`http://127.0.0.1:8000/api/fournisseurs/${fournisseur.id}/`);
+        mutate();
       }
     }
     set_new_data_inputted(false);
@@ -184,7 +184,7 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
             </label>
             <Select
               id="categories"
-              className="flex-grow-1"
+              className="flex-grow-1 me-2"
               options={category_options}
               placeholder="Sélectionner une catégorie pour ce fournisseur"
               isSearchable={true}
@@ -194,19 +194,21 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
                 set_new_data_inputted(true);
               }}
             />
+            <AddFournisseurTagButton is_category={true} />
           </div>
+
           {categoryError ? (
             <p style={{ color: "red" }}>{categoryError}</p>
           ) : null}
         </div>
         <div className="col-5 d-flex flex-column align-items-end">
-          <div className="col-12 d-flex flew-row justify-content-between align-items-baseline">
+          <div className="col-12 d-flex flew-row justify-content-between align-items-center">
             <label style={{ marginRight: "7px" }} htmlFor="categories">
               Spécialité métier:
             </label>
             <Select
               id="categories"
-              className="flex-grow-1"
+              className="flex-grow-1 me-2"
               options={specialty_options}
               placeholder="Sélectionner une spécialité pour ce fournisseur"
               isSearchable={true}
@@ -216,6 +218,7 @@ export default function EditFournisseurGeneralData({ fournisseur }) {
                 set_new_data_inputted(true);
               }}
             />
+            <AddFournisseurTagButton is_specialty={true} />
           </div>
           {specialtyError ? (
             <p style={{ color: "red" }}>{lastOrderTimeError}</p>

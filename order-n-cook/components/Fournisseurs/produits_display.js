@@ -1,4 +1,3 @@
-import IngredientListItem from "../Ingredients/Ingredients/page_elements/ingredients_list_item";
 import React, { useState, useEffect } from "react";
 import { Button, Table } from "reactstrap";
 import Modal from "react-bootstrap/Modal";
@@ -49,6 +48,7 @@ export default function FournisseurProduitsDisplay({
   fournisseur_name,
   fournisseur_id,
   isEdit = false,
+  mutate = null,
 }) {
   // State variable for the filtered search modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -545,6 +545,7 @@ export default function FournisseurProduitsDisplay({
                       fournisseur_id={fournisseur_id}
                       isEdit={isEdit}
                       fournisseur_name={fournisseur_name}
+                      mutate={mutate}
                     ></ProduitListItem>
                   ))}
                 </tbody>

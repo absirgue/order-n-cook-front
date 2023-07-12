@@ -10,11 +10,11 @@ import {
 } from "../../../../utils/backend/ingredient_components_requests";
 import { get_all_existing_ingredients_options_with_labels } from "../../../../utils/backend/ingredient_requests";
 import { get_all_existing_labels } from "../../../../utils/backend/ingredient_requests";
-import { useSWRConfig } from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import { create_new_unit_conversion } from "../../../../utils/backend/ingredient_components_requests";
 import { create_ingredient_request } from "../../../../utils/backend/ingredient_requests";
 
-export default function AddProduit({ fournisseur_id }) {
+export default function AddProduit({ fournisseur_id, mutate = null }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [createNewIngredient, setCreateNewIngredient] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState("");
@@ -24,7 +24,6 @@ export default function AddProduit({ fournisseur_id }) {
   const [sousCategory, setSousCategory] = useState(null);
   const [createNewUnit, setCreateNewUnit] = useState(false);
   const [labels, setLabels] = useState([]);
-  const { mutate } = useSWRConfig();
 
   const category_options = [];
 
@@ -234,7 +233,9 @@ export default function AddProduit({ fournisseur_id }) {
    *      - closing the modal
    */
   function handleSuccess() {
-    mutate(`http://127.0.0.1:8000/api/fournisseurs/${fournisseur_id}/`);
+    console.log("IN Handle success");
+    console.log(fournisseur_id);
+    mutate();
     setError({});
     resetSelections();
     setModalOpen(!modalOpen);

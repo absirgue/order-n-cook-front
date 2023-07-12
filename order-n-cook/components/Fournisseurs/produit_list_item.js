@@ -10,6 +10,7 @@ export default function ProduitListItem({
   isEdit = false,
   fournisseur_name,
   fournisseur_id,
+  mutate = null,
 }) {
   const [openOrderModal, setOpenOrderModal] = useState(false);
   const delete_confirmation_text =
@@ -149,6 +150,7 @@ export default function ProduitListItem({
             <EditProduit
               produit={produit}
               fournisseur_id={fournisseur_id}
+              mutate={mutate}
             ></EditProduit>
             <Button
               className="emoji_button"

@@ -7,121 +7,7 @@ import Link from "next/link";
 import FournsiseurName from "../../../components/Fournisseurs/edit_only/granular/name_edit";
 import EditFournisseurGeneralData from "../../../components/Fournisseurs/edit_only/granular/general_data_edit";
 import AddProduit from "../../../components/Fournisseurs/edit_only/granular/add_produit";
-function getIngredientData() {
-  return {
-    id: 1,
-    name: "Anthès",
-    adresse: "12 avenue de la Gare",
-    address_line_2: "3e étage",
-    postal_code: "12600",
-    city: "Villefranche",
-    department: "Aveyron",
-    country: "France",
-    client_code: "CECIESTEST",
-    principal_phone_number: "0789654567",
-    ordering_phone_number: "0719651567",
-    // accounting_phone_number:"0719651567",
-    principal_email: "anthes@test.org",
-    ordering_email: "anthes@test.org",
-    // cc_sales_email:"anthes@test.org",
-    // last_time_to_order:"16h",
-    category: "Crèmerie",
-    specialty: "Maître Frommager",
-    delivers_monday: true,
-    delivers_tuesday: false,
-    delivers_wednesday: false,
-    delivers_thursday: false,
-    delivers_friday: true,
-    delivers_saturday: true,
-    delivers_sunday: true,
-    produits: [
-      {
-        ingredient: {
-          name: "crème",
-          labels: [
-            { id: 1, name: "AOC" },
-            { id: 2, name: "AOP" },
-          ],
-          id: 2,
-          allergenes: [
-            { id: 1, name: "noix" },
-            { id: 2, name: "lactose" },
-          ],
-          category: "crémerie",
-          sous_category: "crème",
-        },
-        real_unit: {
-          quantity: 1,
-          unit: "plaquette",
-        },
-        conversion_unit: {
-          quantity: 250,
-          unit: "gramme",
-        },
-        price: 5.5,
-        kilogramme_price: 22,
-        last_known_price: 5,
-        date_last_known_price: "12/12/1492",
-      },
-      {
-        ingredient: {
-          name: "beurre",
-          category: "crémerie",
-          sous_category: "beurre",
-          id: 2,
-        },
-        real_unit: {
-          quantity: 1,
-          unit: "kilogramme",
-        },
-        conversion_unit: {
-          quantity: 250,
-          unit: "gramme",
-        },
-        price: 15,
-      },
-      {
-        ingredient: {
-          name: "mozarella",
-          category: "crémerie",
-          sous_category: "frommage",
-          id: 2,
-        },
-        real_unit: {
-          quantity: 1,
-          unit: "unité",
-        },
-        conversion_unit: {
-          quantity: 300,
-          unit: "gramme",
-        },
-        price: 4,
-        kilogramme_price: 15,
-        last_known_price: 4,
-      },
-      {
-        ingredient: {
-          name: "crème épaisse",
-          labels: [{ id: 1, name: "AOC" }],
-          category: "crémerie",
-          sous_category: "crème",
-          id: 2,
-        },
-        real_unit: {
-          quantity: 1,
-          unit: "pot",
-        },
-        conversion_unit: {
-          quantity: 300,
-          unit: "gramme",
-        },
-        price: 5.25,
-        kilogramme_price: 22,
-        last_known_price: 6,
-      },
-    ],
-  };
-}
+
 const fetcher = (url) => fetch(url).then((res) => res.json());
 /**
  * Page to display Fournisseur details
@@ -158,6 +44,8 @@ export default function EditFournisseurDetailPage() {
     id ? `http://127.0.0.1:8000/api/fournisseurs/${id}/` : null,
     fetcher
   );
+
+  const mutate = () => window.location.reload();
 
   if (error) {
     return (
@@ -218,11 +106,15 @@ export default function EditFournisseurDetailPage() {
       <div className={"d-flex flex-col justify-content-between col-8"}>
         <EditFournisseurGeneralData
           fournisseur={fournisseurData}
+          mutate={mutate}
         ></EditFournisseurGeneralData>
       </div>
       <div className={"col-6 d-flex justify-content-center"}></div>
       <div className="col-11 col-lg-10 d-flex flex-row justify-content-end">
-        <AddProduit fournisseur_id={fournisseurData.id}></AddProduit>
+        <AddProduit
+          fournisseur_id={fournisseurData.id}
+          mutate={mutate}
+        ></AddProduit>
       </div>
       <div className="col-12 d-flex flex-row justify-content-center">
         {fournisseurData.produits ? (
@@ -231,6 +123,7 @@ export default function EditFournisseurDetailPage() {
             isEdit={true}
             fournisseur_id={fournisseurData.id}
             fournisseur_name={fournisseurData.name}
+            mutate={mutate}
           ></FournisseurProduitsDisplay>
         ) : (
           <p>

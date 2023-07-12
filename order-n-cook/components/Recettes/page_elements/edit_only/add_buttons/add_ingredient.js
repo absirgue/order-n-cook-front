@@ -564,7 +564,6 @@ const AddIngredient = ({
                     style={{ borderColor: "#c2c1d1" }}
                     rows="2"
                     cols="50"
-                    placeholder="émondées"
                   />
                 </div>
                 {noteError ? <p className="form-error">{noteError}</p> : null}

@@ -79,9 +79,13 @@ export default function RecordOrder({ items }) {
       data["email_note"] = emailNote;
 
       const response = await create_commande(data);
-      if (response.status == 201) {
+      if (response.status == 201 || response.status == 202) {
         alert(
-          'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!'
+          'Votre commande a bien été passée! Vous pouvez la retrouver dans la section "Mes Commande". Merci!' +
+            response.status ==
+            202
+            ? null
+            : "\n\nATTENTION: la commande n'a pas pu être envoyée par email. Veuillez-vous assurer de la bonne transmission du bon de commande au fournisseur."
         );
         await downloadPDFFromAPIAnswer(response, items[0].fournisseur_name);
         for (let i = 0; i < items.length; i++) {

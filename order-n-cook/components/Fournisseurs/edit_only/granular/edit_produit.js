@@ -9,7 +9,7 @@ A modal that shows all the Fournisseurs providing a given ingredient and gives t
 quantity of said ingredient from a selected provider.
 */
 
-const EditProduit = ({ produit, fournisseur_id }) => {
+const EditProduit = ({ produit, fournisseur_id, mutate = null }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedUnit, setSelectedUnit] = React.useState("default");
   const [error, setError] = React.useState({});
@@ -20,8 +20,6 @@ const EditProduit = ({ produit, fournisseur_id }) => {
       return { value: label.id, label: label.name };
     })
   );
-
-  const { mutate } = useSWRConfig();
 
   async function get_possible_units() {
     const endpoint =
@@ -119,7 +117,7 @@ const EditProduit = ({ produit, fournisseur_id }) => {
     const result = await response.json();
     if (response.status == 200) {
       setModalOpen(false);
-      mutate(`http://127.0.0.1:8000/api/fournisseurs/${fournisseur_id}/`);
+      mutate();
     } else {
       let error_found = false;
       if (
