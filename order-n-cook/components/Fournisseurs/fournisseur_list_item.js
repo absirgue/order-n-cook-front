@@ -6,10 +6,13 @@ import Link from "next/link";
 const FournisseurListItem = ({ fournisseur }) => {
   return (
     <tr>
-      <td className={"w-50"} style={{ verticalAlign: "middle" }}>
+      <td
+        className={"w-50"}
+        style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+      >
         <Link href={"/fournisseurs/" + fournisseur.id}>{fournisseur.name}</Link>
       </td>
-      <td className={"w-25"}>
+      <td className={"w-25"} style={{ backgroundColor: "transparent" }}>
         <p style={{ marginBottom: "0px" }}>{fournisseur.category}</p>
       </td>
     </tr>

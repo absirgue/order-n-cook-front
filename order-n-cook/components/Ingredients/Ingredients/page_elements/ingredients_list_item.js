@@ -30,17 +30,20 @@ const IngredientListItem = ({ ingredient }) => {
 
   return (
     <tr>
-      <td className={"w-10"}>
+      <td className={"w-10"} style={{ backgroundColor: "transparent" }}>
         <PurchaseIngredientHelper
           ingredient={{ ...ingredient, ingredient_id: ingredient.id }}
           onClose={() => setShowPurchaseModal(false)}
           show={showPurchaseModal}
         ></PurchaseIngredientHelper>
       </td>
-      <td className={"w-25"} style={{ verticalAlign: "middle" }}>
+      <td
+        className={"w-25"}
+        style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+      >
         <Link href={"/ingredients/" + ingredient.id}>{ingredient.name}</Link>
       </td>
-      <td className={"w-25"}>
+      <td className={"w-25"} style={{ backgroundColor: "transparent" }}>
         <div className={"d-flex flex-row"}>
           {ingredient.labels.map((label) => (
             <div>
@@ -71,7 +74,7 @@ const IngredientListItem = ({ ingredient }) => {
           ))}
         </div>
       </td>
-      <td className={"w-25"}>
+      <td className={"w-25"} style={{ backgroundColor: "transparent" }}>
         <div>
           <div>
             {ingredient.allergenes.length > 0 ? (

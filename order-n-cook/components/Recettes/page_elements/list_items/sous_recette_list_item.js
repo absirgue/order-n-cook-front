@@ -18,6 +18,7 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
         className={"col-1"}
         style={{
           verticalAlign: "middle",
+          backgroundColor: "transparent",
         }}
       >
         <p style={{ marginBottom: "0px", textAlign: "end" }}>
@@ -28,13 +29,17 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
         className={"col-3"}
         style={{
           verticalAlign: "middle",
+          backgroundColor: "transparent",
         }}
       >
         <p style={{ marginBottom: "0px" }}>
           {sous_recette.unit ? sous_recette.unit : "unité inconnue"}
         </p>
       </td>
-      <td className={"col-7"} style={{ verticalAlign: "middle" }}>
+      <td
+        className={"col-7"}
+        style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+      >
         <Link
           href={
             "/sous_recettes/" + recette_id + "/" + sous_recette.sous_recette_id
@@ -46,15 +51,17 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
       </td>
       {is_edit ? (
         <>
-          <td className={"col-1"}>{/* Empty on purpose */}</td>
-          <td className={"col-1"}>
+          <td className={"col-1"} style={{ backgroundColor: "transparent" }}>
+            {/* Empty on purpose */}
+          </td>
+          <td className={"col-1"} style={{ backgroundColor: "transparent" }}>
             <RecetteComponentModifier
               recette_id={recette_id}
               component={sous_recette}
               is_sous_recette={true}
             ></RecetteComponentModifier>
           </td>
-          <td className={"col-1"}>
+          <td className={"col-1"} style={{ backgroundColor: "transparent" }}>
             <DeleteButton
               element={sous_recette}
               is_sous_recette={true}
@@ -64,7 +71,7 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
         </>
       ) : (
         <>
-          <td className={"col-1"}>
+          <td className={"col-1"} style={{ backgroundColor: "transparent" }}>
             <div>
               <div>
                 {sous_recette.allergenes.length > 0 ? (
@@ -81,6 +88,7 @@ const SousRecetteListItem = ({ sous_recette, is_edit = false, recette_id }) => {
             className={"col-1"}
             style={{
               verticalAlign: "middle",
+              backgroundColor: "transparent",
             }}
           >
             <p

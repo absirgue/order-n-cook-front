@@ -20,7 +20,7 @@ const RecetteIngredientListItem = ({
     <tr>
       {/* Purchase modal for not in edit mode */}
       {!is_edit ? (
-        <td className={"col-1"}>
+        <td className={"col-1"} style={{ backgroundColor: "transparent" }}>
           <PurchaseIngredientHelper
             ingredient={ingredient}
             onClose={() => setShowPurchaseModal(false)}
@@ -33,6 +33,7 @@ const RecetteIngredientListItem = ({
         className={"col-1"}
         style={{
           verticalAlign: "middle",
+          backgroundColor: "transparent",
         }}
       >
         <p style={{ marginBottom: "0px", textAlign: "end" }}>
@@ -43,6 +44,7 @@ const RecetteIngredientListItem = ({
         className={"col-2"}
         style={{
           verticalAlign: "middle",
+          backgroundColor: "transparent",
         }}
       >
         <p style={{ marginBottom: "0px" }}>
@@ -50,7 +52,10 @@ const RecetteIngredientListItem = ({
         </p>
       </td>
       {/* Name as a link to access ingredient detail page */}
-      <td className={"col-7"} style={{ verticalAlign: "middle" }}>
+      <td
+        className={"col-7"}
+        style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+      >
         <Link href={"/ingredients/" + ingredient.ingredient_id}>
           {ingredient.name}
         </Link>
@@ -61,8 +66,14 @@ const RecetteIngredientListItem = ({
       an Allergene modal and the price of the ingredient if not if not */}
       {is_edit ? (
         <>
-          <td className={"col-1"}></td>
-          <td className={"col-1"} style={{ verticalAlign: "middle" }}>
+          <td
+            className={"col-1"}
+            style={{ backgroundColor: "transparent" }}
+          ></td>
+          <td
+            className={"col-1"}
+            style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+          >
             <ChangeSectionButton
               is_ingredient={true}
               all_sections={all_sections}
@@ -70,13 +81,19 @@ const RecetteIngredientListItem = ({
             ></ChangeSectionButton>
           </td>
 
-          <td className={"col-1"} style={{ verticalAlign: "middle" }}>
+          <td
+            className={"col-1"}
+            style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+          >
             <RecetteComponentModifier
               recette_id={recette_id}
               component={ingredient}
             ></RecetteComponentModifier>
           </td>
-          <td className={"col-1"} style={{ verticalAlign: "middle" }}>
+          <td
+            className={"col-1"}
+            style={{ verticalAlign: "middle", backgroundColor: "transparent" }}
+          >
             <DeleteButton
               element={ingredient}
               is_ingredient={true}
@@ -86,7 +103,7 @@ const RecetteIngredientListItem = ({
         </>
       ) : (
         <>
-          <td className={"col-1"}>
+          <td className={"col-1"} style={{ backgroundColor: "transparent" }}>
             <div>
               <div>
                 {ingredient.allergenes.length > 0 ? (
@@ -99,6 +116,7 @@ const RecetteIngredientListItem = ({
             className={"col-1"}
             style={{
               verticalAlign: "middle",
+              backgroundColor: "transparent",
             }}
           >
             <p
