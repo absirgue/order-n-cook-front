@@ -5,7 +5,10 @@
     --bs-table-active-bg:transparent;
     --bs-table-hover-bg:transparent;
   }
-  
+
+  td {
+    background-color: transparent;
+  }
 
 .btn-primary {
     background-color: #0085CA;
