@@ -67,11 +67,12 @@ export default function ProduitListItem({
               fournisseur_name: fournisseur_name,
               fournisseur_id: fournisseur_id,
             }}
+            style={{ backgroundColor: "transparent" }}
           ></PlaceOrder>
         </Modal.Body>
       </Modal>
       <Link
-        style={{ paddingTop: "0px" }}
+        style={{ paddingTop: "0px", backgroundColor: "transparent" }}
         className="col-3 ms-2 d-flex flex-column justify-content-center"
         href={"/ingredients/" + produit.ingredient.id}
       >
@@ -79,7 +80,11 @@ export default function ProduitListItem({
       </Link>
 
       <p
-        style={{ paddingTop: "0px", marginBottom: "0px" }}
+        style={{
+          paddingTop: "0px",
+          marginBottom: "0px",
+          backgroundColor: "transparent",
+        }}
         className="col-3 d-flex flex-column justify-content-center"
         title="Quantité proposée et sa conversion_unit en unité de masse"
       >
@@ -93,7 +98,11 @@ export default function ProduitListItem({
       </p>
 
       <p
-        style={{ paddingTop: "0px", marginBottom: "0px" }}
+        style={{
+          paddingTop: "0px",
+          marginBottom: "0px",
+          backgroundColor: "transparent",
+        }}
         className="col-1 d-flex flex-column justify-content-center"
         title="Prix unitaire (estimé)"
       >
@@ -102,29 +111,42 @@ export default function ProduitListItem({
 
       {produit.kilogramme_price ? (
         <p
-          style={{ paddingTop: "0px", marginBottom: "0px" }}
+          style={{
+            paddingTop: "0px",
+            marginBottom: "0px",
+            backgroundColor: "transparent",
+          }}
           className="col-1 d-flex flex-column justify-content-center"
           title="Prix au kilogramme (estimé)"
         >
           {produit.kilogramme_price + "€/kg"}
         </p>
       ) : (
-        <p className="col-1" style={{ marginBottom: "0px" }}>
+        <p
+          className="col-1"
+          style={{ marginBottom: "0px", backgroundColor: "transparent" }}
+        >
           {/* Purposefully empty, think of a message when unknwon conversion_unit */}
         </p>
       )}
       {produit.last_known_price ? (
         <div
           className="col-2 d-flex flex-column align-items-center justify-content-center"
+          style={{ backgroundColor: "transparent", paddingTop: "0px" }}
           title={
             "Dernier prix unitaire connu" +
             (produit.date_last_known_price
               ? " (" + produit.date_last_known_price + ")"
               : "")
           }
-          style={{ paddingTop: "0px" }}
         >
-          <p style={{ marginBottom: "0px", color: "#95929c" }}>
+          <p
+            style={{
+              marginBottom: "0px",
+              color: "#95929c",
+              backgroundColor: "transparent",
+            }}
+          >
             {produit.last_known_price + "€"}
           </p>
           <p
@@ -132,6 +154,7 @@ export default function ProduitListItem({
               marginBottom: "0px",
               color: "#95929c",
               fontSize: "14px",
+              backgroundColor: "transparent",
             }}
           >
             {produit.date_last_known_price
@@ -146,7 +169,10 @@ export default function ProduitListItem({
       )}
       {isEdit ? (
         <>
-          <div className="col-1 d-flex flex-row justify-content-end">
+          <div
+            className="col-1 d-flex flex-row justify-content-end"
+            style={{ backgroundColor: "transparent" }}
+          >
             <EditProduit
               produit={produit}
               fournisseur_id={fournisseur_id}
